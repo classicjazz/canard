@@ -1,0 +1,353 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Canard\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-21T04:16:35+00:00\n"
+"PO-Revision-Date: 2024-06-12 12:47:49+0000\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:99
+msgid "Red"
+msgstr "Sarkana"
+
+#: functions.php:74
+msgid "Black"
+msgstr "Melna"
+
+#: functions.php:94
+msgid "White"
+msgstr "Balta"
+
+#: functions.php:89
+msgid "Light Gray"
+msgstr "Gaiši pelēks"
+
+#: functions.php:79
+msgid "Dark Gray"
+msgstr "Tumši pelēks"
+
+#: inc/wpcom-colors.php:324
+msgid "Background"
+msgstr "Fons"
+
+#. translators: %s: Name of current post.
+#. translators: %s: Name of current post
+#: content.php:45
+#: inc/extras.php:99
+msgid "Continue reading %s"
+msgstr "Turpināt %s lasīšanu"
+
+#. Author URI of the theme
+#: style.css
+msgid "https://wordpress.com/themes/"
+msgstr "https://wordpress.com/themes/"
+
+#. Author of the theme
+#: style.css
+msgid "Automattic"
+msgstr "Automātisks"
+
+#: single.php:29
+msgid "Next"
+msgstr "Nākamais"
+
+#: single.php:29
+msgid "Next post:"
+msgstr "Nākamais raksts:"
+
+#: single.php:30
+msgid "Previous"
+msgstr "Iepriekšējais"
+
+#: single.php:30
+msgid "Previous post:"
+msgstr "Iepriekšējais raksts:"
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr "Meklēšanas rezultāti: %s"
+
+#: inc/template-tags.php:199
+msgid "Archives"
+msgstr "Arhīvi"
+
+#: inc/template-tags.php:193
+msgid "Archives: %s"
+msgstr "Arhīvi: %s"
+
+#. translators: 1: Taxonomy singular name, 2: Current taxonomy term
+#: inc/template-tags.php:197
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/template-tags.php:188
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr "Audio"
+
+#: inc/template-tags.php:190
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr "Tērzēšana"
+
+#: inc/template-tags.php:186
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr "Statusi"
+
+#: inc/template-tags.php:184
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Saites"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Video"
+
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Citāti"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Galerijas"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Attēli"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Piezīmes"
+
+#: inc/template-tags.php:167
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-tags.php:169
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-tags.php:169
+msgid "Month: %s"
+msgstr "Mēnesis: %s"
+
+#: inc/template-tags.php:171
+msgid "Day: %s"
+msgstr "Diena: %s"
+
+#: inc/template-tags.php:171
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "j. F, Y"
+
+#: inc/template-tags.php:167
+msgid "Year: %s"
+msgstr "Gads: %s"
+
+#: inc/template-tags.php:165
+msgid "Author: %s"
+msgstr "Autors: %s"
+
+#: inc/template-tags.php:163
+msgid "Tag: %s"
+msgstr "Birka: %s"
+
+#: inc/template-tags.php:161
+msgid "Category: %s"
+msgstr "Kategorijas: %s"
+
+#: inc/template-tags.php:124
+msgid "1 Comment"
+msgstr "1 komentārs"
+
+#: inc/template-tags.php:124
+msgid "% Comments"
+msgstr "% komentāri"
+
+#: inc/template-tags.php:124
+msgid "Leave a comment"
+msgstr "Komentēt"
+
+#: inc/template-tags.php:57
+msgid "Post navigation"
+msgstr "Rakstu navigācija"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:76
+#: inc/template-tags.php:140
+msgid ", "
+msgstr ","
+
+#: inc/template-tags.php:32
+msgid "Newer posts"
+msgstr "Jaunākas ziņas"
+
+#: inc/template-tags.php:24
+msgid "Posts navigation"
+msgstr "Rakstu navigācija"
+
+#: inc/template-tags.php:28
+msgid "Older posts"
+msgstr "Vecākas ziņas"
+
+#: inc/customizer.php:21
+msgid "Theme Options"
+msgstr "Tēmas opcijas"
+
+#: inc/extras.php:53
+msgid "Page %s"
+msgstr "Lapa %s"
+
+#: header.php:78
+msgid "Search"
+msgstr "Meklēt"
+
+#. translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:195
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "on"
+
+#: header.php:23
+msgid "Skip to content"
+msgstr "Doties uz saturu"
+
+#: header.php:73
+msgid "Primary Menu"
+msgstr "Galvenā izvēlne"
+
+#. translators: If there are characters in your language that are not supported
+#. by Playfair Display, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:234
+msgctxt "Playfair Display font: on or off"
+msgid "on"
+msgstr "ieslēgts"
+
+#. translators: If there are characters in your language that are not supported
+#. by PT Serif, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:229
+msgctxt "PT Serif font: on or off"
+msgid "on"
+msgstr "ieslēgts"
+
+#: functions.php:167
+msgid "Footer"
+msgstr "Kājene"
+
+#. translators: If there are characters in your language that are not supported
+#. by Lato, translate this to 'off'. Do not translate into your own language.
+#: functions.php:190
+msgctxt "Lato font: on or off"
+msgid "on"
+msgstr "on"
+
+#: functions.php:155
+#: sidebar.php:15
+msgid "Sidebar"
+msgstr "Sānumala"
+
+#: footer.php:55
+msgid "Theme: %1$s by %2$s."
+msgstr "Tēma: %1$s no %2$s."
+
+#: footer.php:53
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: footer.php:53
+msgid "Proudly powered by %s"
+msgstr "Lepni darbina %s"
+
+#: content.php:21
+msgid "Sticky post"
+msgstr "Pielīmētie raksti"
+
+#: content-page.php:36
+#: inc/template-tags.php:143
+msgid "Edit"
+msgstr "Labot"
+
+#: content-page.php:29
+#: content-single.php:30
+msgid "Page"
+msgstr "Lapa"
+
+#: content-page.php:25
+#: content-single.php:26
+msgid "Pages:"
+msgstr "Lapas:"
+
+#: content-none.php:29
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Izskatās, ka mēs nevaram atrast to ko meklējat. Iespējams meklēšana var palīdzēt."
+
+#: content-none.php:24
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Diemžēl, bet nekas netika atrasts. Mēģiniet vēlreiz izmantojot citus atslēgvārdus."
+
+#: content-none.php:20
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "Esat gatavi publicēt savu pirmo rakstu? <a href=\"%1$s\">Sāciet te</a>."
+
+#: content-none.php:14
+msgid "Nothing Found"
+msgstr "Nekas nav atrasts"
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr "Komentēšana ir slēgta."
+
+#: comments.php:48
+msgid "Newer Comments"
+msgstr "Jaunāki komentāri"
+
+#: comments.php:47
+msgid "Older Comments"
+msgstr "Senāki komentāri"
+
+#: comments.php:46
+msgid "Comment navigation"
+msgstr "Komentāru navigācija"
+
+#: comments.php:29
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "%1$s doma par &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s domas par &ldquo;%2$s&rdquo;"
+msgstr[2] "%1$s domu par &ldquo;%2$s&rdquo;"
+
+#: author-bio.php:32
+msgid "View all posts by %s"
+msgstr "Skatīt visus %s rakstus"
+
+#: author-bio.php:25
+msgid "Published by"
+msgstr "Publicējis"
+
+#: 404.php:21
+msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
+msgstr "Izskatās, ka šajā vietā nekas netika atrasts. Mēģini kādu no zemāk redzamajām saitēm vai meklētāju!"
+
+#: 404.php:17
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Opā! Tāda lapa nav atrodama."

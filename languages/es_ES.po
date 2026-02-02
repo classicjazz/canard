@@ -1,0 +1,362 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Canard\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-11-16T01:46:13+00:00\n"
+"PO-Revision-Date: 2021-11-14 16:39:12+0000\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:98
+msgid "Red"
+msgstr "Rojo"
+
+#: functions.php:73
+msgid "Black"
+msgstr "Negro"
+
+#: functions.php:78
+msgid "Dark Gray"
+msgstr "Gris oscuro"
+
+#: functions.php:93
+msgid "White"
+msgstr "Blanco"
+
+#: functions.php:88
+msgid "Light Gray"
+msgstr "Gris claro"
+
+#: functions.php:83
+msgid "Medium Gray"
+msgstr "Gris medio"
+
+#. translators: %s: Name of current post.
+#. translators: %s: Name of current post
+#: content.php:44
+#: inc/extras.php:98
+msgid "Continue reading %s"
+msgstr "Continúa leyendo %s"
+
+#. Author of the theme
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Author URI of the theme
+msgid "https://wordpress.com/themes/"
+msgstr "https://wordpress.com/themes/"
+
+#. Description of the theme
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "Un tema flexible y versátil, perfecto para revistas, sitios de noticias y blogs. Te permite destacar artículos específicos en la página de inicio y equilibra la legibilidad con un potente uso de la fotografía, todo ello en un diseño que funciona en cualquier dispositivo."
+
+#: single.php:28
+msgid "Next"
+msgstr "Siguiente"
+
+#: single.php:28
+msgid "Next post:"
+msgstr "Entrada siguiente:"
+
+#: single.php:29
+msgid "Previous"
+msgstr "Anterior"
+
+#: single.php:29
+msgid "Previous post:"
+msgstr "Entrada anterior:"
+
+#: search.php:17
+msgid "Search Results for: %s"
+msgstr "Resultados de búsqueda por: %s"
+
+#: inc/template-tags.php:186
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr "Audio"
+
+#: inc/template-tags.php:188
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr "Chats"
+
+#: inc/template-tags.php:191
+msgid "Archives: %s"
+msgstr "Archivos: %s"
+
+#. translators: 1: Taxonomy singular name, 2: Current taxonomy term
+#: inc/template-tags.php:195
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/template-tags.php:197
+msgid "Archives"
+msgstr "Archivos"
+
+#: inc/template-tags.php:172
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Asides"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Galerías"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Imágenes"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Vídeos"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Citas"
+
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Enlaces"
+
+#: inc/template-tags.php:184
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr "Estatus"
+
+#: inc/template-tags.php:165
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-tags.php:167
+msgid "Month: %s"
+msgstr "Mes: %s"
+
+#: inc/template-tags.php:167
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-tags.php:169
+msgid "Day: %s"
+msgstr "Día: %s"
+
+#: inc/template-tags.php:169
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "j F, Y"
+
+#: inc/template-tags.php:159
+msgid "Category: %s"
+msgstr "Categoría: %s"
+
+#: inc/template-tags.php:161
+msgid "Tag: %s"
+msgstr "Etiqueta: %s"
+
+#: inc/template-tags.php:163
+msgid "Author: %s"
+msgstr "Autor: %s"
+
+#: inc/template-tags.php:165
+msgid "Year: %s"
+msgstr "Año: %s"
+
+#: inc/template-tags.php:123
+msgid "% Comments"
+msgstr "% comentarios"
+
+#: inc/template-tags.php:123
+msgid "1 Comment"
+msgstr "1 Comentario"
+
+#: inc/template-tags.php:123
+msgid "Leave a comment"
+msgstr "Deja un comentario"
+
+#: inc/template-tags.php:31
+msgid "Newer posts"
+msgstr "Entradas recientes"
+
+#: inc/template-tags.php:56
+msgid "Post navigation"
+msgstr "Navegador de entradas"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:75
+#: inc/template-tags.php:139
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:23
+msgid "Posts navigation"
+msgstr "Ir a las entradas"
+
+#: inc/template-tags.php:27
+msgid "Older posts"
+msgstr "Entradas antiguas"
+
+#: inc/jetpack.php:20
+msgid "The featured content section displays on the front page above the header."
+msgstr "La sección de destacados aparece en la portada sobre el encabezado."
+
+#: inc/customizer.php:20
+msgid "Theme Options"
+msgstr "Opciones del tema"
+
+#: inc/extras.php:52
+msgid "Page %s"
+msgstr "Página %s"
+
+#: inc/customizer.php:29
+msgid "Show author bio on single posts."
+msgstr "Mostrar biografía del autor en entradas individuales."
+
+#: header.php:77
+msgid "Search"
+msgstr "Buscar"
+
+#. translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:194
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "activa"
+
+#. translators: If there are characters in your language that are not supported
+#. by PT Serif, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:228
+msgctxt "PT Serif font: on or off"
+msgid "on"
+msgstr "on"
+
+#. translators: If there are characters in your language that are not supported
+#. by Playfair Display, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:233
+msgctxt "Playfair Display font: on or off"
+msgid "on"
+msgstr "on"
+
+#: header.php:22
+msgid "Skip to content"
+msgstr "Ir al contenido"
+
+#: header.php:72
+msgid "Primary Menu"
+msgstr "Menú Principal"
+
+#: functions.php:166
+msgid "Footer"
+msgstr "Pie de página"
+
+#. translators: If there are characters in your language that are not supported
+#. by Lato, translate this to 'off'. Do not translate into your own language.
+#: functions.php:189
+msgctxt "Lato font: on or off"
+msgid "on"
+msgstr "on"
+
+#: footer.php:54
+msgid "Theme: %1$s by %2$s."
+msgstr "Tema: %1$s por %2$s."
+
+#: functions.php:154
+#: sidebar.php:14
+msgid "Sidebar"
+msgstr "Barra lateral"
+
+#: footer.php:52
+msgid "http://wordpress.org/"
+msgstr "http://es.wordpress.org/"
+
+#: footer.php:52
+msgid "Proudly powered by %s"
+msgstr "Orgullosamente ofrecido por %s"
+
+#: content.php:20
+msgid "Sticky post"
+msgstr "Entrada fija"
+
+#: content-page.php:35
+#: inc/template-tags.php:142
+msgid "Edit"
+msgstr "Editar"
+
+#: content-page.php:28
+#: content-single.php:29
+msgid "Page"
+msgstr "Página"
+
+#: content-page.php:24
+#: content-single.php:25
+msgid "Pages:"
+msgstr "Páginas:"
+
+#: content-none.php:28
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Parece que no podemos encontrar lo que estás buscando. Tal vez la búsqueda le pueda ayudar."
+
+#: content-none.php:23
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Lo sentimos, pero nada coincidió con su búsqueda. Por favor inténtelo de nuevo con otras palabras clave."
+
+#: content-none.php:19
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "¿Preparado para publicar tu primera entrada? <a href=\"%1$s\">Empieza aquí</a>."
+
+#: content-none.php:13
+msgid "Nothing Found"
+msgstr "No se ha encontrado nada"
+
+#: comments.php:57
+msgid "Comments are closed."
+msgstr "Los comentarios están cerrados."
+
+#: comments.php:47
+msgid "Newer Comments"
+msgstr "Comentarios más recientes"
+
+#: comments.php:46
+msgid "Older Comments"
+msgstr "Comentarios anteriores"
+
+#: comments.php:45
+msgid "Comment navigation"
+msgstr "Navegación de comentarios"
+
+#: comments.php:28
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "Un comentario en &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s comentarios en &ldquo;%2$s&rdquo;"
+
+#: author-bio.php:31
+msgid "View all posts by %s"
+msgstr "Ver todas las entradas de %s"
+
+#: author-bio.php:24
+msgid "Published by"
+msgstr "Publicado por"
+
+#: 404.php:20
+msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
+msgstr "Parece que no se encontró nada en esta ubicación. ¿Quizás pruebes con uno de los enlaces de abajo o una búsqueda?"
+
+#: 404.php:16
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "¡Vaya! Esa página no se puede encontrar."

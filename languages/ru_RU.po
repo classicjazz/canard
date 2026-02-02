@@ -1,0 +1,353 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Canard\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-21T04:16:48+00:00\n"
+"PO-Revision-Date: 2024-06-12 12:02:33+0000\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:99
+msgid "Red"
+msgstr "Красный"
+
+#: functions.php:74
+msgid "Black"
+msgstr "Чёрный"
+
+#: functions.php:79
+msgid "Dark Gray"
+msgstr "Темно-серый"
+
+#: functions.php:94
+msgid "White"
+msgstr "Белый"
+
+#: functions.php:89
+msgid "Light Gray"
+msgstr "Светло-серая"
+
+#: inc/wpcom-colors.php:561
+msgid "Accent"
+msgstr "Акцент"
+
+#: inc/wpcom-colors.php:324
+msgid "Background"
+msgstr "Фон"
+
+#: inc/wpcom-colors.php:444
+msgid "Contrast"
+msgstr "Контраст"
+
+#. translators: %s: Name of current post.
+#. translators: %s: Name of current post
+#: content.php:45
+#: inc/extras.php:99
+msgid "Continue reading %s"
+msgstr "Продолжить чтение %s"
+
+#. Author of the theme
+#: style.css
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Author URI of the theme
+#: style.css
+msgid "https://wordpress.com/themes/"
+msgstr "https://wordpress.com/themes/"
+
+#: single.php:29
+msgid "Next"
+msgstr "Далее"
+
+#: single.php:29
+msgid "Next post:"
+msgstr "Следующая запись:"
+
+#: single.php:30
+msgid "Previous"
+msgstr "Назад"
+
+#: single.php:30
+msgid "Previous post:"
+msgstr "Предыдущая запись:"
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr "Результаты поиска для: %s"
+
+#: inc/template-tags.php:188
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr "Аудио"
+
+#: inc/template-tags.php:190
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr "Чаты"
+
+#: inc/template-tags.php:193
+msgid "Archives: %s"
+msgstr "Архивы: %s"
+
+#. translators: 1: Taxonomy singular name, 2: Current taxonomy term
+#: inc/template-tags.php:197
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/template-tags.php:199
+msgid "Archives"
+msgstr "Архивы"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Заметки"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Галереи"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Изображения"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Видео"
+
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Цитаты"
+
+#: inc/template-tags.php:184
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Ссылки"
+
+#: inc/template-tags.php:186
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr "Статусы"
+
+#: inc/template-tags.php:167
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-tags.php:169
+msgid "Month: %s"
+msgstr "Месяц: %s"
+
+#: inc/template-tags.php:169
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-tags.php:171
+msgid "Day: %s"
+msgstr "День: %s"
+
+#: inc/template-tags.php:171
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "d.m.Y"
+
+#: inc/template-tags.php:161
+msgid "Category: %s"
+msgstr "Рубрика: %s"
+
+#: inc/template-tags.php:163
+msgid "Tag: %s"
+msgstr "Метка: %s"
+
+#: inc/template-tags.php:165
+msgid "Author: %s"
+msgstr "Автор: %s"
+
+#: inc/template-tags.php:167
+msgid "Year: %s"
+msgstr "Год: %s"
+
+#: inc/template-tags.php:124
+msgid "1 Comment"
+msgstr "1 комментарий"
+
+#: inc/template-tags.php:124
+msgid "% Comments"
+msgstr "Комментарии (%)"
+
+#: inc/template-tags.php:124
+msgid "Leave a comment"
+msgstr "Оставить комментарий"
+
+#: inc/template-tags.php:32
+msgid "Newer posts"
+msgstr "Следующие записи"
+
+#: inc/template-tags.php:57
+msgid "Post navigation"
+msgstr "Навигация по записям"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:76
+#: inc/template-tags.php:140
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:24
+msgid "Posts navigation"
+msgstr "Навигация по записям"
+
+#: inc/template-tags.php:28
+msgid "Older posts"
+msgstr "Предыдущие записи"
+
+#: inc/customizer.php:21
+msgid "Theme Options"
+msgstr "Настройки темы"
+
+#: inc/extras.php:53
+msgid "Page %s"
+msgstr "Страница %s"
+
+#: header.php:78
+msgid "Search"
+msgstr "Поиск"
+
+#. translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:195
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "on"
+
+#. translators: If there are characters in your language that are not supported
+#. by PT Serif, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:229
+msgctxt "PT Serif font: on or off"
+msgid "on"
+msgstr "on"
+
+#: header.php:23
+msgid "Skip to content"
+msgstr "Перейти к содержимому"
+
+#: header.php:73
+msgid "Primary Menu"
+msgstr "Основное меню"
+
+#: functions.php:167
+msgid "Footer"
+msgstr "Подвал"
+
+#. translators: If there are characters in your language that are not supported
+#. by Lato, translate this to 'off'. Do not translate into your own language.
+#: functions.php:190
+msgctxt "Lato font: on or off"
+msgid "on"
+msgstr "on"
+
+#: footer.php:55
+msgid "Theme: %1$s by %2$s."
+msgstr "Тема: %1$s, автор: %2$s."
+
+#: functions.php:155
+#: sidebar.php:15
+msgid "Sidebar"
+msgstr "Боковая колонка"
+
+#: footer.php:53
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: footer.php:53
+msgid "Proudly powered by %s"
+msgstr "Сайт работает на %s"
+
+#: content.php:21
+msgid "Sticky post"
+msgstr "Запись-липучка"
+
+#: content-page.php:36
+#: inc/template-tags.php:143
+msgid "Edit"
+msgstr "Изменить"
+
+#: content-page.php:29
+#: content-single.php:30
+msgid "Page"
+msgstr "страница"
+
+#: content-page.php:25
+#: content-single.php:26
+msgid "Pages:"
+msgstr "Страниц:"
+
+#: content-none.php:29
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Запрошенную информацию найти не удалось. Возможно, будет полезен поиск по сайту."
+
+#: content-none.php:24
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Извините, по вашему запросу ничего не найдено. Попробуйте другие ключевые слова."
+
+#: content-none.php:20
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "Готовы опубликовать свою первую запись? <a href=\"%1$s\">Начните отсюда</a>."
+
+#: content-none.php:14
+msgid "Nothing Found"
+msgstr "Ничего не найдено"
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr "Обсуждение закрыто."
+
+#: comments.php:48
+msgid "Newer Comments"
+msgstr "Следующие комментарии"
+
+#: comments.php:47
+msgid "Older Comments"
+msgstr "Предыдущие комментарии"
+
+#: comments.php:46
+msgid "Comment navigation"
+msgstr "Навигация по комментариям"
+
+#: comments.php:29
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "%2$s: %1$s комментарий"
+msgstr[1] "%2$s: %1$s комментария"
+msgstr[2] "%2$s: %1$s комментариев"
+
+#: author-bio.php:32
+msgid "View all posts by %s"
+msgstr "Посмотреть все записи автора %s"
+
+#: author-bio.php:25
+msgid "Published by"
+msgstr "Автор"
+
+#: 404.php:21
+msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
+msgstr "По этому адресу ничего не найдено. Воспользуйтесь одной из следующих ссылок или поиском."
+
+#: 404.php:17
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Ошибка. Страница не найдена."

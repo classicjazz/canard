@@ -1,0 +1,352 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Canard\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-21T04:17:05+00:00\n"
+"PO-Revision-Date: 2024-09-15 08:39:06+0000\n"
+"Language: vi_VN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:99
+msgid "Red"
+msgstr "Đỏ"
+
+#: functions.php:74
+msgid "Black"
+msgstr "Đen"
+
+#: functions.php:94
+msgid "White"
+msgstr "Trắng"
+
+#: functions.php:89
+msgid "Light Gray"
+msgstr "Light Gray"
+
+#: functions.php:79
+msgid "Dark Gray"
+msgstr "Dark Gray"
+
+#: functions.php:84
+msgid "Medium Gray"
+msgstr "Xám vừa"
+
+#: inc/wpcom-colors.php:324
+msgid "Background"
+msgstr "Nền"
+
+#. translators: %s: Name of current post.
+#. translators: %s: Name of current post
+#: content.php:45
+#: inc/extras.php:99
+msgid "Continue reading %s"
+msgstr "Đọc tiếp %s"
+
+#. Author of the theme
+#: style.css
+msgid "Automattic"
+msgstr "Tự động"
+
+#. Author URI of the theme
+#: style.css
+msgid "https://wordpress.com/themes/"
+msgstr "https://wordpress.com/themes/"
+
+#. Description of the theme
+#: style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "Một giao diện linh hoạt và đa năng hoàn hảo cho tạp chí, trang web tin tức và blog. Nó cho phép bạn làm nổi bật các bài viết cụ thể trên trang chủ và cân bằng khả năng đọc với việc sử dụng hình ảnh mạnh mẽ - tất cả đều trong một bố cục hoạt động trên mọi thiết bị."
+
+#: single.php:29
+msgid "Next"
+msgstr "Tiếp tục"
+
+#: single.php:30
+msgid "Previous"
+msgstr "Trước"
+
+#: single.php:30
+msgid "Previous post:"
+msgstr "Bài cũ hơn:"
+
+#: single.php:29
+msgid "Next post:"
+msgstr "Bài tiếp theo:"
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr "Kết quả tìm kiếm của: %s"
+
+#: inc/template-tags.php:199
+msgid "Archives"
+msgstr "Lưu trữ"
+
+#: inc/template-tags.php:190
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr "Tán gẫu"
+
+#: inc/template-tags.php:188
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr "Âm thanh"
+
+#. translators: 1: Taxonomy singular name, 2: Current taxonomy term
+#: inc/template-tags.php:197
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/template-tags.php:193
+msgid "Archives: %s"
+msgstr "Lưu trữ: %s"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Trích đoạn bài viết"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Hình ảnh"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Bộ sưu tập"
+
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Trích dẫn"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Video"
+
+#: inc/template-tags.php:184
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Đường dẫn"
+
+#: inc/template-tags.php:186
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr "Trạng thái"
+
+#: inc/template-tags.php:167
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "N"
+
+#: inc/template-tags.php:169
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F N"
+
+#: inc/template-tags.php:171
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "F j, Y"
+
+#: inc/template-tags.php:171
+msgid "Day: %s"
+msgstr "Ngày: %s"
+
+#: inc/template-tags.php:169
+msgid "Month: %s"
+msgstr "Tháng: %s"
+
+#: inc/template-tags.php:163
+msgid "Tag: %s"
+msgstr "Thẻ: %s "
+
+#: inc/template-tags.php:161
+msgid "Category: %s"
+msgstr "Chuyên mục: %s"
+
+#: inc/template-tags.php:165
+msgid "Author: %s"
+msgstr "Tác giả: %s"
+
+#: inc/template-tags.php:167
+msgid "Year: %s"
+msgstr "Năm: %s"
+
+#: inc/template-tags.php:124
+msgid "1 Comment"
+msgstr "1 Bình luận"
+
+#: inc/template-tags.php:124
+msgid "% Comments"
+msgstr "% phản hồi"
+
+#: inc/template-tags.php:124
+msgid "Leave a comment"
+msgstr "Để lại bình luận"
+
+#: inc/template-tags.php:57
+msgid "Post navigation"
+msgstr "Điều hướng bài viết"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:76
+#: inc/template-tags.php:140
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:32
+msgid "Newer posts"
+msgstr "Các bài viết mới hơn"
+
+#: inc/template-tags.php:24
+msgid "Posts navigation"
+msgstr "Điều hướng các bài viết"
+
+#: inc/template-tags.php:28
+msgid "Older posts"
+msgstr "Post cũ hơn"
+
+#: inc/customizer.php:21
+msgid "Theme Options"
+msgstr "Tùy chỉnh cho giao diện"
+
+#: inc/extras.php:53
+msgid "Page %s"
+msgstr "Trang %s"
+
+#: header.php:78
+msgid "Search"
+msgstr "Tìm kiếm"
+
+#: header.php:23
+msgid "Skip to content"
+msgstr "Bỏ qua nội dung"
+
+#: header.php:73
+msgid "Primary Menu"
+msgstr "Menu chính"
+
+#. translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:195
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "on"
+
+#. translators: If there are characters in your language that are not supported
+#. by PT Serif, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:229
+msgctxt "PT Serif font: on or off"
+msgid "on"
+msgstr "bật"
+
+#: functions.php:167
+msgid "Footer"
+msgstr "Footer"
+
+#. translators: If there are characters in your language that are not supported
+#. by Lato, translate this to 'off'. Do not translate into your own language.
+#: functions.php:190
+msgctxt "Lato font: on or off"
+msgid "on"
+msgstr "bật"
+
+#: functions.php:155
+#: sidebar.php:15
+msgid "Sidebar"
+msgstr "Thanh bên"
+
+#: footer.php:55
+msgid "Theme: %1$s by %2$s."
+msgstr "Theme: %1$s by %2$s."
+
+#: footer.php:53
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: footer.php:53
+msgid "Proudly powered by %s"
+msgstr "Tự hào được hỗ trợ bởi %s"
+
+#: content.php:21
+msgid "Sticky post"
+msgstr "Bài viết đáng chú ý"
+
+#: content-page.php:36
+#: inc/template-tags.php:143
+msgid "Edit"
+msgstr "Sửa"
+
+#: content-page.php:29
+#: content-single.php:30
+msgid "Page"
+msgstr "Trang"
+
+#: content-page.php:25
+#: content-single.php:26
+msgid "Pages:"
+msgstr "Trang:"
+
+#: content-none.php:29
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Có vẻ như chúng tôi không thể tìm ra cái mà bạn đang muốn. Có lẽ việc tìm kiếm có thể giúp bạn."
+
+#: content-none.php:24
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Xin lỗi, nhưng không có gì phù hợp với cái bạn tìm kiếm. Vui lòng thử lại với một vài từ khoá khác."
+
+#: content-none.php:20
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "Bạn đã sẵn sàng xuất bản bài đầu tiên? <a href=\"%1$s\">Bắt đầu tại đây</a>."
+
+#: content-none.php:14
+msgid "Nothing Found"
+msgstr "Không tìm thấy"
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr "Bình luận đã được đóng."
+
+#: comments.php:48
+msgid "Newer Comments"
+msgstr "Bình luận mới"
+
+#: comments.php:47
+msgid "Older Comments"
+msgstr "Bình luận cũ"
+
+#: comments.php:46
+msgid "Comment navigation"
+msgstr "Điều hướng bình luận"
+
+#: comments.php:29
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "Một suy nghĩ %1$s thoughts on &ldquo;%2$s&rdquo;"
+
+#: author-bio.php:32
+msgid "View all posts by %s"
+msgstr "Xem các bài viết của %s"
+
+#: author-bio.php:25
+msgid "Published by"
+msgstr "Được xuất bản bởi"
+
+#: 404.php:21
+msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
+msgstr "Không tìm thấy gì ở đây. Thử tìm thứ khác hoặc chọn một trong những liên kết dưới đây?"
+
+#: 404.php:17
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Oops! Không tìm thấy trang này."
