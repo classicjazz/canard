@@ -1,0 +1,402 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Canard\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-03-05T01:52:03+00:00\n"
+"PO-Revision-Date: 2025-01-06 14:14:40+0000\n"
+"Language: is\n"
+"Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:99
+msgid "Red"
+msgstr "Rauður"
+
+#: functions.php:94
+msgid "White"
+msgstr "Hvítur"
+
+#: functions.php:89
+msgid "Light Gray"
+msgstr "Ljós grár"
+
+#: functions.php:84
+msgid "Medium Gray"
+msgstr "Miðlungs grár"
+
+#: functions.php:79
+msgid "Dark Gray"
+msgstr "Dökk grár"
+
+#: functions.php:74
+msgid "Black"
+msgstr "Svart"
+
+#: inc/wpcom-colors.php:561
+msgid "Accent"
+msgstr "Hreimur"
+
+#: inc/wpcom-colors.php:444
+msgid "Contrast"
+msgstr "Birtuskil"
+
+#: inc/wpcom-colors.php:324
+msgid "Background"
+msgstr "Bakgrunnur"
+
+#. translators: %s: Name of current post.
+#. translators: %s: Name of current post
+#: content.php:45
+#: inc/extras.php:99
+msgid "Continue reading %s"
+msgstr "Halda áfram að lesa: %s"
+
+#. Author URI of the theme
+#: style.css
+msgid "https://wordpress.com/themes/"
+msgstr "https://wordpress.com/themes/"
+
+#. Author of the theme
+#: style.css
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://wordpress.com/themes/canard/"
+msgstr "https://wordpress.com/themes/canard/"
+
+#. Theme Name of the theme
+#: style.css
+msgid "Canard"
+msgstr "Canard"
+
+#: single.php:30
+msgid "Previous post:"
+msgstr "Síðasta grein:"
+
+#: single.php:30
+msgid "Previous"
+msgstr "Til baka"
+
+#: single.php:29
+msgid "Next post:"
+msgstr "Næsta grein:"
+
+#: single.php:29
+msgid "Next"
+msgstr "Næst"
+
+#: search.php:18
+msgid "Search Results for: %s"
+msgstr "Leitarniðurstöður fyrir: %s"
+
+#: inc/template-tags.php:199
+msgid "Archives"
+msgstr "Færslusöfn"
+
+#. translators: 1: Taxonomy singular name, 2: Current taxonomy term
+#: inc/template-tags.php:197
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/template-tags.php:193
+msgid "Archives: %s"
+msgstr "Færslusafn: %s"
+
+#: inc/template-tags.php:190
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr "Samtöl"
+
+#: inc/template-tags.php:188
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr "Hljóðskrár"
+
+#: inc/template-tags.php:186
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr "Stöður"
+
+#: inc/template-tags.php:184
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Tenglar"
+
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Tilvitnanir"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Myndbönd"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Myndir"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Myndasöfn"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Innskot"
+
+#: inc/template-tags.php:171
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "j. F, Y"
+
+#: inc/template-tags.php:171
+msgid "Day: %s"
+msgstr "Dagur: %s"
+
+#: inc/template-tags.php:169
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "M Á"
+
+#: inc/template-tags.php:169
+msgid "Month: %s"
+msgstr "Mánuður: %s"
+
+#: inc/template-tags.php:167
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Á"
+
+#: inc/template-tags.php:167
+msgid "Year: %s"
+msgstr "Ár: %s"
+
+#: inc/template-tags.php:165
+msgid "Author: %s"
+msgstr "Höfundur: %s"
+
+#: inc/template-tags.php:163
+msgid "Tag: %s"
+msgstr "Efnisorð: %s"
+
+#: inc/template-tags.php:161
+msgid "Category: %s"
+msgstr "Flokkur: %s"
+
+#: inc/template-tags.php:124
+msgid "% Comments"
+msgstr "% athugasemdir"
+
+#: inc/template-tags.php:124
+msgid "1 Comment"
+msgstr "1 athugasemd"
+
+#: inc/template-tags.php:124
+msgid "Leave a comment"
+msgstr "Skildu eftir athugasemd"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:76
+#: inc/template-tags.php:140
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:57
+msgid "Post navigation"
+msgstr "Leiðarkerfi færslna"
+
+#: inc/template-tags.php:32
+msgid "Newer posts"
+msgstr "Nýrri færslur"
+
+#: inc/template-tags.php:28
+msgid "Older posts"
+msgstr "Eldri færslur"
+
+#: inc/template-tags.php:24
+msgid "Posts navigation"
+msgstr "Leiðarstýring færslna"
+
+#: inc/jetpack.php:21
+msgid "The featured content section displays on the front page above the header."
+msgstr "Þetta svæði birtir efnisáherslur á forsíðu fyrir ofan haus."
+
+#: inc/extras.php:53
+msgid "Page %s"
+msgstr "Síða %s"
+
+#: inc/customizer.php:30
+msgid "Show author bio on single posts."
+msgstr "Birta upplýsingar um höfund á stökum færslum."
+
+#: inc/customizer.php:21
+msgid "Theme Options"
+msgstr "Býður valkosti"
+
+#: header.php:78
+msgid "Search"
+msgstr "Leita"
+
+#: header.php:73
+msgid "Primary Menu"
+msgstr "Aðalvalmynd"
+
+#: header.php:23
+msgid "Skip to content"
+msgstr "Fara að efni"
+
+#. translators: If there are characters in your language that are not supported
+#. by Playfair Display, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:234
+msgctxt "Playfair Display font: on or off"
+msgid "on"
+msgstr "virkt"
+
+#. translators: If there are characters in your language that are not supported
+#. by PT Serif, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:229
+msgctxt "PT Serif font: on or off"
+msgid "on"
+msgstr "virkt"
+
+#. translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:195
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "virkt"
+
+#. translators: If there are characters in your language that are not supported
+#. by Lato, translate this to 'off'. Do not translate into your own language.
+#: functions.php:190
+msgctxt "Lato font: on or off"
+msgid "on"
+msgstr "virkt"
+
+#: functions.php:167
+msgid "Footer"
+msgstr "Síðufótur"
+
+#: functions.php:155
+#: sidebar.php:15
+msgid "Sidebar"
+msgstr "Hliðarslá"
+
+#: functions.php:112
+msgid "Social Location"
+msgstr "Staðsetning samfélagsmiðla"
+
+#: functions.php:111
+msgid "Footer Location"
+msgstr "Staðsetning í fæti"
+
+#: functions.php:110
+msgid "Secondary Location"
+msgstr "Seinni staðsetning"
+
+#: functions.php:109
+msgid "Primary Location"
+msgstr "Aðalstaðsetning"
+
+#: footer.php:55
+msgid "Theme: %1$s by %2$s."
+msgstr "Þema: %1$s eftir %2$s."
+
+#: footer.php:53
+msgid "Proudly powered by %s"
+msgstr "Keyrt með stolti á %s"
+
+#: footer.php:53
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: content.php:21
+msgid "Sticky post"
+msgstr "Heftanlegar færslur"
+
+#: content-page.php:36
+#: inc/template-tags.php:143
+msgid "Edit"
+msgstr "Breyta"
+
+#: content-page.php:29
+#: content-single.php:30
+msgid "Page"
+msgstr "Síða"
+
+#: content-page.php:25
+#: content-single.php:26
+msgid "Pages:"
+msgstr "Síður:"
+
+#: content-none.php:29
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Það lítur út fyrir að við finnum ekki það sem þú sækist eftir. Hugsanlega hjálpar til að nota leitina."
+
+#: content-none.php:24
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Því miður, ekkert fannst sem passaði við leitarskilyrðin. Vinsamlega reyndu aftur með öðrum leitarorðum."
+
+#: content-none.php:20
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "Tilbúin(n) til að birta fyrstu færsluna þína? <a href=\"%1$s\">Byrjaðu hér</a>."
+
+#: content-none.php:14
+msgid "Nothing Found"
+msgstr "Ekkert fannst"
+
+#: content-link.php:9
+msgid "External link to %s"
+msgstr "Útvær tengill á %s"
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr "Lokað er á athugasemdir."
+
+#: comments.php:48
+msgid "Newer Comments"
+msgstr "Nýrri athugasemdir"
+
+#: comments.php:47
+msgid "Older Comments"
+msgstr "Eldri athugasemdir"
+
+#: comments.php:46
+msgid "Comment navigation"
+msgstr "Leiðastýring athugasemda"
+
+#: comments.php:29
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "%1$s athugasemd við &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s athugasemdir við &ldquo;%2$s&rdquo;"
+
+#: author-bio.php:32
+msgid "View all posts by %s"
+msgstr "Skoða allar færslur eftir %s"
+
+#: author-bio.php:25
+msgid "Published by"
+msgstr "Gefið út af"
+
+#: 404.php:21
+msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
+msgstr "Svo virðist sem ekkert hafi fundist á þessari slóð. Þú gætir reynt einn af tenglunum hér að neðan eða leitina?"
+
+#: 404.php:17
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Úbbs! Þessi síða fannst ekki."

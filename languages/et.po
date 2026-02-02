@@ -1,0 +1,328 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress.com - Themes - Canard\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-02-04T00:57:38+00:00\n"
+"PO-Revision-Date: 2020-04-11 17:09:03+0000\n"
+"Language: et_EE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+
+#: functions.php:99
+msgid "Red"
+msgstr "Punane"
+
+#: functions.php:74
+msgid "Black"
+msgstr "Must"
+
+#: functions.php:94
+msgid "White"
+msgstr "Valge"
+
+#: functions.php:79
+msgid "Dark Gray"
+msgstr "Tumehall"
+
+#: functions.php:84
+msgid "Medium Gray"
+msgstr "Hall"
+
+#: functions.php:89
+msgid "Light Gray"
+msgstr "Helehall"
+
+#: inc/wpcom-colors.php:323
+msgid "Background"
+msgstr "Taust"
+
+#. translators: %s: Name of current post.
+#. translators: %s: Name of current post
+#: content.php:44
+#: inc/extras.php:98
+msgid "Continue reading %s"
+msgstr "Loe edasi: %s"
+
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic"
+msgstr "Automattic"
+
+#. Author URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://wordpress.com/themes/"
+msgstr "https://wordpress.com/themes/ "
+
+#: single.php:28
+msgid "Next"
+msgstr "Järgmine"
+
+#: single.php:29
+msgid "Previous"
+msgstr "Eelmine"
+
+#: single.php:29
+msgid "Previous post:"
+msgstr "Eelmine postitus:"
+
+#: single.php:28
+msgid "Next post:"
+msgstr "Järgmine postitus:"
+
+#: search.php:17
+msgid "Search Results for: %s"
+msgstr "Otsitulemused: %s"
+
+#: inc/template-tags.php:197
+msgid "Archives"
+msgstr "Arhiiv"
+
+#: inc/template-tags.php:188
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr "Vestlused"
+
+#: inc/template-tags.php:186
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr "Audio"
+
+#. translators: 1: Taxonomy singular name, 2: Current taxonomy term
+#: inc/template-tags.php:195
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: inc/template-tags.php:191
+msgid "Archives: %s"
+msgstr "Arhiiv: %s"
+
+#: inc/template-tags.php:172
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Ääremärkused"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Pildid"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Galeriid"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Tsitaadid"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Videod"
+
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Viited"
+
+#: inc/template-tags.php:184
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr "Olekud"
+
+#: inc/template-tags.php:165
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: inc/template-tags.php:167
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: inc/template-tags.php:169
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "j. F Y"
+
+#: inc/template-tags.php:169
+msgid "Day: %s"
+msgstr "Päev: %s"
+
+#: inc/template-tags.php:167
+msgid "Month: %s"
+msgstr "Kuu: %s"
+
+#: inc/template-tags.php:161
+msgid "Tag: %s"
+msgstr "Silt: %s"
+
+#: inc/template-tags.php:159
+msgid "Category: %s"
+msgstr "Rubriik: %s"
+
+#: inc/template-tags.php:163
+msgid "Author: %s"
+msgstr "Autor: %s"
+
+#: inc/template-tags.php:165
+msgid "Year: %s"
+msgstr "Aasta: %s"
+
+#: inc/template-tags.php:123
+msgid "1 Comment"
+msgstr "1 kommentaar"
+
+#: inc/template-tags.php:123
+msgid "% Comments"
+msgstr "% kommentaari"
+
+#: inc/template-tags.php:123
+msgid "Leave a comment"
+msgstr "Lisa kommentaar"
+
+#: inc/template-tags.php:56
+msgid "Post navigation"
+msgstr "Postituste töölaud"
+
+#. translators: used between list items, there is a space after the comma
+#: inc/template-tags.php:75
+#: inc/template-tags.php:139
+msgid ", "
+msgstr ", "
+
+#: inc/template-tags.php:31
+msgid "Newer posts"
+msgstr "Uuemad postitused"
+
+#: inc/template-tags.php:23
+msgid "Posts navigation"
+msgstr "Postituste töölaud"
+
+#: inc/template-tags.php:27
+msgid "Older posts"
+msgstr "Vanemad postitused"
+
+#: inc/customizer.php:20
+msgid "Theme Options"
+msgstr "Teemavalikud"
+
+#: inc/extras.php:52
+msgid "Page %s"
+msgstr "Leht %s"
+
+#: header.php:77
+msgid "Search"
+msgstr "Otsi"
+
+#: header.php:22
+msgid "Skip to content"
+msgstr "Liigu sisu juurde"
+
+#: header.php:72
+msgid "Primary Menu"
+msgstr "Peamenüü"
+
+#: functions.php:150
+msgid "Footer"
+msgstr "Jalus"
+
+#. translators: If there are characters in your language that are not supported
+#. by Lato, translate this to 'off'. Do not translate into your own language.
+#: functions.php:172
+msgctxt "Lato font: on or off"
+msgid "on"
+msgstr "on"
+
+#: functions.php:140
+#: sidebar.php:14
+msgid "Sidebar"
+msgstr "Küljepaan"
+
+#: footer.php:54
+msgid "Theme: %1$s by %2$s."
+msgstr "Teema: %1$s autor %2$s."
+
+#: footer.php:52
+msgid "http://wordpress.org/"
+msgstr "http://wordpress.org/"
+
+#: footer.php:52
+msgid "Proudly powered by %s"
+msgstr "Kasutame %si"
+
+#: content.php:20
+msgid "Sticky post"
+msgstr "Esilehepostitus"
+
+#: content-page.php:35
+#: inc/template-tags.php:142
+msgid "Edit"
+msgstr "Muuda"
+
+#: content-page.php:28
+#: content-single.php:29
+msgid "Page"
+msgstr "leht"
+
+#: content-page.php:24
+#: content-single.php:25
+msgid "Pages:"
+msgstr "Lehed:"
+
+#: content-none.php:28
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
+msgstr "Tundub, et me ei leia, mida otsite. Võibolla otsingumootor aitab."
+
+#: content-none.php:23
+msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
+msgstr "Kahjuks ei leidnud vastet otsitavale. Proovi uuesti mõne muu märksõnaga"
+
+#: content-none.php:19
+msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr "Oled valmis esimest postitust avalikustama? <a href=\"%1$s\">Alusta siit</a>."
+
+#: content-none.php:13
+msgid "Nothing Found"
+msgstr "Midagi ei leitud"
+
+#: comments.php:57
+msgid "Comments are closed."
+msgstr "Kommenteerimine on suletud."
+
+#: comments.php:47
+msgid "Newer Comments"
+msgstr "Uuemad kommentaarid"
+
+#: comments.php:46
+msgid "Older Comments"
+msgstr "Vanemad kommentaarid"
+
+#: comments.php:45
+msgid "Comment navigation"
+msgstr "Kommentaaride töölaud"
+
+#: comments.php:28
+msgctxt "comments title"
+msgid "One thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] "Üks kommentaar &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s kommentaari &ldquo;%2$s&rdquo;"
+
+#: author-bio.php:31
+msgid "View all posts by %s"
+msgstr "Vaata autori %s postitusi"
+
+#: 404.php:20
+msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
+msgstr "Kahjuks ei leitud midagi. Proovi mõnda allolevat linki või otsingut."
+
+#: 404.php:16
+msgid "Oops! That page can&rsquo;t be found."
+msgstr "Oihh! Seda lehte ei õnnestunud leida."
