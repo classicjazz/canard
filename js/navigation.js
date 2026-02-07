@@ -1,107 +1,135 @@
-( function( $ ) {
+( function() {
 
-	var debounce = function( func, wait ) {
-		var timeout, args, context, timestamp;
-		return function() {
-			context = this;
-			args = [].slice.call( arguments, 0 );
-			timestamp = new Date();
-			var later = function() {
-				var last = ( new Date() ) - timestamp;
-				if ( last < wait ) {
-					timeout = setTimeout( later, wait - last );
-				} else {
-					timeout = null;
-					func.apply( context, args );
-				}
-			};
-			if ( ! timeout ) {
-				timeout = setTimeout( later, wait );
-			}
-		};
-	};
+	const debounce = window.canardUtils.debounce;
 
+	/**
+	 * Injects dropdown toggle buttons next to parent-item links on mobile,
+	 * and removes them on desktop where hover handles sub-menu visibility.
+	 */
 	function menuDropdownToggle() {
-		$( '.main-navigation .page_item_has_children > a, .main-navigation .menu-item-has-children > a, .widget_nav_menu .page_item_has_children > a, .widget_nav_menu .menu-item-has-children > a' ).each( function() {
-			if ( ! $( this ).find( '.dropdown-toggle' ).length ) {
-				$( this ).append( '<button class="dropdown-toggle" aria-expanded="false"/>' );
+		const parentLinks = document.querySelectorAll(
+			'.main-navigation .page_item_has_children > a, ' +
+			'.main-navigation .menu-item-has-children > a, ' +
+			'.widget_nav_menu .page_item_has_children > a, ' +
+			'.widget_nav_menu .menu-item-has-children > a'
+		);
+
+		parentLinks.forEach( function( link ) {
+			if ( ! link.querySelector( '.dropdown-toggle' ) ) {
+				const btn = document.createElement( 'button' );
+				btn.classList.add( 'dropdown-toggle' );
+				btn.setAttribute( 'aria-expanded', 'false' );
+				link.appendChild( btn );
 			}
 		} );
 
-		if ( $( window ).width() > 959 ) {
-			$( '.main-navigation .dropdown-toggle' ).remove();
+		if ( window.innerWidth > 959 ) {
+			document.querySelectorAll( '.main-navigation .dropdown-toggle' ).forEach( function( btn ) {
+				btn.parentNode.removeChild( btn );
+			} );
 		}
 	}
 
-	$( window ).load( menuDropdownToggle ).resize( debounce( menuDropdownToggle, 500 ) );
+	window.addEventListener( 'load', menuDropdownToggle );
+	window.addEventListener( 'resize', debounce( menuDropdownToggle, 500 ) );
 
-	$( window ).load( function() {
-		var menu = $( '#masthead' ).find( 'div' );
-		if ( ! menu || ! menu.children().length ) {
+	window.addEventListener( 'load', function() {
+		// Targets the first div inside #masthead, which wraps the navigation.
+		const masthead = document.getElementById( 'masthead' );
+		const menu     = masthead ? masthead.querySelector( 'div' ) : null;
+		if ( ! menu || ! menu.children.length ) {
 			return;
 		}
 
-		$( '.dropdown-toggle' ).click( function( event ) {
+		// Delegate dropdown-toggle clicks on the document so dynamically
+		// inserted buttons (from menuDropdownToggle above) are covered.
+		document.addEventListener( 'click', function( event ) {
+			const btn = event.target.closest( '.dropdown-toggle' );
+			if ( ! btn ) {
+				return;
+			}
 			event.preventDefault();
-			$( this ).toggleClass( 'toggled' );
-			$( this ).parent().next( '.children, .sub-menu' ).toggleClass( 'toggled' );
-			$( this ).attr( 'aria-expanded', $( this ).attr( 'aria-expanded' ) === 'false' ? 'true' : 'false' );
+
+			const isExpanded = btn.getAttribute( 'aria-expanded' ) === 'true';
+			btn.classList.toggle( 'toggled' );
+			btn.setAttribute( 'aria-expanded', isExpanded ? 'false' : 'true' );
+
+			const subMenu = btn.parentNode.nextElementSibling;
+			if ( subMenu && ( subMenu.classList.contains( 'children' ) || subMenu.classList.contains( 'sub-menu' ) ) ) {
+				subMenu.classList.toggle( 'toggled' );
+			}
 		} );
 
 		if ( 'ontouchstart' in window ) {
-			menu.find( '.menu-item-has-children > a' ).on( 'touchstart', function( e ) {
-				var el = $( this ).parent( 'li' );
-
-				if ( ! el.hasClass( 'focus' ) ) {
-					e.preventDefault();
-					el.toggleClass( 'focus' );
-					el.siblings( '.focus' ).removeClass( 'focus' );
-				}
+			menu.querySelectorAll( '.menu-item-has-children > a' ).forEach( function( link ) {
+				link.addEventListener( 'touchstart', function( e ) {
+					const li = this.parentElement;
+					if ( ! li.classList.contains( 'focus' ) ) {
+						e.preventDefault();
+						li.classList.toggle( 'focus' );
+						// Close siblings.
+						Array.from( li.parentNode.children ).forEach( function( sibling ) {
+							if ( sibling !== li ) {
+								sibling.classList.remove( 'focus' );
+							}
+						} );
+					}
+				} );
 			} );
 		}
 
-		menu.find( 'a' ).on( 'focus blur', function() {
-			$( this ).parents( '.menu-item' ).toggleClass( 'focus' );
+		menu.querySelectorAll( 'a' ).forEach( function( link ) {
+			link.addEventListener( 'focus', function() {
+				let el = this.parentElement;
+				while ( el && el !== menu ) {
+					if ( el.classList.contains( 'menu-item' ) ) {
+						el.classList.add( 'focus' );
+					}
+					el = el.parentElement;
+				}
+			} );
+			link.addEventListener( 'blur', function() {
+				let el = this.parentElement;
+				while ( el && el !== menu ) {
+					if ( el.classList.contains( 'menu-item' ) ) {
+						el.classList.remove( 'focus' );
+					}
+					el = el.parentElement;
+				}
+			} );
 		} );
 	} );
 
-} )( jQuery );
+} )();
 
 ( function() {
 
-	var container, button, menu;
-
-	container = document.getElementById( 'site-navigation' );
+	const container = document.getElementById( 'site-navigation' );
 	if ( ! container ) {
 		return;
 	}
 
-	button = container.getElementsByTagName( 'button' )[0];
-	if ( 'undefined' === typeof button ) {
+	const button = container.getElementsByTagName( 'button' )[0];
+	if ( ! button ) {
 		return;
 	}
 
-	menu = container.getElementsByTagName( 'ul' )[0];
-	if ( 'undefined' === typeof menu ) {
+	const menu = container.getElementsByTagName( 'ul' )[0];
+	if ( ! menu ) {
 		button.style.display = 'none';
 		return;
 	}
 	menu.setAttribute( 'aria-expanded', 'false' );
 
-	if ( -1 === menu.className.indexOf( 'nav-menu' ) ) {
-		menu.className += ' nav-menu';
+	if ( ! menu.classList.contains( 'nav-menu' ) ) {
+		menu.classList.add( 'nav-menu' );
 	}
 
-	button.onclick = function() {
-		if ( -1 !== container.className.indexOf( 'toggled' ) ) {
-			container.className = container.className.replace( ' toggled', '' );
-			button.setAttribute( 'aria-expanded', 'false' );
-			menu.setAttribute( 'aria-expanded', 'false' );
-		} else {
-			container.className += ' toggled';
-			button.setAttribute( 'aria-expanded', 'true' );
-			menu.setAttribute( 'aria-expanded', 'true' );
-		}
-	};
+	button.addEventListener( 'click', function() {
+		const toggled = container.classList.contains( 'toggled' );
+		container.classList.toggle( 'toggled' );
+		button.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );
+		menu.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );
+	} );
 
 } )();

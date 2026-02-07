@@ -1,36 +1,46 @@
 /**
- * Theme Customizer enhancements for a better user experience.
+ * Theme Customizer live preview handlers.
  *
- * Contains handlers to make Theme Customizer preview reload changes asynchronously.
+ * Reloads changes to site title, description, and header text color
+ * asynchronously without requiring a full page refresh.
  */
 
-( function( $ ) {
-	// Site title and description.
+( function() {
+
+	// Update site title text in real time.
 	wp.customize( 'blogname', function( value ) {
 		value.bind( function( to ) {
-			$( '.site-title a' ).text( to );
-		} );
-	} );
-	wp.customize( 'blogdescription', function( value ) {
-		value.bind( function( to ) {
-			$( '.site-description' ).text( to );
-		} );
-	} );
-	// Header text color.
-	wp.customize( 'header_textcolor', function( value ) {
-		value.bind( function( to ) {
-			if ( 'blank' === to ) {
-				$( '.site-title, .site-description' ).css( {
-					'clip': 'rect(1px, 1px, 1px, 1px)',
-					'position': 'absolute'
-				} );
-			} else {
-				$( '.site-title, .site-description' ).css( {
-					'clip': 'auto',
-					'color': to,
-					'position': 'relative'
-				} );
+			const el = document.querySelector( '.site-title a' );
+			if ( el ) {
+				el.textContent = to;
 			}
 		} );
 	} );
-} )( jQuery );
+
+	// Update site description text in real time.
+	wp.customize( 'blogdescription', function( value ) {
+		value.bind( function( to ) {
+			const el = document.querySelector( '.site-description' );
+			if ( el ) {
+				el.textContent = to;
+			}
+		} );
+	} );
+
+	// Toggle site title and description visibility when header text color changes.
+	// 'blank' means "hide header text" in the Customizer; any other value is a hex color.
+	wp.customize( 'header_textcolor', function( value ) {
+		value.bind( function( to ) {
+			document.querySelectorAll( '.site-title, .site-description' ).forEach( function( el ) {
+				if ( 'blank' === to ) {
+					el.classList.add( 'screen-reader-text' );
+					el.style.color = '';
+				} else {
+					el.classList.remove( 'screen-reader-text' );
+					el.style.color = to;
+				}
+			} );
+		} );
+	} );
+
+} )();

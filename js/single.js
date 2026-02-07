@@ -1,56 +1,98 @@
-( function( $ ) {
+( function() {
 
-	var debounce = function( func, wait ) {
-		var timeout, args, context, timestamp;
-		return function() {
-			context = this;
-			args = [].slice.call( arguments, 0 );
-			timestamp = new Date();
-			var later = function() {
-				var last = ( new Date() ) - timestamp;
-				if ( last < wait ) {
-					timeout = setTimeout( later, wait - last );
-				} else {
-					timeout = null;
-					func.apply( context, args );
-				}
-			};
-			if ( ! timeout ) {
-				timeout = setTimeout( later, wait );
+	const debounce = window.canardUtils.debounce;
+
+	/**
+	 * Entry-hero layout.
+	 *
+	 * When the server has determined that the entry-hero layout applies it adds
+	 * the class 'has-entry-hero' to <body> (via entry-script.php / body_class
+	 * filter). This block reads that class and performs the DOM rearrangement
+	 * that was previously an inline <script> in entry-script.php.
+	 *
+	 * Runs immediately (not on load) so the reflow happens before paint.
+	 */
+	if ( document.body.classList.contains( 'has-entry-hero' ) ) {
+		const entryHeader = document.querySelector( '.hentry.has-post-thumbnail .entry-header' );
+		const siteContentInner = document.querySelector( '.site-content-inner' );
+
+		if ( entryHeader && siteContentInner ) {
+			// Wrap .entry-title and .entry-meta together inside two nested divs.
+			const targets = entryHeader.querySelectorAll( '.entry-title, .entry-meta' );
+			if ( targets.length ) {
+				const inner   = document.createElement( 'div' );
+				const wrapper = document.createElement( 'div' );
+				inner.className   = 'entry-header-inner';
+				wrapper.className = 'entry-header-wrapper';
+
+				// Move matched elements into inner, then nest inner → wrapper.
+				targets.forEach( function( el ) {
+					inner.appendChild( el );
+				} );
+				wrapper.appendChild( inner );
+				entryHeader.appendChild( wrapper );
 			}
-		};
-	};
 
+			// Hoist the entry header before .site-content-inner and mark it.
+			siteContentInner.parentNode.insertBefore( entryHeader, siteContentInner );
+			entryHeader.classList.add( 'entry-hero' );
+		}
+	}
+
+	/**
+	 * Moves the author info block into the sidebar on wide viewports,
+	 * or below the entry content on narrow viewports.
+	 */
 	function authorInfo() {
-		var authorInfo = $( '.author-info' );
-		if ( authorInfo.length ) {
-			if ( $( window ).width() > 959 ) {
-				authorInfo.prependTo( '.widget-area' );
-			} else {
-				authorInfo.insertAfter( '.entry-content' );
+		const authorInfoEl = document.querySelector( '.author-info' );
+		if ( ! authorInfoEl ) {
+			return;
+		}
+		if ( window.innerWidth > 959 ) {
+			const widgetArea = document.querySelector( '.widget-area' );
+			if ( widgetArea ) {
+				widgetArea.insertBefore( authorInfoEl, widgetArea.firstChild );
+			}
+		} else {
+			const entryContent = document.querySelector( '.entry-content' );
+			if ( entryContent && entryContent.nextSibling !== authorInfoEl ) {
+				entryContent.after( authorInfoEl );
 			}
 		}
 	}
 
-	$( window ).load( authorInfo ).resize( debounce( authorInfo, 500 ) );
+	window.addEventListener( 'load', authorInfo );
+	window.addEventListener( 'resize', debounce( authorInfo, 500 ) );
 
-	$( window ).load( function() {
-		// Move Sharedaddy & Related Posts
-		var sharedaddy = $( '.sd-sharing-enabled:not(#jp-post-flair), .sd-like.jetpack-likes-widget-wrapper, .sd-rating' ),
-		    relatedPosts = $( '#jp-relatedposts' );
-		if ( sharedaddy.length ) {
-			sharedaddy.appendTo( '.entry-footer' );
-		}
-		if ( relatedPosts.length ) {
-			$( "#jp-post-flair" ).insertAfter( '.entry-footer' );
+	window.addEventListener( 'load', function() {
+
+		// Move Jetpack Sharedaddy and Related Posts into the entry footer area.
+		// NOTE: These selectors target the classic Jetpack sharing module. If your
+		// Jetpack version uses block-based sharing/related posts, these will match
+		// nothing and silently no-op. Verify selectors against your Jetpack version
+		// and remove this block if the classic module is not in use.
+		const entryFooter = document.querySelector( '.entry-footer' );
+		if ( entryFooter ) {
+			document.querySelectorAll( '.sd-sharing-enabled:not(#jp-post-flair), .sd-like.jetpack-likes-widget-wrapper, .sd-rating' ).forEach( function( el ) {
+				entryFooter.appendChild( el );
+			} );
+
+			const relatedPosts = document.getElementById( 'jp-relatedposts' );
+			if ( relatedPosts ) {
+				const postFlair = document.getElementById( 'jp-post-flair' );
+				if ( postFlair ) {
+					entryFooter.after( postFlair );
+				}
+			}
 		}
 
-		// Make sure tables don't overflow in Entry Content.
-		$( '.entry-content' ).find( 'table' ).each( function() {
-			if ( $( this ).width() > $( this ).parent().width() ) {
-				$( this ).css( 'table-layout', 'fixed' );
+		// Prevent tables from overflowing their container in entry content.
+		document.querySelectorAll( '.entry-content table' ).forEach( function( table ) {
+			if ( table.offsetWidth > table.parentElement.offsetWidth ) {
+				table.style.tableLayout = 'fixed';
 			}
 		} );
+
 	} );
 
-} )( jQuery );
+} )();

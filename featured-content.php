@@ -1,10 +1,14 @@
-<?php declare( strict_types = 1 ); ?>
 <?php
 /**
  * The template for displaying featured content
  *
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $featured_posts = canard_get_featured_posts();
 if ( empty( $featured_posts ) ) {
 	return;
