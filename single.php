@@ -1,4 +1,3 @@
-<?php declare( strict_types = 1 ); ?>
 <?php
 /**
  * The template for displaying all single posts.

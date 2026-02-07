@@ -2346,7 +2346,7 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 	opacity: 0.3;
 	bottom: 0;
 	width: 100%;
-	z-index: -1
+	z-index: -1;
 }
 
 /* Link */
@@ -2799,7 +2799,7 @@ video,
 }
 #infinite-footer .blog-credits a:focus,
 #infinite-footer .blog-info a:focus {
-	outline-color: rgba(255, 255, 255, 0.7)
+	outline-color: rgba(255, 255, 255, 0.7);
 }
 #infinite-footer .blog-credits,
 #infinite-footer .blog-info {

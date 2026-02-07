@@ -375,7 +375,7 @@ hr.wp-block-separator {
 .has-white-color,
 .has-white-color:hover,
 .has-white-color:focus,
-,.has-white-color:active {
+.has-white-color:active {
 	color: #fff;
 }
 

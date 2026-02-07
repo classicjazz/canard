@@ -1,4 +1,3 @@
-<?php declare( strict_types = 1 ); ?>
 <?php
 /**
  * Canard functions and definitions
@@ -65,6 +64,14 @@ if ( ! function_exists( 'canard_setup' ) ) :
 
 		// Add support for responsive embeds.
 		add_theme_support( 'responsive-embeds' );
+
+		// Add support for custom logo.
+		add_theme_support( 'custom-logo', array(
+			'width'       => 400,
+			'height'      => 90,
+			'flex-width'  => true,
+			'flex-height' => true,
+		) );
 
 		// Add custom colors to Gutenberg
 		add_theme_support(
@@ -145,6 +152,14 @@ endif; // canard_setup
 add_action( 'after_setup_theme', 'canard_setup' );
 
 /**
+ * Disable block-based widgets editor to maintain classic widget interface.
+ */
+function canard_disable_block_widgets() {
+	remove_theme_support( 'widgets-block-editor' );
+}
+add_action( 'after_setup_theme', 'canard_disable_block_widgets' );
+
+/**
  * Register widget area.
  *
  * @link http://codex.wordpress.org/Function_Reference/register_sidebar
@@ -206,8 +221,9 @@ function canard_lato_inconsolata_fonts_url() {
 		}
 
 		$query_args = array(
-			'family' => urlencode( implode( '|', $font_families ) ),
-			'subset' => urlencode( 'latin,latin-ext' ),
+			'family'  => urlencode( implode( '|', $font_families ) ),
+			'subset'  => urlencode( 'latin,latin-ext' ),
+			'display' => 'swap',
 		);
 		$fonts_url  = add_query_arg( $query_args, 'https://fonts.googleapis.com/css' );
 	}
@@ -245,8 +261,9 @@ function canard_pt_serif_playfair_display_font_url() {
 		}
 
 		$query_args = array(
-			'family' => urlencode( implode( '|', $font_families ) ),
-			'subset' => urlencode( 'cyrillic,latin,latin-ext' ),
+			'family'  => urlencode( implode( '|', $font_families ) ),
+			'subset'  => urlencode( 'cyrillic,latin,latin-ext' ),
+			'display' => 'swap',
 		);
 		$fonts_url  = add_query_arg( $query_args, 'https://fonts.googleapis.com/css' );
 	}

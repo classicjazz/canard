@@ -33,15 +33,15 @@
 		}
 	}
 
-	$( window ).load( menuDropdownToggle ).resize( debounce( menuDropdownToggle, 500 ) );
+	$( window ).on( 'load', menuDropdownToggle ).on( 'resize', debounce( menuDropdownToggle, 500 ) );
 
-	$( window ).load( function() {
+	$( window ).on( 'load', function() {
 		var menu = $( '#masthead' ).find( 'div' );
 		if ( ! menu || ! menu.children().length ) {
 			return;
 		}
 
-		$( '.dropdown-toggle' ).click( function( event ) {
+		$( '.dropdown-toggle' ).on( 'click', function( event ) {
 			event.preventDefault();
 			$( this ).toggleClass( 'toggled' );
 			$( this ).parent().next( '.children, .sub-menu' ).toggleClass( 'toggled' );

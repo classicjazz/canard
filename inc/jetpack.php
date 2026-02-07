@@ -1,4 +1,3 @@
-<?php declare( strict_types = 1 ); ?>
 <?php
 /**
  * Jetpack Compatibility File
@@ -25,10 +24,6 @@ function canard_jetpack_setup() {
 
 	// Add theme support for Responsive Videos.
 	add_theme_support( 'jetpack-responsive-videos' );
-
-	// Add theme support for Site Logo.
-	add_image_size( 'canard-logo', 400, 90 );
-	add_theme_support( 'site-logo', array( 'size' => 'canard-logo' ) );
 
 	// Add theme support for Content Options.
 	add_theme_support( 'jetpack-content-options', array(
@@ -72,13 +67,11 @@ function canard_remove_sharedaddy() {
 add_action( 'loop_start', 'canard_remove_sharedaddy' );
 
 /**
- * Return early if Site Logo is not available.
+ * Display the site logo using WordPress core custom logo functionality.
  */
 function canard_the_site_logo() {
-	if ( ! function_exists( 'jetpack_the_site_logo' ) ) {
-		return;
-	} else {
-		jetpack_the_site_logo();
+	if ( function_exists( 'the_custom_logo' ) ) {
+		the_custom_logo();
 	}
 }
 
