@@ -5,19 +5,23 @@
  * @package Canard
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 get_header(); ?>
 
 	<div class="site-content-inner">
 		<div id="primary" class="content-area">
-			<main id="main" class="site-main" role="main">
+			<main id="main" class="site-main">
 
 				<section class="error-404 not-found">
 					<header class="page-header">
-						<h1 class="page-title"><?php _e( 'Oops! That page can&rsquo;t be found.', 'canard' ); ?></h1>
+						<h1 class="page-title"><?php esc_html_e( 'Oops! That page can&rsquo;t be found.', 'canard' ); ?></h1>
 					</header><!-- .page-header -->
 
 					<div class="page-content">
-						<p><?php _e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'canard' ); ?></p>
+						<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'canard' ); ?></p>
 
 						<?php get_search_form(); ?>
 

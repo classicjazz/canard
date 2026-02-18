@@ -5,8 +5,12 @@
  * @package Canard
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Add postMessage support for site title and description for the Theme Customizer.
+ * Adds postMessage support for site title and description for the Theme Customizer.
  *
  * @param WP_Customize_Manager $wp_customize Theme Customizer object.
  */
@@ -35,23 +39,19 @@ function canard_customize_register( $wp_customize ) {
 add_action( 'customize_register', 'canard_customize_register' );
 
 /**
- * Sanitize the checkbox.
+ * Sanitizes a checkbox value to a boolean.
  *
- * @param boolean $input.
- * @return boolean (true|false).
+ * @param mixed $input Raw input value.
+ * @return bool
  */
 function canard_sanitize_checkbox( $input ) {
-	if ( 1 == $input ) {
-		return true;
-	} else {
-		return false;
-	}
+	return (bool) $input;
 }
 
 /**
- * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
+ * Enqueues the live-preview JS for the Theme Customizer.
  */
 function canard_customize_preview_js() {
-	wp_enqueue_script( 'canard-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), '20130508', true );
+	wp_enqueue_script( 'canard-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), CANARD_VERSION, true );
 }
 add_action( 'customize_preview_init', 'canard_customize_preview_js' );

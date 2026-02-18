@@ -1,13 +1,17 @@
 <?php
 /**
- * Sample implementation of the Custom Header feature
- * http://codex.wordpress.org/Custom_Headers
+ * Implementation of the Custom Header feature.
  *
+ * @link https://developer.wordpress.org/themes/functionality/custom-headers/
  * @package Canard
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
- * Set up the WordPress core custom header feature.
+ * Sets up the WordPress core custom header feature.
  *
  * @uses canard_header_style()
  */
@@ -26,35 +30,31 @@ add_action( 'after_setup_theme', 'canard_custom_header_setup' );
 
 if ( ! function_exists( 'canard_header_style' ) ) :
 /**
- * Styles the header image and text displayed on the blog
+ * Outputs CSS for the site title and description when a custom header text
+ * color is set, or hides them when the header text is disabled.
  *
- * @see canard_custom_header_setup().
+ * @see canard_custom_header_setup()
  */
 function canard_header_style() {
 	$header_text_color = get_header_textcolor();
 
-	// If no custom options for text are set, let's bail.
-	// get_header_textcolor() options: Any hex value, 'blank' to hide text. Default: add_theme_support( 'custom-header' ).
+	// If no custom text color is set, bail — default styles apply.
 	if ( get_theme_support( 'custom-header', 'default-text-color' ) === $header_text_color ) {
 		return;
 	}
-
-	// If we get this far, we have custom styles. Let's do this.
 	?>
-	<style type="text/css">
-	<?php
-		// Has the text been hidden?
-		if ( 'blank' == $header_text_color ) :
-	?>
+	<style>
+	<?php if ( 'blank' === $header_text_color ) : ?>
 		.site-title,
 		.site-description {
 			position: absolute;
-			clip: rect(1px, 1px, 1px, 1px);
+			clip-path: inset(50%);
+			white-space: nowrap;
+			overflow: hidden;
+			height: 1px;
+			width: 1px;
 		}
-	<?php
-		// If the user has set a custom color for the text use that
-		else :
-	?>
+	<?php else : ?>
 		.site-title,
 		.site-description {
 			color: #<?php echo esc_attr( $header_text_color ); ?>;
@@ -63,4 +63,4 @@ function canard_header_style() {
 	</style>
 	<?php
 }
-endif; // canard_header_style
+endif;

@@ -11,22 +11,22 @@
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="profile" href="http://gmpg.org/xfn/11">
-<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
+<link rel="profile" href="https://gmpg.org/xfn/11">
 
 <?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
 <div id="page" class="hfeed site">
-	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'canard' ); ?></a>
+	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'canard' ); ?></a>
 
-	<header id="masthead" class="site-header" role="banner">
+	<header id="masthead" class="site-header">
 		<?php if ( has_nav_menu( 'secondary' ) || has_nav_menu( 'social' ) ) : ?>
 			<div class="site-top">
 				<div class="site-top-inner">
 					<?php if ( has_nav_menu( 'secondary' ) ) : ?>
-						<nav class="secondary-navigation" role="navigation">
+						<nav class="secondary-navigation" aria-label="<?php esc_attr_e( 'Secondary Navigation', 'canard' ); ?>">
 							<?php
 								wp_nav_menu( array(
 									'theme_location'  => 'secondary',
@@ -36,7 +36,7 @@
 						</nav><!-- .secondary-navigation -->
 					<?php endif; ?>
 					<?php if ( has_nav_menu( 'social' ) ) : ?>
-						<nav class="social-navigation" role="navigation">
+						<nav class="social-navigation" aria-label="<?php esc_attr_e( 'Social Navigation', 'canard' ); ?>">
 							<?php
 								wp_nav_menu( array(
 									'theme_location'  => 'social',
@@ -63,18 +63,18 @@
 					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php header_image(); ?>" width="<?php echo get_custom_header()->width; ?>" height="<?php echo get_custom_header()->height; ?>" alt=""></a>
 				</div><!-- .header-image-inner -->
 			</div><!-- .header-image -->
-		<?php endif; // End header image check. ?>
+		<?php endif; ?>
 
 		<div id="search-navigation" class="search-navigation">
 			<div class="search-navigation-inner">
 				<?php if ( has_nav_menu( 'primary' ) ) : ?>
-					<nav id="site-navigation" class="main-navigation" role="navigation">
-						<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><span class="screen-reader-text"><?php _e( 'Primary Menu', 'canard' ); ?></span></button>
+					<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary Navigation', 'canard' ); ?>">
+						<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><span class="screen-reader-text"><?php esc_html_e( 'Primary Menu', 'canard' ); ?></span></button>
 						<?php wp_nav_menu( array( 'theme_location'  => 'primary', 'menu_id' => 'primary-menu' ) ); ?>
 					</nav><!-- #site-navigation -->
 				<?php endif; ?>
 				<div id="search-header" class="search-header">
-					<button class="search-toggle" aria-controls="search-form" aria-expanded="false"><span class="screen-reader-text"><?php _e( 'Search', 'canard' ); ?></span></button>
+					<button class="search-toggle" aria-controls="search-form" aria-expanded="false"><span class="screen-reader-text"><?php esc_html_e( 'Search', 'canard' ); ?></span></button>
 					<?php get_search_form(); ?>
 				</div><!-- #search-header -->
 			</div><!-- .search-navigation-inner -->

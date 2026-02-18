@@ -5,18 +5,22 @@
  * @package Canard
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 get_header(); ?>
 
 	<div class="site-content-inner">
 		<div id="primary" class="content-area">
-			<main id="main" class="site-main" role="main">
+			<main id="main" class="site-main">
 
 				<?php while ( have_posts() ) : the_post(); ?>
 
 					<?php get_template_part( 'content', 'single' ); ?>
 
 					<?php
-						// If comments are open or we have at least one comment, load up the comment template
+						// Load the comment template if comments are open or there is at least one comment.
 						if ( comments_open() || get_comments_number() ) :
 							comments_template();
 						endif;
@@ -27,10 +31,10 @@ get_header(); ?>
 						the_post_navigation( array(
 							'next_text' => '<span class="meta-nav" aria-hidden="true">' . __( 'Next', 'canard' ) . '</span> ' . '<span class="screen-reader-text">' . __( 'Next post:', 'canard' ) . '</span> ' . '<span class="post-title">%title</span>',
 							'prev_text' => '<span class="meta-nav" aria-hidden="true">' . __( 'Previous', 'canard' ) . '</span> ' . '<span class="screen-reader-text">' . __( 'Previous post:', 'canard' ) . '</span> ' . '<span class="post-title">%title</span>',
-				) );
+						) );
 					?>
 
-				<?php endwhile; // end of the loop. ?>
+				<?php endwhile; ?>
 
 			</main><!-- #main -->
 		</div><!-- #primary -->

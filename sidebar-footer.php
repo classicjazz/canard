@@ -1,17 +1,21 @@
 <?php
 /**
- * The Sidebar containing the footer widget area.
+ * The sidebar containing the footer widget area.
  *
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! is_active_sidebar( 'sidebar-2' ) ) {
 	return;
 }
 ?>
 
-<div id="tertiary" class="footer-widget" role="complementary">
+<div id="tertiary" class="footer-widget">
 	<div class="footer-widget-inner">
 		<?php dynamic_sidebar( 'sidebar-2' ); ?>
-	</div><!-- .wrapper -->
+	</div><!-- .footer-widget-inner -->
 </div><!-- #tertiary -->

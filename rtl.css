@@ -1,57 +1,12 @@
 /*
 Theme Name: Canard
-
-Adding support for language written in a Right To Left (RTL) direction is easy -
-it's just a matter of overwriting all the horizontal positioning attributes
-of your CSS stylesheet in a separate stylesheet file named rtl.css.
-
-http://codex.wordpress.org/Right_to_Left_Language_Support
 */
 
-/*--------------------------------------------------------------
->>> TABLE OF CONTENTS:
-----------------------------------------------------------------
-# Normalize
-# Typography
-# Elements
-# Forms
-# Navigation
-	## Primary Menu
-	## Social Menu
-	## Secondary Menu
-	## Paging Navigation
-# Accessibility
-# Widgets
-# Content
-	## Header
-	## Featured Content
-	## Posts & Pages
-	## Comments
-# Media
-# Jetpack
-	## Infinite Scroll
-	## Recipes
-	## Widgets
-# Eventbrite
-# Responsive
-	## x >= 600px
-	## x >= 768px
-	## x >= 960px
-	## x >= 1080px
-	## x >= 1380px
---------------------------------------------------------------*/
-
-/*--------------------------------------------------------------
-# Normalize
---------------------------------------------------------------*/
 body {
 	direction: rtl;
 	unicode-bidi: embed;
 }
 
-/*--------------------------------------------------------------
-# Typography
---------------------------------------------------------------*/
 blockquote:before {
 	float: right;
 }
@@ -64,9 +19,6 @@ pre {
 	border-right: 2px solid #d11415;
 }
 
-/*--------------------------------------------------------------
-# Elements
---------------------------------------------------------------*/
 li > ul,
 li > ol {
 	margin-left: 0;
@@ -76,10 +28,6 @@ table {
 	text-align: right;
 }
 
-/*--------------------------------------------------------------
-# Forms
---------------------------------------------------------------*/
-/* Search Form */
 .search-form:before {
 	left: 6px;
 	right: auto;
@@ -93,13 +41,6 @@ table {
 	right: auto;
 }
 
-/*--------------------------------------------------------------
-# Navigation
---------------------------------------------------------------*/
-/*--------------------------------------------------------------
-## Primary Menu
---------------------------------------------------------------*/
-/* Dropdown Toggle */
 .dropdown-toggle,
 .menu-toggle {
 	left: 0;
@@ -111,7 +52,6 @@ table {
 	right: auto;
 }
 
-/* Main Navigation */
 .main-navigation ul {
 	padding-right: 0;
 }
@@ -125,9 +65,6 @@ table {
 	padding-right: 0;
 }
 
-/*--------------------------------------------------------------
-## Social Menu
---------------------------------------------------------------*/
 .social-navigation li {
 	float: right;
 }
@@ -140,9 +77,6 @@ table {
 	margin-right: 5px;
 }
 
-/*--------------------------------------------------------------
-## Secondary Menu
---------------------------------------------------------------*/
 .secondary-navigation li {
 	float: right;
 }
@@ -159,9 +93,6 @@ table {
 	border-right: 1px solid #444;
 }
 
-/*--------------------------------------------------------------
-## Paging Navigation
---------------------------------------------------------------*/
 .comment-navigation .nav-previous,
 .posts-navigation .nav-previous {
 	float: right;
@@ -172,31 +103,23 @@ table {
 	text-align: left;
 }
 
-/*--------------------------------------------------------------
-# Accessibility
---------------------------------------------------------------*/
 .screen-reader-text:focus {
 	left: auto;
 	right: 5px;
 }
 
-/*--------------------------------------------------------------
-# Widgets
---------------------------------------------------------------*/
 .widget-area:before {
 	left: auto;
 	right: 0;
 }
 
-/* Sidebar Toggle */
 .sidebar-toggle {
 	left: auto;
 	margin-left: 0;
 	margin-right: -22.5px;
-	right: 50;
+	right: 50px;
 }
 
-/* Footer Widget */
 .footer-widget-inner .widget:nth-of-type(4n+1) {
 	clear: right;
 	margin-right: 0;
@@ -206,7 +129,6 @@ table {
 	margin-left: 0;
 }
 
-/* Lists */
 .widget_archive ul,
 .widget_categories ul,
 .widget_links ul,
@@ -225,19 +147,11 @@ table {
 	padding-right: 30px;
 }
 
-/* Tag Cloud */
 .widget_tag_cloud a:before {
 	margin-left: 0.125em;
 	margin-right: 0;
 }
 
-/*--------------------------------------------------------------
-# Content
---------------------------------------------------------------*/
-/*--------------------------------------------------------------
-## Header
---------------------------------------------------------------*/
-/* Site Header */
 .site-header {
 	border-bottom: 1px solid #ddd;
 	padding: 30px 0;
@@ -245,7 +159,6 @@ table {
 	width: 100%;
 }
 
-/* Site Top */
 .site-top {
 	background: #222;
 	color: #aaa;
@@ -254,7 +167,6 @@ table {
 	padding: 7.5px 0;
 }
 
-/* Search Navigation */
 .search-header .search-form:before {
 	left: 13.5px;
 	right: auto;
@@ -264,23 +176,15 @@ table {
 	right: auto;
 }
 
-/*--------------------------------------------------------------
-## Featured Content
---------------------------------------------------------------*/
 .featured-content .hentry {
 	float: right;
 }
 
-/*--------------------------------------------------------------
-## Posts & Pages
---------------------------------------------------------------*/
-/* Sticky */
 .sticky-post {
 	left: 15px;
 	right: auto;
 }
 
-/* Entry Footer */
 .entry-footer {
 	float: right;
 }
@@ -289,7 +193,6 @@ table {
 	margin-right: 0;
 }
 
-/* Page Links */
 .page-links a,
 .page-links > span {
 	margin: 0 0 5px 5px;
@@ -300,9 +203,6 @@ table {
 	text-align: right;
 }
 
-/*--------------------------------------------------------------
-## Comments
---------------------------------------------------------------*/
 .comment-list .comment-respond {
 	margin-left: 0;
 	margin-right: 30px;
@@ -320,41 +220,24 @@ table {
 	float: left;
 }
 
-/*--------------------------------------------------------------
-# Media
---------------------------------------------------------------*/
 .gallery-caption {
 	left: auto;
 	right: 0;
 }
 
-/*--------------------------------------------------------------
-# Jetpack
---------------------------------------------------------------*/
-/*--------------------------------------------------------------
-## Infinite Scroll
---------------------------------------------------------------*/
 .infinite-loader .spinner {
 	left: auto !important;
 	right: 50% !important;
 }
 
-/*--------------------------------------------------------------
-## Recipes
---------------------------------------------------------------*/
 .site-content .jetpack-recipe blockquote {
 	margin-right: 0;
 }
 
-/*--------------------------------------------------------------
-## Widgets
---------------------------------------------------------------*/
-/* Gravatar Profile */
 .widget-grofile .grofile-thumbnail {
 	float: left;
 }
 
-/* RSS Links */
 .widget_rss_links ul {
 	margin-right: 0;
 }
@@ -363,9 +246,6 @@ table {
 	margin-right: 11px;
 }
 
-/*--------------------------------------------------------------
-# Eventbrite
---------------------------------------------------------------*/
 .eventbrite-event .entry-header span {
 	padding-left: 12px;
 	padding-right: 0;
@@ -374,14 +254,7 @@ table {
 	padding-left: 0;
 }
 
-/*--------------------------------------------------------------
-# Responsive
---------------------------------------------------------------*/
-/*--------------------------------------------------------------
-## x >= 600px
---------------------------------------------------------------*/
 @media screen and (min-width: 600px) {
-	/* Paging Navigation */
 	.comment-navigation .nav-next a:after,
 	.comment-navigation .nav-previous a:before,
 	.posts-navigation .nav-next a:after,
@@ -393,18 +266,13 @@ table {
 		content: '\f429';
 	}
 
-	/* Widgets */
 	.sidebar-toggle {
 		margin-left: 0;
 		margin-right: -30px;
 	}
 }
 
-/*--------------------------------------------------------------
-## x >= 768px
---------------------------------------------------------------*/
 @media screen and (min-width: 768px) {
-	/* Grid */
 	.footer-widget-inner .widget {
 		float: right;
 	}
@@ -419,14 +287,12 @@ table {
 		margin-right: 0;
 	}
 
-	/* Featured Content */
 	.blog .featured-content .hentry:nth-of-type(2),
 	.blog .featured-content .hentry:nth-of-type(4) {
 		margin-left: 30px;
 		margin-right: 0;
 	}
 
-	/* Posts & Pages */
 	.content-area .format-standard a.post-thumbnail {
 		float: right;
 		margin-left: 30px;
@@ -443,7 +309,6 @@ table {
 		float: left;
 	}
 
-	/* Post Formats */
 	.post-link {
 		float: right;
 		margin-left: 30px;
@@ -464,11 +329,7 @@ table {
 	}
 }
 
-/*--------------------------------------------------------------
-## x >= 960px
---------------------------------------------------------------*/
 @media screen and (min-width: 960px) {
-	/* Primary Menu */
 	.main-navigation {
 		float: right;
 	}
@@ -498,7 +359,6 @@ table {
 		right: auto;
 	}
 	.main-navigation ul ul .menu-item-has-children > a:after {
-		-webkit-transform: rotate(90deg);
 		transform: rotate(90deg);
 	}
 	.main-navigation ul ul {
@@ -522,19 +382,16 @@ table {
 		right: 100%;
 	}
 
-	/* Social Menu */
 	.social-navigation {
 		float: left;
 		padding-left: 0;
 		padding-right: 15px;
 	}
 
-	/* Secondary Menu */
 	.secondary-navigation {
 		float: right;
 	}
 
-	/* Footer Menu */
 	.footer-navigation li {
 		float: right;
 	}
@@ -551,7 +408,6 @@ table {
 		border-right: 1px solid #eee;
 	}
 
-	/* Grid */
 	.comments-area {
 		margin-left: -60px;
 		margin-right: 0;
@@ -585,7 +441,6 @@ table {
 		margin-right: 30px;
 	}
 
-	/* Featured Content */
 	.blog .featured-content .hentry:first-of-type {
 		margin-left: 30px;
 		margin-right: 0;
@@ -598,7 +453,6 @@ table {
 		margin-right: 0;
 	}
 
-	/* Posts & Pages */
 	.author-info {
 		margin-left: 0;
 		margin-right: -60px;
@@ -606,14 +460,12 @@ table {
 		padding-right: 60px;
 	}
 
-	/* Comments */
 	.comment-list:before,
 	.comment-navigation + .comment-respond:before {
 		left: -60px;
 		right: auto;
 	}
 
-	/* Sharedaddy */
 	div#jp-relatedposts:before {
 		left: -60px;
 		right: auto;
@@ -628,11 +480,7 @@ table {
 	}
 }
 
-/*--------------------------------------------------------------
-## x >= 1080px
---------------------------------------------------------------*/
 @media screen and (min-width: 1080px) {
-	/* Featured Content */
 	.blog .featured-content .hentry:first-of-type {
 		margin-left: 0;
 	}
@@ -650,12 +498,10 @@ table {
 		margin-right: 330px;
 	}
 
-	/* Posts & Pages */
 	.author-info .author-heading {
 		float: right;
 	}
 
-	/* Featured Content */
 	.blog .featured-content .hentry:nth-of-type(2),
 	.blog .featured-content .hentry:nth-of-type(3) {
 		margin-left: 0;
@@ -666,11 +512,7 @@ table {
 	}
 }
 
-/*--------------------------------------------------------------
-## x >= 1380px
---------------------------------------------------------------*/
 @media screen and (min-width: 1380px) {
-	/* Grid */
 	div#jp-relatedposts,
 	.comments-area,
 	.single .entry-content {

@@ -5,6 +5,15 @@
  * @package Canard
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Theme version constant used for cache-busting enqueued assets.
+ */
+define( 'CANARD_VERSION', '2.0.0' );
+
 /**
  * Set the content width based on the theme's design and stylesheet.
  */
@@ -37,7 +46,7 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		 * Make theme available for translation.
 		 * Translations can be filed in the /languages/ directory.
 		 * If you're building a theme based on Canard, use a find and replace
-		 * to change 'canard' to the name of your theme in all the template files
+		 * to change 'canard' to the name of your theme in all the template files.
 		 */
 		load_theme_textdomain( 'canard', get_template_directory() . '/languages' );
 
@@ -55,7 +64,7 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		/*
 		 * Enable support for Post Thumbnails on posts and pages.
 		 *
-		 * @link http://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
+		 * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
 		 */
 		add_theme_support( 'post-thumbnails' );
 		add_image_size( 'canard-post-thumbnail', 870, 773, true );
@@ -73,7 +82,7 @@ if ( ! function_exists( 'canard_setup' ) ) :
 			'flex-height' => true,
 		) );
 
-		// Add custom colors to Gutenberg
+		// Register editor color palette.
 		add_theme_support(
 			'editor-color-palette',
 			array(
@@ -110,7 +119,7 @@ if ( ! function_exists( 'canard_setup' ) ) :
 			)
 		);
 
-		// This theme uses wp_nav_menu() in four locations.
+		// Register navigation menu locations.
 		register_nav_menus(
 			array(
 				'primary'   => __( 'Primary Location', 'canard' ),
@@ -122,7 +131,8 @@ if ( ! function_exists( 'canard_setup' ) ) :
 
 		/*
 		 * Switch default core markup for search form, comment form, and comments
-		 * to output valid HTML5.
+		 * to output valid HTML5. Including 'script' and 'style' tells WordPress to
+		 * omit type attributes on script and style tags.
 		 */
 		add_theme_support(
 			'html5',
@@ -132,12 +142,15 @@ if ( ! function_exists( 'canard_setup' ) ) :
 				'comment-list',
 				'gallery',
 				'caption',
+				'script',
+				'style',
 			)
 		);
 
 		/*
 		 * Enable support for Post Formats.
-		 * See http://codex.wordpress.org/Post_Formats
+		 *
+		 * @link https://developer.wordpress.org/themes/functionality/post-formats/
 		 */
 		add_theme_support(
 			'post-formats',
@@ -148,7 +161,7 @@ if ( ! function_exists( 'canard_setup' ) ) :
 			)
 		);
 	}
-endif; // canard_setup
+endif;
 add_action( 'after_setup_theme', 'canard_setup' );
 
 /**
@@ -160,9 +173,9 @@ function canard_disable_block_widgets() {
 add_action( 'after_setup_theme', 'canard_disable_block_widgets' );
 
 /**
- * Register widget area.
+ * Register widget areas.
  *
- * @link http://codex.wordpress.org/Function_Reference/register_sidebar
+ * @link https://developer.wordpress.org/themes/functionality/sidebars/
  */
 function canard_widgets_init() {
 	register_sidebar(
@@ -192,83 +205,39 @@ function canard_widgets_init() {
 add_action( 'widgets_init', 'canard_widgets_init' );
 
 /**
- * Register Lato and Inconsolata fonts.
+ * Build a combined Google Fonts v2 URL for Lato, Inconsolata, PT Serif,
+ * and Playfair Display. Using a single request reduces HTTP round trips.
  *
- * @return string
+ * @return string Google Fonts stylesheet URL, or empty string if all fonts are disabled.
  */
-function canard_lato_inconsolata_fonts_url() {
-	$fonts_url = '';
+function canard_google_fonts_url() {
+	$families = array();
 
-	/* translators: If there are characters in your language that are not supported
-	 * by Lato, translate this to 'off'. Do not translate into your own language.
-	 */
-	$lato = _x( 'on', 'Lato font: on or off', 'canard' );
-
-	/* translators: If there are characters in your language that are not supported
-	 * by Inconsolata, translate this to 'off'. Do not translate into your own language.
-	 */
-	$inconsolata = _x( 'on', 'Inconsolata font: on or off', 'canard' );
-
-	if ( 'off' !== $lato || 'off' !== $inconsolata ) {
-		$font_families = array();
-
-		if ( 'off' !== $lato ) {
-			$font_families[] = 'Lato:400,700,400italic,700italic';
-		}
-
-		if ( 'off' !== $inconsolata ) {
-			$font_families[] = 'Inconsolata:400,700';
-		}
-
-		$query_args = array(
-			'family'  => urlencode( implode( '|', $font_families ) ),
-			'subset'  => urlencode( 'latin,latin-ext' ),
-			'display' => 'swap',
-		);
-		$fonts_url  = add_query_arg( $query_args, 'https://fonts.googleapis.com/css' );
+	/* translators: If characters in your language are not supported by Lato, translate this to 'off'. */
+	if ( 'off' !== _x( 'on', 'Lato font: on or off', 'canard' ) ) {
+		$families[] = 'family=Lato:ital,wght@0,400;0,700;1,400;1,700';
 	}
 
-	return $fonts_url;
-}
-
-/**
- * Register PT Serif and Playfair Display fonts.
- *
- * @return string
- */
-function canard_pt_serif_playfair_display_font_url() {
-	$fonts_url = '';
-
-	/* translators: If there are characters in your language that are not supported
-	 * by PT Serif, translate this to 'off'. Do not translate into your own language.
-	 */
-	$pt_serif = _x( 'on', 'PT Serif font: on or off', 'canard' );
-
-	/* translators: If there are characters in your language that are not supported
-	 * by Playfair Display, translate this to 'off'. Do not translate into your own language.
-	 */
-	$playfair_display = _x( 'on', 'Playfair Display font: on or off', 'canard' );
-
-	if ( 'off' !== $pt_serif || 'off' !== $playfair_display ) {
-		$font_families = array();
-
-		if ( 'off' !== $pt_serif ) {
-			$font_families[] = 'PT Serif:400,700,400italic,700italic';
-		}
-
-		if ( 'off' !== $playfair_display ) {
-			$font_families[] = 'Playfair Display:400,700,400italic,700italic';
-		}
-
-		$query_args = array(
-			'family'  => urlencode( implode( '|', $font_families ) ),
-			'subset'  => urlencode( 'cyrillic,latin,latin-ext' ),
-			'display' => 'swap',
-		);
-		$fonts_url  = add_query_arg( $query_args, 'https://fonts.googleapis.com/css' );
+	/* translators: If characters in your language are not supported by Inconsolata, translate this to 'off'. */
+	if ( 'off' !== _x( 'on', 'Inconsolata font: on or off', 'canard' ) ) {
+		$families[] = 'family=Inconsolata:wght@400;700';
 	}
 
-	return $fonts_url;
+	/* translators: If characters in your language are not supported by PT Serif, translate this to 'off'. */
+	if ( 'off' !== _x( 'on', 'PT Serif font: on or off', 'canard' ) ) {
+		$families[] = 'family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700';
+	}
+
+	/* translators: If characters in your language are not supported by Playfair Display, translate this to 'off'. */
+	if ( 'off' !== _x( 'on', 'Playfair Display font: on or off', 'canard' ) ) {
+		$families[] = 'family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700';
+	}
+
+	if ( empty( $families ) ) {
+		return '';
+	}
+
+	return 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
 }
 
 /**
@@ -276,38 +245,46 @@ function canard_pt_serif_playfair_display_font_url() {
  */
 function canard_scripts() {
 
-	// Gutenberg styles
-	wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css' );
+	// Gutenberg block styles.
+	wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
 
 	wp_enqueue_style( 'genericons', get_template_directory_uri() . '/genericons/genericons.css', array(), '3.3' );
 
-	wp_enqueue_style( 'canard-pt-serif-playfair-display', canard_pt_serif_playfair_display_font_url() );
+	// Single Google Fonts request for all typefaces used by the theme.
+	$fonts_url = canard_google_fonts_url();
+	if ( $fonts_url ) {
+		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
+	}
 
-	wp_enqueue_style( 'canard-lato-inconsolata', canard_lato_inconsolata_fonts_url() );
+	wp_enqueue_style( 'canard-style', get_stylesheet_uri(), array(), CANARD_VERSION );
 
-	wp_enqueue_style( 'canard-style', get_stylesheet_uri() );
+	// Shared utility functions (debounce). No dependencies — plain JS.
+	wp_enqueue_script( 'canard-utils', get_template_directory_uri() . '/js/utils.js', array(), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-navigation', get_template_directory_uri() . '/js/navigation.js', array( 'jquery' ), '20150507', true );
+	wp_enqueue_script( 'canard-navigation', get_template_directory_uri() . '/js/navigation.js', array( 'jquery', 'canard-utils' ), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array( 'jquery' ), '20150507', true );
+	wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array( 'jquery' ), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-header', get_template_directory_uri() . '/js/header.js', array(), '20150908', true );
+	wp_enqueue_script( 'canard-header', get_template_directory_uri() . '/js/header.js', array(), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-search', get_template_directory_uri() . '/js/search.js', array( 'jquery' ), '20150507', true );
+	wp_enqueue_script( 'canard-search', get_template_directory_uri() . '/js/search.js', array( 'jquery' ), CANARD_VERSION, true );
 
 	if ( is_singular() ) {
-		wp_enqueue_script( 'canard-single', get_template_directory_uri() . '/js/single.js', array( 'jquery' ), '20150507', true );
+		wp_enqueue_script( 'canard-single', get_template_directory_uri() . '/js/single.js', array( 'jquery', 'canard-utils' ), CANARD_VERSION, true );
 	}
 
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
-		wp_enqueue_script( 'canard-sidebar', get_template_directory_uri() . '/js/sidebar.js', array(), '20150429', true );
+		wp_enqueue_script( 'canard-sidebar', get_template_directory_uri() . '/js/sidebar.js', array(), CANARD_VERSION, true );
 	}
 
 	if ( is_home() || is_archive() || is_search() ) {
-		wp_enqueue_script( 'canard-posts', get_template_directory_uri() . '/js/posts.js', array( 'jquery' ), '20150507', true );
+		wp_enqueue_script( 'canard-posts', get_template_directory_uri() . '/js/posts.js', array( 'jquery', 'canard-utils' ), CANARD_VERSION, true );
 	}
 
-	wp_enqueue_script( 'canard-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20130115', true );
+	// canard-skip-link-focus-fix removed — the WebKit/Opera/IE hashchange focus
+	// fix it provided has been unnecessary since ~2016. IE is unsupported since
+	// WP 5.8 and Opera as a distinct engine has not existed since 2013.
+	// Native browser hash navigation handles skip-link focus correctly today.
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -316,13 +293,17 @@ function canard_scripts() {
 add_action( 'wp_enqueue_scripts', 'canard_scripts' );
 
 /**
- * Gutenberg Editor Styles
+ * Enqueue styles for the block editor.
  */
 function canard_editor_styles() {
-	wp_enqueue_style( 'canard-block-style', get_template_directory_uri() . '/blocks.css' );
-	wp_enqueue_style( 'canard-editor-block-style', get_template_directory_uri() . '/editor-blocks.css' );
-	wp_enqueue_style( 'canard-pt-serif-playfair-display', canard_pt_serif_playfair_display_font_url() );
-	wp_enqueue_style( 'canard-lato-inconsolata', canard_lato_inconsolata_fonts_url() );
+	wp_enqueue_style( 'canard-block-style', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
+	wp_enqueue_style( 'canard-editor-block-style', get_template_directory_uri() . '/editor-blocks.css', array(), CANARD_VERSION );
+
+	$fonts_url = canard_google_fonts_url();
+	if ( $fonts_url ) {
+		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
+	}
+
 	wp_enqueue_style( 'genericons', get_template_directory_uri() . '/genericons/genericons.css', array(), '3.3' );
 }
 add_action( 'enqueue_block_editor_assets', 'canard_editor_styles' );
@@ -351,8 +332,3 @@ require get_template_directory() . '/inc/customizer.php';
  * Load Jetpack compatibility file.
  */
 require get_template_directory() . '/inc/jetpack.php';
-
-
-// updater for WordPress.com themes
-if ( is_admin() )
-	include dirname( __FILE__ ) . '/inc/updater.php';

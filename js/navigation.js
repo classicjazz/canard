@@ -1,25 +1,6 @@
 ( function( $ ) {
 
-	var debounce = function( func, wait ) {
-		var timeout, args, context, timestamp;
-		return function() {
-			context = this;
-			args = [].slice.call( arguments, 0 );
-			timestamp = new Date();
-			var later = function() {
-				var last = ( new Date() ) - timestamp;
-				if ( last < wait ) {
-					timeout = setTimeout( later, wait - last );
-				} else {
-					timeout = null;
-					func.apply( context, args );
-				}
-			};
-			if ( ! timeout ) {
-				timeout = setTimeout( later, wait );
-			}
-		};
-	};
+	const debounce = window.canardUtils.debounce;
 
 	function menuDropdownToggle() {
 		$( '.main-navigation .page_item_has_children > a, .main-navigation .menu-item-has-children > a, .widget_nav_menu .page_item_has_children > a, .widget_nav_menu .menu-item-has-children > a' ).each( function() {
@@ -36,7 +17,8 @@
 	$( window ).on( 'load', menuDropdownToggle ).on( 'resize', debounce( menuDropdownToggle, 500 ) );
 
 	$( window ).on( 'load', function() {
-		var menu = $( '#masthead' ).find( 'div' );
+		// Targets the first div inside #masthead, which wraps the navigation.
+		const menu = $( '#masthead' ).find( 'div' );
 		if ( ! menu || ! menu.children().length ) {
 			return;
 		}
@@ -50,7 +32,7 @@
 
 		if ( 'ontouchstart' in window ) {
 			menu.find( '.menu-item-has-children > a' ).on( 'touchstart', function( e ) {
-				var el = $( this ).parent( 'li' );
+				const el = $( this ).parent( 'li' );
 
 				if ( ! el.hasClass( 'focus' ) ) {
 					e.preventDefault();
@@ -69,20 +51,18 @@
 
 ( function() {
 
-	var container, button, menu;
-
-	container = document.getElementById( 'site-navigation' );
+	const container = document.getElementById( 'site-navigation' );
 	if ( ! container ) {
 		return;
 	}
 
-	button = container.getElementsByTagName( 'button' )[0];
-	if ( 'undefined' === typeof button ) {
+	const button = container.getElementsByTagName( 'button' )[0];
+	if ( ! button ) {
 		return;
 	}
 
-	menu = container.getElementsByTagName( 'ul' )[0];
-	if ( 'undefined' === typeof menu ) {
+	const menu = container.getElementsByTagName( 'ul' )[0];
+	if ( ! menu ) {
 		button.style.display = 'none';
 		return;
 	}

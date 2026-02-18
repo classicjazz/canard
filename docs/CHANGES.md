@@ -1,188 +1,80 @@
-# Exact Changes Made - Quick Reference
+# Consolidated Theme Changes
 
-## Files Modified: 30 Total
+## Summary of PHP Modifications
 
-### PHP Files: 26 files
-**Change:** Removed invalid `<?php declare( strict_types = 1 ); ?>` from line 1
+### Core PHP Standards (Global)
 
-**Root Level (20 files):**
-- 404.php
-- archive.php
-- author-bio.php
-- comments.php
-- content-featured-post.php
-- content-link.php
-- content-none.php
-- content-page.php
-- content-single.php
-- content.php
-- entry-script.php
-- featured-content.php
-- footer.php
-- functions.php *(also has additional changes below)*
-- header.php
-- index.php
-- page.php
-- search.php
-- sidebar-footer.php
-- sidebar.php
-- single.php
+* **Strict Types Removal:** Removed invalid `<?php declare( strict_types = 1 ); ?>` from the first line of all **26** PHP files to ensure compatibility.
+* **Security (ABSPATH):** Added `if ( ! defined( 'ABSPATH' ) ) exit;` guards to all template and include files to prevent direct script access.
+* **Escaping:** Replaced `_e()` with `esc_html_e()` and wrapped `get_the_title()` / `get_search_query()` in `esc_html()` across all templates for XSS prevention.
+* **HTML5 Semantics:** Removed redundant `role="..."` attributes (e.g., `banner`, `navigation`, `main`, `complementary`) as they are implicit in modern HTML5 elements.
 
-**inc/ Directory (7 files):**
-- inc/custom-header.php
-- inc/customizer.php
-- inc/extras.php
-- inc/jetpack-fonts.php
-- inc/jetpack.php
-- inc/template-tags.php
-- inc/updater.php
+### `functions.php`
+
+* **Version Management:** Added `CANARD_VERSION` constant to replace hardcoded "2015" version strings in all enqueues.
+* **Google Fonts:** Merged separate font requests into a single `canard_google_fonts_url()` function using the **v2 API (/css2)** with `&display=swap`.
+* **HTML5 Support:** Expanded `add_theme_support( 'html5', ... )` to include `script` and `style`.
+* **Classic Widgets:** Added `canard_disable_block_widgets()` to maintain the legacy widget interface.
+* **Cleanup:** Removed the WordPress.com updater inclusion.
+
+### Template Files (`header.php`, `footer.php`, `comments.php`)
+
+* **header.php:** Added `wp_body_open()`; upgraded XFN profile to HTTPS; added descriptive `aria-label` to navigation elements; removed the legacy pingback link tag.
+* **footer.php:** Updated WordPress.org link to HTTPS and moved it outside of translation strings; applied `esc_html__()` to theme credits.
+* **comments.php:** Cleaned up escaping and navigation roles.
 
 ---
 
-## functions.php - 3 Specific Changes
+## JavaScript Modernization
 
-### Change 1: Google Fonts - Lato/Inconsolata (Line ~208-212)
-```php
-// BEFORE:
-$query_args = array(
-    'family' => urlencode( implode( '|', $font_families ) ),
-    'subset' => urlencode( 'latin,latin-ext' ),
-);
+### Global JS Improvements
 
-// AFTER:
-$query_args = array(
-    'family'  => urlencode( implode( '|', $font_families ) ),
-    'subset'  => urlencode( 'latin,latin-ext' ),
-    'display' => 'swap',  // ← ADDED
-);
-```
+* **jQuery Events:** Replaced all legacy `.load()` and `.resize()` calls with `.on( 'load', ... )` and `.on( 'resize', ... )`.
+* **ES6 Refactoring:** Replaced `var` with `const` and `let` throughout all scripts; used `classList.add()` instead of string concatenation for class manipulation.
+* **Strict Equality:** Replaced `'undefined' === typeof x` checks with simple truthy/falsy `!x` logic.
 
-### Change 2: Google Fonts - PT Serif/Playfair (Line ~247-251)
-```php
-// BEFORE:
-$query_args = array(
-    'family' => urlencode( implode( '|', $font_families ) ),
-    'subset' => urlencode( 'cyrillic,latin,latin-ext' ),
-);
+### File-Specific Changes
 
-// AFTER:
-$query_args = array(
-    'family'  => urlencode( implode( '|', $font_families ) ),
-    'subset'  => urlencode( 'cyrillic,latin,latin-ext' ),
-    'display' => 'swap',  // ← ADDED
-);
-```
-
-### Change 3: Classic Widgets Support (After line 145)
-```php
-// ADDED:
-/**
- * Disable block-based widgets editor to maintain classic widget interface.
- */
-function canard_disable_block_widgets() {
-    remove_theme_support( 'widgets-block-editor' );
-}
-add_action( 'after_setup_theme', 'canard_disable_block_widgets' );
-```
+| File | Change Description |
+| --- | --- |
+| **utils.js** | **NEW FILE:** Contains shared `debounce` implementation exposed as `window.canardUtils.debounce`. |
+| **navigation.js** | Integrated shared `debounce`; added comments for `find('div')` intent; strict ES6 refactor. |
+| **customizer.js** | Replaced inline styles with `.addClass('screen-reader-text')`; updated `clip-path` logic. |
+| **posts.js / single.js** | Fixed character encoding corruption (em dashes); renamed shadowed variables for clarity. |
+| **header.js** | Added null guards for `siteBranding` before accessing `clientHeight`. |
 
 ---
 
-## js/navigation.js - 3 Changes
+## CSS & Styling (Fixes & Cleanup)
 
-### Change 1: Line 36
-```javascript
-// BEFORE:
-$( window ).load( menuDropdownToggle ).resize( debounce( menuDropdownToggle, 500 ) );
+### Bug Fixes
 
-// AFTER:
-$( window ).on( 'load', menuDropdownToggle ).on( 'resize', debounce( menuDropdownToggle, 500 ) );
-```
+* **#1 - #3 (editor-blocks.css):** Removed stray backtick; fixed typos (`.wp-block-latest-posts`); updated `.is-wide` to `.is-style-wide`.
+* **#4 (rtl.css):** Fixed missing units on `right: 50px`.
+* **#5 (style.css):** Replaced placeholder hacks with modern `::placeholder { color: #777; opacity: 1; }`.
+* **#6 - #7 (Global):** Implemented keyboard-accessible focus: `:focus:not(:focus-visible) { outline: none; }`.
+* **#14 (editor-blocks.css):** Replaced `wp-block-quote__citation` with `wp-block-quote cite` (pullquotes retain the `__citation` class).
 
-### Change 2: Line 38
-```javascript
-// BEFORE:
-$( window ).load( function() {
+### Modernization & Cleanup
 
-// AFTER:
-$( window ).on( 'load', function() {
-```
-
-### Change 3: Line 44
-```javascript
-// BEFORE:
-$( '.dropdown-toggle' ).click( function( event ) {
-
-// AFTER:
-$( '.dropdown-toggle' ).on( 'click', function( event ) {
-```
+* **Accessibility:** Replaced deprecated `clip: rect()` with `clip-path: inset(50%)` and `white-space: nowrap` for all `.screen-reader-text` declarations.
+* **Legacy Prefix Removal:** Stripped all legacy `-webkit-box`, `-ms-flexbox`, and `-webkit-transform` prefixes (Issues #10, #11).
+* **Normalization:** Cleaned up `style.css` normalize block; updated `abbr[title]` to use `underline dotted` (Issue #8).
+* **Cleanup:** Removed all `speak: none` declarations (Issue #12) and empty ruleset stubs in `blocks.css` (Issue #16).
 
 ---
 
-## style.css - 2 Changes
+## Files Removed / Added
 
-### Change 1: Line 2349
-```css
-/* BEFORE: */
-z-index: -1
-
-/* AFTER: */
-z-index: -1;
-```
-
-### Change 2: Line 2802
-```css
-/* BEFORE: */
-outline-color: rgba(255, 255, 255, 0.7)
-
-/* AFTER: */
-outline-color: rgba(255, 255, 255, 0.7);
-```
+* **Deleted:** `skip-link-focus-fix.js` (no longer required for modern browsers).
+* **Added:** `js/utils.js`.
 
 ---
 
-## blocks.css - 1 Change
+## Total Change Metrics
 
-### Line 378
-```css
-/* BEFORE: */
-.has-white-color:hover,
-.has-white-color:focus,
-,.has-white-color:active {
-
-/* AFTER: */
-.has-white-color:hover,
-.has-white-color:focus,
-.has-white-color:active {
-```
-*(Removed leading comma)*
-
----
-
-readme.txt (cut irrelevant changelog)
-
----
-
-## Files NOT Modified
-
-All other files remain **100% original**:
-- ✅ rtl.css (unchanged)
-- ✅ editor-blocks.css (unchanged)
-- ✅ genericons/genericons.css (unchanged)
-- ✅ All other .js files (unchanged)
-- ✅ All language files (unchanged)
-- ✅ All images and fonts (unchanged)
-- ✅ LICENSE (unchanged)
-- ✅ screenshot.png (unchanged)
-
----
-
-## Total Line Changes
-
-| File | Lines Removed | Lines Added | Net Change |
-|------|--------------|-------------|------------|
-| **PHP files (26)** | 26 | 0 | -26 lines |
-| **functions.php** | 2 lines | 11 lines | +9 lines |
-| **navigation.js** | 3 lines | 3 lines | 0 lines |
-| **style.css** | 2 lines | 2 lines | 0 lines |
-| **blocks.css** | 1 line | 1 line | 0 lines |
-| **TOTAL** | 34 lines | 17 lines | **-17 lines** |
+| Category | Files Modified | Impact |
+| --- | --- | --- |
+| **PHP** | 29 | Security hardening, HTML5 compliance, strict escaping. |
+| **JS** | 10 | ES6 modernization, shared utilities, jQuery API updates. |
+| **CSS** | 4 | Prefix removal, accessibility fixes, Gutenberg block alignment. |

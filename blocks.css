@@ -3,23 +3,6 @@ Theme Name: Canard
 Description: Used to style Gutenberg Blocks.
 */
 
-/*--------------------------------------------------------------
->>> TABLE OF CONTENTS:
-----------------------------------------------------------------
-1.0 General Block Styles
-2.0 Blocks - Common Blocks
-3.0 Blocks - Formatting
-4.0 Blocks - Layout Elements
-5.0 Blocks - Widgets
-6.0 Blocks - Colors
---------------------------------------------------------------*/
-
-/*--------------------------------------------------------------
-1.0 General Block Styles
---------------------------------------------------------------*/
-
-/* Captions */
-
 [class^="wp-block-"] figcaption {
 	color: #777;
 	font-family: Lato, sans-serif;
@@ -28,17 +11,9 @@ Description: Used to style Gutenberg Blocks.
 	max-width: 100%;
 }
 
-/*--------------------------------------------------------------
-2.0 Blocks - Common Blocks
---------------------------------------------------------------*/
-
-/* Paragraph */
-
 p.has-drop-cap:not(:focus)::first-letter {
 	font-size: 64px;
 }
-
-/* Images */
 
 .wp-block-cover,
 .wp-block-cover.alignleft,
@@ -47,28 +22,13 @@ p.has-drop-cap:not(:focus)::first-letter {
 	display: flex;
 }
 
-/* Gallery */
-
 .wp-block-gallery {
 	margin-bottom: 30px;
 	margin-left: auto;
 }
 
-/* Quote */
-
-.wp-block-quote:not(.is-large):not(.is-style-large).alignleft,
-.wp-block-quote:not(.is-large):not(.is-style-large).alignright {
-}
-
-.rtl .wp-block-quote:not(.is-large):not(.is-style-large).alignleft,
-.rtl .wp-block-quote:not(.is-large):not(.is-style-large).alignright {
-}
-
 .wp-block-quote cite {
 	font-style: normal;
-}
-
-.wp-block-quote cite:before {
 }
 
 .wp-block-quote.is-large,
@@ -78,14 +38,10 @@ p.has-drop-cap:not(:focus)::first-letter {
 	font-size: 120%;
 }
 
-/* Audio */
-
 .wp-block-audio audio {
 	display: block;
 	width: 100%;
 }
-
-/* File */
 
 .wp-block-file a.wp-block-file__button {
 	background: #d11415;
@@ -105,22 +61,10 @@ p.has-drop-cap:not(:focus)::first-letter {
 	outline: none;
 }
 
-.wp-block-file a.wp-block-file__button:focus {
-	background: #fff;
-	color: #d11415;
-	outline: none;
-}
-
 .rtl .wp-block-file * + .wp-block-file__button {
 	margin-left: 0.75em;
 	margin-right: 0;
 }
-
-/*--------------------------------------------------------------
-3.0 Blocks - Formatting Blocks
---------------------------------------------------------------*/
-
-/* Verse */
 
 .wp-block-verse {
 	background: transparent;
@@ -134,13 +78,9 @@ p.has-drop-cap:not(:focus)::first-letter {
 	padding: 0;
 }
 
-/* Code */
-
 .wp-block-code {
 	font-family: Inconsolata, monospace;
 }
-
-/* Pullquote */
 
 .wp-block-pullquote {
 	margin: 0;
@@ -173,50 +113,11 @@ p.has-drop-cap:not(:focus)::first-letter {
 	font-size: 16px;
 }
 
-.rtl .wp-block-pullquote blockquote {
-}
-
-.wp-block-pullquote p {
-}
-
 .wp-block-pullquote cite {
 	text-transform: none;
 	font-size: inherit;
 	font-weight: bold;
 }
-
-.wp-block-pullquote cite:before {
-}
-
-/* Table */
-
-.wp-block-table,
-.wp-block-table th,
-.wp-block-table td {
-}
-
-.wp-block-table {
-}
-
-.wp-block-table th,
-.wp-block-table td {
-}
-
-.wp-block-table th {
-}
-
-.wp-block-table td {
-}
-
-.rtl .wp-block-table th,
-.rtl .wp-block-table td {
-}
-
-/*--------------------------------------------------------------
-4.0 Blocks - Layout Elements
---------------------------------------------------------------*/
-
-/* Buttons */
 
 .wp-block-button .wp-block-button__link {
 	border: 2px solid;
@@ -263,8 +164,6 @@ p.has-drop-cap:not(:focus)::first-letter {
 	color: currentColor;
 }
 
-/* Seperator */
-
 hr.wp-block-separator {
 	border: 0;
 }
@@ -290,12 +189,6 @@ hr.wp-block-separator {
 	max-width: 100%;
 }
 
-/*--------------------------------------------------------------
-5.0 Blocks - Widget Blocks
---------------------------------------------------------------*/
-
-/* General Widget styles */
-
 .wp-block-categories.aligncenter,
 .wp-block-categories.aligncenter ul,
 .wp-block-archives.aligncenter,
@@ -305,15 +198,10 @@ hr.wp-block-separator {
 	text-align: center;
 }
 
-/* Latest Comments */
-
 .editor-block-list__block .wp-block-latest-comments__comment-meta a {
 	box-shadow: none;
 	font-weight: 700;
 	text-decoration: none;
-}
-
-.wp-block-latest-comments__comment-date {
 }
 
 .wp-block-latest-comments .wp-block-latest-comments__comment {
@@ -325,10 +213,6 @@ hr.wp-block-separator {
 .wp-block-latest-comments__comment-excerpt p:last-child {
 	margin-bottom: 0;
 }
-
-/*--------------------------------------------------------------
-6.0 Blocks - Colors
---------------------------------------------------------------*/
 
 .has-dark-gray-color,
 .has-dark-gray-color:hover,
@@ -413,4 +297,3 @@ hr.wp-block-separator {
 .has-black-background-color:active {
 	background-color: #222;
 }
-

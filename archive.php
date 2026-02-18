@@ -2,16 +2,19 @@
 /**
  * The template for displaying archive pages.
  *
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
- *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 get_header(); ?>
 
 	<div class="site-content-inner">
 		<div id="primary" class="content-area">
-			<main id="main" class="site-main" role="main">
+			<main id="main" class="site-main">
 
 			<?php if ( have_posts() ) : ?>
 
@@ -22,13 +25,12 @@ get_header(); ?>
 					?>
 				</header><!-- .page-header -->
 
-				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 
 					<?php
-						/* Include the Post-Format-specific template for the content.
-						 * If you want to override this in a child theme, then include a file
-						 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
+						/*
+						 * Include the post format-specific template part.
+						 * To override in a child theme, create content-{format}.php.
 						 */
 						get_template_part( 'content', get_post_format() );
 					?>
