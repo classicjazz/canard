@@ -3663,3 +3663,8 @@ a {
 		height: 420px;
 	}
 }
+
+.entry-hero .page-title {
+	color: #fff;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+}
