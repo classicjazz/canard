@@ -313,3 +313,91 @@ require get_template_directory() . '/inc/jetpack.php';
  */
 require_once get_template_directory() . '/entry-script.php';
 add_filter( 'body_class', 'canard_entry_hero_body_class' );
+
+/**
+ * -------------------------------------------------------------------------
+ * Category Header Image
+ * -------------------------------------------------------------------------
+ *
+ * canard_get_category_header_image() returns the URL of the banner image for
+ * the current category archive, or false if none is configured.
+ *
+ * By default the function returns false so that category.php falls back to a
+ * plain colour block (see canard_get_category_color() below).
+ *
+ * CHILD THEME OVERRIDE — use the canard_category_header_image filter:
+ *
+ *   add_filter( 'canard_category_header_image', function( $url ) {
+ *     $cat   = get_queried_object();
+ *     $slug  = $cat ? $cat->slug : '';
+ *     $map   = array( 'travel' => 'travel.webp', ... );
+ *     if ( isset( $map[ $slug ] ) ) {
+ *       return get_stylesheet_directory_uri() . '/images/categories/' . $map[ $slug ];
+ *     }
+ *     return $url; // return the received value (false) to keep the colour fallback
+ *   } );
+ *
+ * Always return the received $url value (not a hardcoded false) for slugs with
+ * no match, so the filter chain and colour fallback continue to work correctly.
+ *
+ * See docs/category-images.md for full documentation.
+ *
+ * @return string|false Image URL, or false to trigger the colour fallback.
+ */
+if ( ! function_exists( 'canard_get_category_header_image' ) ) {
+	function canard_get_category_header_image() {
+		/**
+		 * Filters the category header image URL.
+		 *
+		 * Return a URL string to show an image banner, or false/empty to fall
+		 * back to the solid colour block defined by canard_get_category_color().
+		 *
+		 * @param string|false $url Image URL or false.
+		 */
+		return apply_filters( 'canard_category_header_image', false );
+	}
+}
+
+/**
+ * Returns the solid-colour fallback used in the category header when no image
+ * is available.
+ *
+ * Defaults to the theme accent colour (#d11415). Child themes can override
+ * this function or add a filter:
+ *
+ *   add_filter( 'canard_category_color', function( $color ) {
+ *     $map = array( 'travel' => '#1a6eb5', 'food' => '#e07b29' );
+ *     $cat = get_queried_object();
+ *     return $map[ $cat->slug ] ?? $color;
+ *   } );
+ *
+ * @return string A valid CSS colour value (hex, rgb, etc.).
+ */
+if ( ! function_exists( 'canard_get_category_color' ) ) {
+	function canard_get_category_color() {
+		// Read the accent colour from theme.json so the category header stays
+		// in sync if the palette is ever updated (WordPress 5.9+).
+		$default = '#d11415';
+		if ( function_exists( 'wp_get_global_settings' ) ) {
+			$palette = wp_get_global_settings( array( 'color', 'palette', 'theme' ) );
+			if ( is_array( $palette ) ) {
+				foreach ( $palette as $entry ) {
+					if ( isset( $entry['slug'], $entry['color'] ) && 'red' === $entry['slug'] ) {
+						$default = $entry['color'];
+						break;
+					}
+				}
+			}
+		}
+
+		/**
+		 * Filters the category header fallback colour.
+		 *
+		 * Defaults to the 'red' colour defined in theme.json (currently #d11415).
+		 * Falls back to the hardcoded hex if wp_get_global_settings() is unavailable.
+		 *
+		 * @param string $color CSS colour value.
+		 */
+		return apply_filters( 'canard_category_color', $default );
+	}
+}

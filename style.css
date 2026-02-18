@@ -963,8 +963,6 @@ a:visited {
 .site-content:after,
 .site-content-inner:before,
 .site-content-inner:after,
-.site-footer:before,
-.site-footer:after,
 .site-top-inner:before,
 .site-top-inner:after,
 .secondary-navigation > div:before,
@@ -988,7 +986,6 @@ a:visited {
 .site-header:after,
 .site-content:after,
 .site-content-inner:after,
-.site-footer:after,
 .site-top-inner:after,
 .secondary-navigation > div:after {
 	clear: both;
@@ -1197,7 +1194,6 @@ a:visited {
 .search-navigation-inner,
 .site-branding,
 .site-content-inner,
-.site-info,
 .site-top-inner {
 	width: 90%;
 }
@@ -1216,7 +1212,6 @@ a:visited {
 .search-navigation-inner,
 .site-branding,
 .site-content-inner,
-.site-info,
 .site-top-inner {
 	margin: 0 auto;
 }
@@ -1384,40 +1379,6 @@ a:visited {
 .header-image a:focus,
 .header-image a:hover {
 	opacity: 0.7;
-}
-
-.site-footer {
-	background: #222;
-	padding: 7.5px 0;
-	position: relative;
-}
-.site-info {
-	color: #ccc;
-	font-size: 13px;
-	line-height: 1.845;
-	padding: 3px 0;
-	text-align: center;
-}
-.site-info a {
-	color: #ccc;
-}
-.site-info a:active,
-.site-info a:focus,
-.site-info a:hover {
-	color: #fff;
-}
-.site-info a:focus {
-	outline-color: #555;
-}
-.site-info .sep {
-	color: #444;
-	fill: #444;
-	height: 16px;
-	vertical-align: bottom;
-	width: 16px;
-}
-.site-info .sep:hover {
-	transform: rotate(360deg);
 }
 
 .featured-content {
@@ -2251,12 +2212,8 @@ video,
 	margin-bottom: 30px;
 }
 
-.infinite-scroll .posts-navigation,
-.infinite-scroll.neverending .site-footer {
+.infinite-scroll .posts-navigation {
 	display: none;
-}
-.infinity-end.neverending .site-footer {
-	display: block;
 }
 #infinite-handle {
 	border-top: 1px solid #eee;
@@ -2734,7 +2691,6 @@ textarea,
 .post-thumbnail img,
 .search-form:before,
 .site,
-.site-info .sep,
 .sticky-post {
 	transition: all 350ms ease-in-out;
 }
@@ -2945,7 +2901,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 648px;
 	}
@@ -3052,7 +3007,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 720px;
 	}
@@ -3258,7 +3212,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 840px;
 	}
@@ -3501,7 +3454,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 960px;
 	}
@@ -3583,7 +3535,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 1260px;
 	}
@@ -3660,5 +3611,55 @@ a {
 
 	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post {
 		width: 160px;
+	}
+}
+
+/* =Category header
+----------------------------------------------- */
+
+/**
+ * category-color-fallback — shown when no category image is configured.
+ * Mirrors the dimensions of a full-width hero image so the header layout
+ * remains consistent between image and colour variants.
+ */
+.category-color-fallback {
+	display: block;
+	width: 100%;
+	height: 260px;
+}
+
+@media screen and (min-width: 768px) {
+	.category-color-fallback {
+		height: 360px;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.category-color-fallback {
+		height: 420px;
+	}
+}
+
+/**
+ * category-header — the <img> used when a category image is provided.
+ * Matches the full-bleed layout used by other hero images in the theme.
+ */
+.entry-hero .post-thumbnail .category-header {
+	display: block;
+	width: 100%;
+	height: 260px;
+	object-fit: cover;
+	object-position: center;
+}
+
+@media screen and (min-width: 768px) {
+	.entry-hero .post-thumbnail .category-header {
+		height: 360px;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.entry-hero .post-thumbnail .category-header {
+		height: 420px;
 	}
 }

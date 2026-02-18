@@ -235,3 +235,23 @@ The social navigation menu location, all associated template markup, and all ass
 ### New Files
 
 * **`theme.json`:** Replaces the deprecated `add_theme_support( 'editor-color-palette' )` call. Declares the same six-colour palette (Black, Dark Gray, Medium Gray, Light Gray, White, Red) under `settings.color.palette`. Also declares `contentSize` and `wideSize` to match the theme's layout widths. The file uses schema version 2 and is safe to use with classic (non-block) themes from WordPress 5.9 onwards; it does not require block templates or a `templates/` directory.
+
+---
+
+## Round 4 Changes
+
+### PHP
+
+* **`category.php` — Native category archive template added:** A new `category.php` has been added to the parent theme, replacing the equivalent file previously maintained in child themes. The template displays a full-width hero banner at the top of the category archive page, followed by the standard post loop with pagination. It is integrated with the same `entry-hero` layout structure used by single posts and pages.
+
+* **`functions.php` — `canard_get_category_header_image()` added:** Returns the URL of the banner image for the current category archive, or `false` if none is configured. Wrapped in `if ( ! function_exists() )` so child themes can override it entirely. Exposes the `canard_category_header_image` filter (receives `false` by default) so child themes can supply images without replacing the function. See `docs/category-images.md` for usage.
+
+* **`functions.php` — `canard_get_category_color()` added:** Returns the solid-colour fallback used in the category header when no image is provided. The default colour is read at runtime from the `red` entry in the `theme.json` palette via `wp_get_global_settings()` (WordPress 5.9+), so the category header automatically reflects any future palette update. Falls back to the hardcoded value `#d11415` if `wp_get_global_settings()` is unavailable. Exposes the `canard_category_color` filter for child theme overrides.
+
+### CSS
+
+* **`style.css` — Category header styles added:** Two new rule blocks added under a `Category header` section comment. `.category-color-fallback` renders a solid-colour block at 260 px / 360 px / 420 px tall across the three responsive breakpoints, matching the visual footprint of a hero image. `.entry-hero .post-thumbnail .category-header` applies `object-fit: cover` and matching responsive heights to the `<img>` element used when a category image is configured.
+
+### Docs
+
+* **`docs/category-images.md` — New file:** Documents how child themes can supply per-category banner images and/or per-category colours using the `canard_category_header_image` and `canard_category_color` filters, or by overriding the functions entirely. Includes image spec recommendations, code examples for both filter approaches, and guidance on combining images and colours.
