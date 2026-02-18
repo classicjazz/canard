@@ -18,7 +18,7 @@
 				const postThumbnail = entry.querySelector( '.post-thumbnail' );
 				const thumbnail     = entry.querySelector( 'img' );
 				if ( postThumbnail && thumbnail ) {
-					postThumbnail.style.backgroundImage = 'url(' + thumbnail.src + ')';
+					postThumbnail.style.backgroundImage = 'url(' + ( thumbnail.currentSrc || thumbnail.src ) + ')';
 					postThumbnail.style.height          = ( entry.offsetHeight - marginSize ) + 'px';
 				}
 			}

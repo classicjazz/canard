@@ -6,10 +6,14 @@
  *
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="profile" href="https://gmpg.org/xfn/11">
 
@@ -39,14 +43,31 @@
 
 		<div class="site-branding">
 			<?php canard_the_site_logo(); ?>
-			<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-			<h2 class="site-description"><?php bloginfo( 'description' ); ?></h2>
+			<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a></h1>
+			<h2 class="site-description"><?php echo esc_html( get_bloginfo( 'description' ) ); ?></h2>
 		</div><!-- .site-branding -->
 
 		<?php if ( get_header_image() ) : ?>
 			<div class="header-image">
 				<div class="header-image-inner">
-					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &mdash; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php header_image(); ?>" width="<?php echo absint( get_custom_header()->width ); ?>" height="<?php echo absint( get_custom_header()->height ); ?>" alt=""></a>
+					<?php
+					/*
+					 * Security: Use get_header_image() + esc_url() rather than the
+					 * header_image() template tag, which calls echo internally and
+					 * bypasses the escaping layer. Any javascript: or data: URI stored
+					 * as the custom header would otherwise be reflected unescaped into
+					 * the src attribute.
+					 *
+					 * The loading and fetchpriority attribute values are ternary-
+					 * controlled static strings, but are passed through esc_attr() so
+					 * that the pattern is safe if the conditional is ever extended to
+					 * read from a theme option or filter. WordPress VIP coding standards
+					 * require esc_attr() on all attribute echoes without exception.
+					 */
+					$header_loading      = is_front_page() ? 'eager' : 'lazy';
+					$header_fetchprio    = is_front_page() ? 'high'  : 'auto';
+					?>
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &mdash; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php echo esc_url( get_header_image() ); ?>" width="<?php echo absint( get_custom_header()->width ); ?>" height="<?php echo absint( get_custom_header()->height ); ?>" loading="<?php echo esc_attr( $header_loading ); ?>" fetchpriority="<?php echo esc_attr( $header_fetchprio ); ?>" alt=""></a>
 				</div><!-- .header-image-inner -->
 			</div><!-- .header-image -->
 		<?php endif; ?>

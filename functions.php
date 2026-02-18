@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Theme version constant used for cache-busting enqueued assets.
  */
-define( 'CANARD_VERSION', '2.0.0' );
+define( 'CANARD_VERSION', '2.5.0' );
 
 /**
  * Set the content width based on the theme's design and stylesheet.
@@ -109,8 +109,12 @@ if ( ! function_exists( 'canard_setup' ) ) :
 				'caption',
 				'script',
 				'style',
+				'navigation-widgets',
 			)
 		);
+
+		// Enables smoother widget previews in the Customizer.
+		add_theme_support( 'customize-selective-refresh-widgets' );
 
 		/*
 		 * Enable support for Post Formats.
@@ -172,7 +176,12 @@ add_action( 'widgets_init', 'canard_widgets_init' );
  *
  * @return string Google Fonts stylesheet URL, or empty string if all fonts are disabled.
  */
-function canard_google_fonts_url() {
+function canard_google_fonts_url(): string {
+	static $url = null;
+	if ( null !== $url ) {
+		return $url;
+	}
+
 	$families = array();
 
 	/* translators: If characters in your language are not supported by Lato, translate this to 'off'. */
@@ -196,30 +205,57 @@ function canard_google_fonts_url() {
 	}
 
 	if ( empty( $families ) ) {
-		return '';
+		$url = '';
+		return $url;
 	}
 
-	return 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
+	$url = 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
+	return $url;
 }
 
 /**
- * Outputs preconnect resource hints for Google Fonts to improve LCP.
+ * Adds preconnect resource hints for Google Fonts via the proper WordPress
+ * API so they are deduplicated, filterable, and output in the correct position
+ * by wp_resource_hints() — not via a raw wp_head echo.
  * Only emitted when Google Fonts are actually in use.
+ *
+ * @param array  $urls          URLs to print for resource hints.
+ * @param string $relation_type The relation type the URLs are printed for.
+ * @return array Filtered resource hint URLs.
  */
-add_action( 'wp_head', function() {
-	if ( canard_google_fonts_url() ) {
-		echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-		echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+function canard_resource_hints( array $urls, string $relation_type ): array {
+	if ( 'preconnect' === $relation_type && canard_google_fonts_url() ) {
+		$urls[] = array(
+			'href' => 'https://fonts.googleapis.com',
+		);
+		$urls[] = array(
+			'href'        => 'https://fonts.gstatic.com',
+			'crossorigin' => true,
+		);
 	}
-}, 1 );
+
+	// Prefetch Gravatar DNS early so avatar requests on archive pages don't
+	// stall on DNS resolution. Cheap hint; no privacy cost beyond what
+	// get_avatar() already incurs.
+	if ( 'dns-prefetch' === $relation_type && ! is_admin() ) {
+		$urls[] = 'https://secure.gravatar.com';
+	}
+
+	return $urls;
+}
+add_filter( 'wp_resource_hints', 'canard_resource_hints', 10, 2 );
 
 /**
  * Enqueue scripts and styles.
  */
 function canard_scripts() {
 
-	// Gutenberg block styles.
-	wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
+	// Gutenberg block styles — only needed on singular posts/pages and the
+	// front page (where the featured-content carousel may contain block markup).
+	// Archives, search results, and other listing pages do not render block HTML.
+	if ( is_singular() || is_front_page() ) {
+		wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
+	}
 
 	// Single Google Fonts request for all typefaces used by the theme.
 	$fonts_url = canard_google_fonts_url();
@@ -227,29 +263,110 @@ function canard_scripts() {
 		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
 	}
 
-	wp_enqueue_style( 'canard-style', get_stylesheet_uri(), array(), CANARD_VERSION );
+	// Main stylesheet.
+	wp_enqueue_style( 'canard-style', get_template_directory_uri() . '/style.css', array(), CANARD_VERSION );
+
+	// Comment stylesheet — only needed where comments are rendered.
+	if ( is_singular() && ( comments_open() || get_comments_number() ) ) {
+		wp_enqueue_style(
+			'canard-comments',
+			get_template_directory_uri() . '/comments.css',
+			array( 'canard-style' ),
+			CANARD_VERSION
+		);
+	}
 
 	// Shared utility functions (debounce). No dependencies — plain JS.
-	wp_enqueue_script( 'canard-utils', get_template_directory_uri() . '/js/utils.js', array(), CANARD_VERSION, true );
+	// Uses the native WP 6.3+ strategy API (targeting WP 6.9+), which handles
+	// dependency ordering correctly and avoids string-manipulation on script tags.
+	wp_enqueue_script(
+		'canard-utils',
+		get_template_directory_uri() . '/js/utils.js',
+		array(),
+		CANARD_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 
-	wp_enqueue_script( 'canard-navigation', get_template_directory_uri() . '/js/navigation.js', array( 'canard-utils' ), CANARD_VERSION, true );
+	wp_enqueue_script(
+		'canard-navigation',
+		get_template_directory_uri() . '/js/navigation.js',
+		array( 'canard-utils' ),
+		CANARD_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 
-	wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array(), CANARD_VERSION, true );
+	// Only enqueue featured-content script on the front page where it's relevant.
+	if ( is_front_page() ) {
+		wp_enqueue_script(
+			'canard-featured-content',
+			get_template_directory_uri() . '/js/featured-content.js',
+			array(),
+			CANARD_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
 
-	wp_enqueue_script( 'canard-header', get_template_directory_uri() . '/js/header.js', array(), CANARD_VERSION, true );
+	wp_enqueue_script(
+		'canard-header',
+		get_template_directory_uri() . '/js/header.js',
+		array( 'canard-utils' ),
+		CANARD_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 
-	wp_enqueue_script( 'canard-search', get_template_directory_uri() . '/js/search.js', array(), CANARD_VERSION, true );
+	wp_enqueue_script(
+		'canard-search',
+		get_template_directory_uri() . '/js/search.js',
+		array(),
+		CANARD_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 
 	if ( is_singular() ) {
+		// canard-single runs entry-hero DOM rearrangement synchronously to avoid
+		// a layout flash (FOUC). Do NOT add strategy:defer here.
 		wp_enqueue_script( 'canard-single', get_template_directory_uri() . '/js/single.js', array( 'canard-utils' ), CANARD_VERSION, true );
 	}
 
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
-		wp_enqueue_script( 'canard-sidebar', get_template_directory_uri() . '/js/sidebar.js', array(), CANARD_VERSION, true );
+		wp_enqueue_script(
+			'canard-sidebar',
+			get_template_directory_uri() . '/js/sidebar.js',
+			array(),
+			CANARD_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
 	}
 
 	if ( is_home() || is_archive() || is_search() ) {
-		wp_enqueue_script( 'canard-posts', get_template_directory_uri() . '/js/posts.js', array( 'canard-utils' ), CANARD_VERSION, true );
+		wp_enqueue_script(
+			'canard-posts',
+			get_template_directory_uri() . '/js/posts.js',
+			array( 'canard-utils' ),
+			CANARD_VERSION,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
 	}
 
 	// canard-skip-link-focus-fix removed — the WebKit/Opera/IE hashchange focus
@@ -264,18 +381,21 @@ function canard_scripts() {
 add_action( 'wp_enqueue_scripts', 'canard_scripts' );
 
 /**
- * Enqueue styles for the block editor.
+ * Register editor styles via the preferred add_editor_style() API.
+ * This uses WP core's editor style scoping (.editor-styles-wrapper),
+ * handles RTL correctly, and is the recommended path since WP 5.8.
  */
 function canard_editor_styles() {
-	wp_enqueue_style( 'canard-block-style', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
-	wp_enqueue_style( 'canard-editor-block-style', get_template_directory_uri() . '/editor-blocks.css', array(), CANARD_VERSION );
+	add_theme_support( 'editor-styles' );
+	add_editor_style( 'blocks.css' );
+	add_editor_style( 'editor-blocks.css' );
 
 	$fonts_url = canard_google_fonts_url();
 	if ( $fonts_url ) {
-		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
+		add_editor_style( $fonts_url );
 	}
 }
-add_action( 'enqueue_block_editor_assets', 'canard_editor_styles' );
+add_action( 'after_setup_theme', 'canard_editor_styles', 11 );
 
 /**
  * Implement the Custom Header feature.
@@ -313,3 +433,98 @@ require get_template_directory() . '/inc/jetpack.php';
  */
 require_once get_template_directory() . '/entry-script.php';
 add_filter( 'body_class', 'canard_entry_hero_body_class' );
+
+/**
+ * -------------------------------------------------------------------------
+ * Security: Taxonomy Archive Description Sanitisation
+ * -------------------------------------------------------------------------
+ *
+ * WordPress outputs the taxonomy term description through the_archive_description()
+ * without applying wp_kses_post(). Users with the manage_categories capability can
+ * store arbitrary HTML (including <script> tags) in the description field. This
+ * filter sanitises all output from get_the_archive_description() to a safe HTML
+ * subset before it is printed by archive.php and category.php.
+ *
+ * Note: archive.php and category.php also call wp_kses_post() directly at the
+ * point of echo for defence in depth. This filter covers any other template or
+ * plugin that calls the_archive_description() or get_the_archive_description()
+ * without its own sanitisation step.
+ */
+add_filter( 'get_the_archive_description', 'wp_kses_post' );
+
+/**
+ * -------------------------------------------------------------------------
+ * Category Header Image
+ * -------------------------------------------------------------------------
+ *
+ * canard_get_category_header_image() returns the URL of the banner image for
+ * the current category archive, or false if none is configured.
+ *
+ * By default the function returns false so that category.php falls back to a
+ * plain colour block (see canard_get_category_color() below).
+ *
+ * CHILD THEME OVERRIDE — use the canard_category_header_image filter:
+ *
+ *   add_filter( 'canard_category_header_image', function( $url ) {
+ *     $cat   = get_queried_object();
+ *     $slug  = $cat ? $cat->slug : '';
+ *     $map   = array( 'travel' => 'travel.webp', ... );
+ *     if ( isset( $map[ $slug ] ) ) {
+ *       return get_stylesheet_directory_uri() . '/images/categories/' . $map[ $slug ];
+ *     }
+ *     return $url; // return the received value (false) to keep the colour fallback
+ *   } );
+ *
+ * Always return the received $url value (not a hardcoded false) for slugs with
+ * no match, so the filter chain and colour fallback continue to work correctly.
+ *
+ * See docs/category-images.md for full documentation.
+ *
+ * @return string|false Image URL, or false to trigger the colour fallback.
+ */
+if ( ! function_exists( 'canard_get_category_header_image' ) ) {
+	function canard_get_category_header_image() {
+		/**
+		 * Filters the category header image URL.
+		 *
+		 * Return a URL string to show an image banner, or false/empty to fall
+		 * back to the solid colour block defined by canard_get_category_color().
+		 *
+		 * @param string|false $url Image URL or false.
+		 */
+		return apply_filters( 'canard_category_header_image', false );
+	}
+}
+
+/**
+ * Returns the solid-colour fallback used in the category header when no image
+ * is available.
+ *
+ * Defaults to the theme accent colour (#d11415). Child themes can override
+ * this function or add a filter:
+ *
+ *   add_filter( 'canard_category_color', function( $color ) {
+ *     $map = array( 'travel' => '#1a6eb5', 'food' => '#e07b29' );
+ *     $cat = get_queried_object();
+ *     return $map[ $cat->slug ] ?? $color;
+ *   } );
+ *
+ * @return string A valid CSS colour value (hex, rgb, etc.).
+ */
+if ( ! function_exists( 'canard_get_category_color' ) ) {
+	function canard_get_category_color() {
+		/**
+		 * Filters the category header fallback colour.
+		 *
+		 * Defaults to the theme accent colour (#d11415). This was previously
+		 * read from theme.json via wp_get_global_settings(), but Canard is a
+		 * classic theme with no theme.json, so that call always returned an
+		 * empty array and fell back to the hardcoded default. The dead branch
+		 * has been removed; child themes should use this filter to customise
+		 * the colour.
+		 *
+		 * @param string $color CSS colour value.
+		 */
+		return apply_filters( 'canard_category_color', '#d11415' );
+	}
+}

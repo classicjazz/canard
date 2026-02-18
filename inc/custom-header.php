@@ -33,6 +33,11 @@ if ( ! function_exists( 'canard_header_style' ) ) :
  * Outputs CSS for the site title and description when a custom header text
  * color is set, or hides them when the header text is disabled.
  *
+ * Uses wp_add_inline_style() rather than echoing a raw <style> tag so that
+ * the output is compatible with Content Security Policy nonce-based style-src
+ * directives (WordPress 5.9.1+) and is consistent with how
+ * canard_post_nav_background() registers inline styles.
+ *
  * @see canard_custom_header_setup()
  */
 function canard_header_style() {
@@ -42,25 +47,28 @@ function canard_header_style() {
 	if ( get_theme_support( 'custom-header', 'default-text-color' ) === $header_text_color ) {
 		return;
 	}
-	?>
-	<style>
-	<?php if ( 'blank' === $header_text_color ) : ?>
-		.site-title,
-		.site-description {
-			position: absolute;
-			clip-path: inset(50%);
-			white-space: nowrap;
-			overflow: hidden;
-			height: 1px;
-			width: 1px;
-		}
-	<?php else : ?>
-		.site-title,
-		.site-description {
-			color: #<?php echo esc_attr( $header_text_color ); ?>;
-		}
-	<?php endif; ?>
-	</style>
-	<?php
+
+	if ( 'blank' === $header_text_color ) {
+		$css = '
+			.site-title,
+			.site-description {
+				position: absolute;
+				clip-path: inset(50%);
+				white-space: nowrap;
+				overflow: hidden;
+				height: 1px;
+				width: 1px;
+			}
+		';
+	} else {
+		$css = '
+			.site-title,
+			.site-description {
+				color: #' . esc_attr( $header_text_color ) . ';
+			}
+		';
+	}
+
+	wp_add_inline_style( 'canard-style', $css );
 }
 endif;

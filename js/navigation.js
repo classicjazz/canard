@@ -16,9 +16,14 @@
 
 		parentLinks.forEach( function( link ) {
 			if ( ! link.querySelector( '.dropdown-toggle' ) ) {
-				const btn = document.createElement( 'button' );
+				const btn      = document.createElement( 'button' );
+				const linkText = link.firstChild && link.firstChild.nodeValue
+					? link.firstChild.nodeValue.trim()
+					: link.textContent.replace( /\s+/g, ' ' ).trim();
 				btn.classList.add( 'dropdown-toggle' );
 				btn.setAttribute( 'aria-expanded', 'false' );
+				// Provide an accessible name per WCAG 2.1 SC 4.1.2.
+				btn.setAttribute( 'aria-label', linkText ? 'Toggle ' + linkText + ' submenu' : 'Toggle submenu' );
 				link.appendChild( btn );
 			}
 		} );
@@ -75,6 +80,14 @@
 						} );
 					}
 				} );
+			} );
+
+			// Close open submenus when tapping outside the navigation.
+			document.addEventListener( 'touchstart', function( e ) {
+				if ( ! e.target.closest( '.main-navigation' ) ) {
+					document.querySelectorAll( '.main-navigation .focus' )
+						.forEach( function( el ) { el.classList.remove( 'focus' ); } );
+				}
 			} );
 		}
 

@@ -101,21 +101,24 @@ function canard_jetpack_featured_image_display() {
 		return true;
 	}
 
-	$options         = get_theme_support( 'jetpack-content-options' );
-	$featured_images = ( ! empty( $options[0]['featured-images'] ) ) ? $options[0]['featured-images'] : null;
+	$options = get_theme_support( 'jetpack-content-options' )[0] ?? array();
+	$fi      = $options['featured-images'] ?? array();
 
-	$settings = array(
-		'post-default' => ( isset( $featured_images['post-default'] ) && false === $featured_images['post-default'] ) ? '' : 1,
-		'page-default' => ( isset( $featured_images['page-default'] ) && false === $featured_images['page-default'] ) ? '' : 1,
+	$show_on_post = (bool) get_option(
+		'jetpack_content_featured_images_post',
+		! isset( $fi['post-default'] ) || false !== $fi['post-default']
 	);
 
-	$settings = array_merge( $settings, array(
-		'post-option'  => get_option( 'jetpack_content_featured_images_post', $settings['post-default'] ),
-		'page-option'  => get_option( 'jetpack_content_featured_images_page', $settings['page-default'] ),
-	) );
+	$show_on_page = (bool) get_option(
+		'jetpack_content_featured_images_page',
+		! isset( $fi['page-default'] ) || false !== $fi['page-default']
+	);
 
-	if ( ( ! $settings['post-option'] && is_single() )
-		|| ( ! $settings['page-option'] && is_singular() && is_page() ) ) {
+	if ( is_single() && ! $show_on_post ) {
+		return false;
+	}
+
+	if ( is_page() && ! $show_on_page ) {
 		return false;
 	}
 

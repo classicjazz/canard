@@ -1,8 +1,8 @@
 /*
 Theme Name: Canard
-Theme URI: https://wordpress.com/themes/canard/
+Theme URI: https://github.com/classicjazz/canard
 Description: A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device.
-Version: 2.0.0
+Version: 2.5.0
 Author: Automattic, Michael Connelly
 Author URI: https://www.mikeconnelly.com
 License: GNU General Public License v2 or later
@@ -963,8 +963,6 @@ a:visited {
 .site-content:after,
 .site-content-inner:before,
 .site-content-inner:after,
-.site-footer:before,
-.site-footer:after,
 .site-top-inner:before,
 .site-top-inner:after,
 .secondary-navigation > div:before,
@@ -988,7 +986,6 @@ a:visited {
 .site-header:after,
 .site-content:after,
 .site-content-inner:after,
-.site-footer:after,
 .site-top-inner:after,
 .secondary-navigation > div:after {
 	clear: both;
@@ -1197,7 +1194,6 @@ a:visited {
 .search-navigation-inner,
 .site-branding,
 .site-content-inner,
-.site-info,
 .site-top-inner {
 	width: 90%;
 }
@@ -1216,7 +1212,6 @@ a:visited {
 .search-navigation-inner,
 .site-branding,
 .site-content-inner,
-.site-info,
 .site-top-inner {
 	margin: 0 auto;
 }
@@ -1384,40 +1379,6 @@ a:visited {
 .header-image a:focus,
 .header-image a:hover {
 	opacity: 0.7;
-}
-
-.site-footer {
-	background: #222;
-	padding: 7.5px 0;
-	position: relative;
-}
-.site-info {
-	color: #ccc;
-	font-size: 13px;
-	line-height: 1.845;
-	padding: 3px 0;
-	text-align: center;
-}
-.site-info a {
-	color: #ccc;
-}
-.site-info a:active,
-.site-info a:focus,
-.site-info a:hover {
-	color: #fff;
-}
-.site-info a:focus {
-	outline-color: #555;
-}
-.site-info .sep {
-	color: #444;
-	fill: #444;
-	height: 16px;
-	vertical-align: bottom;
-	width: 16px;
-}
-.site-info .sep:hover {
-	transform: rotate(360deg);
 }
 
 .featured-content {
@@ -1633,7 +1594,11 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	position: relative;
 }
 .entry-header-wrapper {
-	padding: 30px 0 0;
+	background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+	bottom: 0;
+	left: 0;
+	padding: 30px 15px 20px;
+	position: absolute;
 	width: 100%;
 }
 .entry-hero .post-thumbnail {
@@ -1642,13 +1607,23 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 .entry-hero .post-thumbnail img {
 	margin: 0 auto;
 }
+.entry-hero .entry-title,
+.entry-hero .page-title {
+	color: #fff;
+	font-size: clamp(1.1rem, 4vw, 2.44rem);
+	line-height: 1.3;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+}
+.entry-hero .entry-meta,
 .entry-hero .entry-meta a {
-	color: #777;
+	color: #fff;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
 }
 .entry-hero .entry-meta a:active,
 .entry-hero .entry-meta a:focus,
 .entry-hero .entry-meta a:hover {
-	color: #222;
+	color: #fff;
+	opacity: 0.7;
 }
 .page .hentry.has-post-thumbnail .entry-hero,
 .single .hentry.has-post-thumbnail .entry-hero {
@@ -2251,12 +2226,8 @@ video,
 	margin-bottom: 30px;
 }
 
-.infinite-scroll .posts-navigation,
-.infinite-scroll.neverending .site-footer {
+.infinite-scroll .posts-navigation {
 	display: none;
-}
-.infinity-end.neverending .site-footer {
-	display: block;
 }
 #infinite-handle {
 	border-top: 1px solid #eee;
@@ -2734,7 +2705,6 @@ textarea,
 .post-thumbnail img,
 .search-form:before,
 .site,
-.site-info .sep,
 .sticky-post {
 	transition: all 350ms ease-in-out;
 }
@@ -2873,9 +2843,6 @@ a {
 	.single .hentry.format-video .entry-header {
 		margin-bottom: 30px;
 	}
-	.entry-header-wrapper {
-		padding-top: 60px;
-	}
 	.page-content {
 		padding-bottom: 30px;
 	}
@@ -2945,7 +2912,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 648px;
 	}
@@ -3010,6 +2976,10 @@ a {
 	.content-area .format-standard.has-post-thumbnail .entry-summary {
 		clear: right;
 	}
+	/* Prevent excerpt text from wrapping around the left-floated post thumbnail */
+	.content-area .format-standard.has-post-thumbnail .entry-summary {
+		overflow: hidden;
+	}
 	.author-info .author-avatar {
 		display: block;
 		float: right;
@@ -3052,7 +3022,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 720px;
 	}
@@ -3258,7 +3227,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 840px;
 	}
@@ -3387,29 +3355,14 @@ a {
 	}
 
 	.entry-header-wrapper {
-		background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
-		bottom: 0;
-		left: 0;
 		padding-bottom: 60px;
-		position: absolute;
-	}
-	.entry-hero .entry-title {
-		color: #fff;
+		padding-left: 0;
+		padding-right: 0;
 	}
 	.entry-hero .entry-meta,
-	.entry-hero .entry-title {
+	.entry-hero .entry-title,
+	.entry-hero .page-title {
 		max-width: 930px;
-		text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
-	}
-	.entry-hero .entry-meta,
-	.entry-hero .entry-meta a {
-		color: #fff;
-	}
-	.entry-hero .entry-meta a:active,
-	.entry-hero .entry-meta a:focus,
-	.entry-hero .entry-meta a:hover {
-		color: #fff;
-		opacity: 0.7;
 	}
 	.entry-hero .entry-meta a:focus {
 		outline-color: rgba(255, 255, 255, 0.7);
@@ -3501,7 +3454,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 960px;
 	}
@@ -3583,7 +3535,6 @@ a {
 	.search-navigation-inner,
 	.site-branding,
 	.site-content-inner,
-	.site-info,
 	.site-top-inner {
 		width: 1260px;
 	}
@@ -3661,4 +3612,44 @@ a {
 	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post {
 		width: 160px;
 	}
+}
+
+/* =Category header
+----------------------------------------------- */
+
+/**
+ * category-color-fallback — shown when no category image is configured.
+ * Uses the same 1920×768 aspect ratio as the canard-single-thumbnail image
+ * size so the header height tracks with the viewport exactly like a post's
+ * featured image does.
+ */
+.category-color-fallback {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1920 / 768;
+	height: auto;
+}
+
+/**
+ * category-header — the <img> used when a category image is provided.
+ * aspect-ratio replaces the old breakpoint-specific fixed heights so this
+ * scales identically to a post featured image at every viewport width.
+ */
+.entry-hero .post-thumbnail .category-header {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1920 / 768;
+	height: auto;
+	object-fit: cover;
+	object-position: center;
+}
+
+/**
+ * page-title white text is now handled by the global .entry-hero rules above,
+ * but we keep this selector so any other .page-title usage inside .entry-hero
+ * (e.g. tag/date archives) also inherits the correct colour and shadow.
+ */
+.entry-hero .page-title {
+	color: #fff;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
 }

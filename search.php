@@ -41,7 +41,17 @@ get_header(); ?>
 
 				<?php endwhile; ?>
 
-				<?php the_posts_navigation(); ?>
+				<?php
+				/*
+				 * Security: use esc_html__() rather than __() so that the pagination
+				 * link labels are treated as plain text. A compromised translation
+				 * file cannot inject markup into the prev/next link text.
+				 */
+				the_posts_pagination( array(
+					'mid_size'  => 2,
+					'prev_text' => esc_html__( '&larr; Previous', 'canard' ),
+					'next_text' => esc_html__( 'Next &rarr;', 'canard' ),
+				) ); ?>
 
 			<?php else : ?>
 
