@@ -18,7 +18,7 @@ function canard_entry_categories() {
 		/* translators: used between list items, there is a space after the comma */
 		$categories_list = get_the_category_list( __( ', ', 'canard' ) );
 		if ( $categories_list && canard_categorized_blog() ) {
-			printf( '<div class="entry-meta"><span class="cat-links">%1$s</span></div>', $categories_list );
+			printf( '<div class="entry-meta"><span class="cat-links">%1$s</span></div>', wp_kses_post( $categories_list ) );
 		}
 	}
 }
@@ -56,10 +56,25 @@ function canard_entry_meta() {
 
 	$posted_on = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( get_permalink() ), $time_string );
 
+	$allowed_meta_html = array(
+		'span' => array( 'class' => array() ),
+		'a'    => array( 'class' => array(), 'href' => array(), 'rel' => array() ),
+		'time' => array( 'class' => array(), 'datetime' => array() ),
+		'img'  => array(
+			'src'     => array(),
+			'class'   => array(),
+			'alt'     => array(),
+			'width'   => array(),
+			'height'  => array(),
+			'loading' => array(),
+			'decoding' => array(),
+		),
+	);
+
 	if ( is_single() && ( true === (bool) get_theme_mod( 'canard_author_bio' ) && get_the_author_meta( 'description' ) ) ) {
-		echo '<span class="posted-on">' . $posted_on . '</span>';
+		echo wp_kses( '<span class="posted-on">' . $posted_on . '</span>', $allowed_meta_html );
 	} else {
-		echo '<span class="byline"> ' . $byline . '</span><span class="posted-on">' . $posted_on . '</span>';
+		echo wp_kses( '<span class="byline"> ' . $byline . '</span><span class="posted-on">' . $posted_on . '</span>', $allowed_meta_html );
 	}
 
 	if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
@@ -92,7 +107,7 @@ endif;
  * @return bool
  */
 function canard_categorized_blog() {
-	if ( false === ( $all_the_cool_cats = get_transient( 'canard_categories' ) ) ) {
+	if ( false === ( $all_the_cool_cats = get_transient( 'canard_cat_count_v1' ) ) ) {
 		$all_the_cool_cats = get_categories( array(
 			'fields'     => 'ids',
 			'hide_empty' => 1,
@@ -102,7 +117,7 @@ function canard_categorized_blog() {
 
 		$all_the_cool_cats = is_countable( $all_the_cool_cats ) ? count( $all_the_cool_cats ) : 0;
 
-		set_transient( 'canard_categories', $all_the_cool_cats );
+		set_transient( 'canard_cat_count_v1', $all_the_cool_cats );
 	}
 
 	return $all_the_cool_cats > 1;
@@ -115,7 +130,7 @@ function canard_category_transient_flusher() {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
-	delete_transient( 'canard_categories' );
+	delete_transient( 'canard_cat_count_v1' );
 }
 add_action( 'edit_category', 'canard_category_transient_flusher' );
 add_action( 'save_post',     'canard_category_transient_flusher' );
@@ -143,9 +158,9 @@ function canard_post_nav_background() {
 	}
 
 	if ( $previous && has_post_thumbnail( $previous->ID ) ) {
-		$prevthumb = wp_get_attachment_image_src( get_post_thumbnail_id( $previous->ID ), 'post-thumbnail' );
+		$prev_url = wp_get_attachment_image_url( get_post_thumbnail_id( $previous->ID ), 'post-thumbnail' );
 		$css .= '
-			.post-navigation .nav-previous { background-image: url(' . esc_url( $prevthumb[0] ?? '' ) . '); }
+			.post-navigation .nav-previous { background-image: url(' . esc_url( $prev_url ) . '); }
 			.post-navigation .nav-previous .post-title, .post-navigation .nav-previous a:hover .post-title, .post-navigation .nav-previous .meta-nav { color: #fff; }
 			.post-navigation .nav-previous a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
 			.post-navigation .nav-previous a:focus, .post-navigation .nav-previous a:hover { background-color: rgba(0, 0, 0, 0.6); }
@@ -154,9 +169,9 @@ function canard_post_nav_background() {
 	}
 
 	if ( $next && has_post_thumbnail( $next->ID ) ) {
-		$nextthumb = wp_get_attachment_image_src( get_post_thumbnail_id( $next->ID ), 'post-thumbnail' );
+		$next_url = wp_get_attachment_image_url( get_post_thumbnail_id( $next->ID ), 'post-thumbnail' );
 		$css .= '
-			.post-navigation .nav-next { background-image: url(' . esc_url( $nextthumb[0] ?? '' ) . '); }
+			.post-navigation .nav-next { background-image: url(' . esc_url( $next_url ) . '); }
 			.post-navigation .nav-next .post-title, .post-navigation .nav-next a:hover .post-title, .post-navigation .nav-next .meta-nav { color: #fff; }
 			.post-navigation .nav-next a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
 			.post-navigation .nav-next a:focus, .post-navigation .nav-next a:hover { background-color: rgba(0, 0, 0, 0.6); }

@@ -62,7 +62,7 @@ if ( post_password_required() ) {
 	<?php endif; ?>
 
 	<?php
-		if ( ! comments_open() && '0' != get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
+		if ( ! comments_open() && 0 !== (int) get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
 	?>
 		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'canard' ); ?></p>
 	<?php endif; ?>

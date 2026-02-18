@@ -75,6 +75,9 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		add_theme_support( 'responsive-embeds' );
 
 		// Add support for custom logo.
+		// The editor colour palette is defined in theme.json rather than via
+		// add_theme_support( 'editor-color-palette' ), which was deprecated
+		// in WordPress 5.9.
 		add_theme_support( 'custom-logo', array(
 			'width'       => 400,
 			'height'      => 90,
@@ -82,50 +85,12 @@ if ( ! function_exists( 'canard_setup' ) ) :
 			'flex-height' => true,
 		) );
 
-		// Register editor color palette.
-		add_theme_support(
-			'editor-color-palette',
-			array(
-				array(
-					'name'  => esc_html__( 'Black', 'canard' ),
-					'slug'  => 'black',
-					'color' => '#222222',
-				),
-				array(
-					'name'  => esc_html__( 'Dark Gray', 'canard' ),
-					'slug'  => 'dark-gray',
-					'color' => '#555555',
-				),
-				array(
-					'name'  => esc_html__( 'Medium Gray', 'canard' ),
-					'slug'  => 'medium-gray',
-					'color' => '#777777',
-				),
-				array(
-					'name'  => esc_html__( 'Light Gray', 'canard' ),
-					'slug'  => 'light-gray',
-					'color' => '#dddddd',
-				),
-				array(
-					'name'  => esc_html__( 'White', 'canard' ),
-					'slug'  => 'white',
-					'color' => '#ffffff',
-				),
-				array(
-					'name'  => esc_html__( 'Red', 'canard' ),
-					'slug'  => 'red',
-					'color' => '#d11415',
-				),
-			)
-		);
-
 		// Register navigation menu locations.
 		register_nav_menus(
 			array(
 				'primary'   => __( 'Primary Location', 'canard' ),
 				'secondary' => __( 'Secondary Location', 'canard' ),
 				'footer'    => __( 'Footer Location', 'canard' ),
-				'social'    => __( 'Social Location', 'canard' ),
 			)
 		);
 
@@ -167,10 +132,7 @@ add_action( 'after_setup_theme', 'canard_setup' );
 /**
  * Disable block-based widgets editor to maintain classic widget interface.
  */
-function canard_disable_block_widgets() {
-	remove_theme_support( 'widgets-block-editor' );
-}
-add_action( 'after_setup_theme', 'canard_disable_block_widgets' );
+add_filter( 'use_widgets_block_editor', '__return_false' );
 
 /**
  * Register widget areas.
@@ -241,14 +203,23 @@ function canard_google_fonts_url() {
 }
 
 /**
+ * Outputs preconnect resource hints for Google Fonts to improve LCP.
+ * Only emitted when Google Fonts are actually in use.
+ */
+add_action( 'wp_head', function() {
+	if ( canard_google_fonts_url() ) {
+		echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+		echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+	}
+}, 1 );
+
+/**
  * Enqueue scripts and styles.
  */
 function canard_scripts() {
 
 	// Gutenberg block styles.
 	wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
-
-	wp_enqueue_style( 'genericons', get_template_directory_uri() . '/genericons/genericons.css', array(), '3.3' );
 
 	// Single Google Fonts request for all typefaces used by the theme.
 	$fonts_url = canard_google_fonts_url();
@@ -261,16 +232,16 @@ function canard_scripts() {
 	// Shared utility functions (debounce). No dependencies — plain JS.
 	wp_enqueue_script( 'canard-utils', get_template_directory_uri() . '/js/utils.js', array(), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-navigation', get_template_directory_uri() . '/js/navigation.js', array( 'jquery', 'canard-utils' ), CANARD_VERSION, true );
+	wp_enqueue_script( 'canard-navigation', get_template_directory_uri() . '/js/navigation.js', array( 'canard-utils' ), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array( 'jquery' ), CANARD_VERSION, true );
+	wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array(), CANARD_VERSION, true );
 
 	wp_enqueue_script( 'canard-header', get_template_directory_uri() . '/js/header.js', array(), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-search', get_template_directory_uri() . '/js/search.js', array( 'jquery' ), CANARD_VERSION, true );
+	wp_enqueue_script( 'canard-search', get_template_directory_uri() . '/js/search.js', array(), CANARD_VERSION, true );
 
 	if ( is_singular() ) {
-		wp_enqueue_script( 'canard-single', get_template_directory_uri() . '/js/single.js', array( 'jquery', 'canard-utils' ), CANARD_VERSION, true );
+		wp_enqueue_script( 'canard-single', get_template_directory_uri() . '/js/single.js', array( 'canard-utils' ), CANARD_VERSION, true );
 	}
 
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
@@ -278,7 +249,7 @@ function canard_scripts() {
 	}
 
 	if ( is_home() || is_archive() || is_search() ) {
-		wp_enqueue_script( 'canard-posts', get_template_directory_uri() . '/js/posts.js', array( 'jquery', 'canard-utils' ), CANARD_VERSION, true );
+		wp_enqueue_script( 'canard-posts', get_template_directory_uri() . '/js/posts.js', array( 'canard-utils' ), CANARD_VERSION, true );
 	}
 
 	// canard-skip-link-focus-fix removed — the WebKit/Opera/IE hashchange focus
@@ -303,8 +274,6 @@ function canard_editor_styles() {
 	if ( $fonts_url ) {
 		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
 	}
-
-	wp_enqueue_style( 'genericons', get_template_directory_uri() . '/genericons/genericons.css', array(), '3.3' );
 }
 add_action( 'enqueue_block_editor_assets', 'canard_editor_styles' );
 
@@ -332,3 +301,15 @@ require get_template_directory() . '/inc/customizer.php';
  * Load Jetpack compatibility file.
  */
 require get_template_directory() . '/inc/jetpack.php';
+
+/**
+ * Register the entry-hero body class filter.
+ *
+ * canard_entry_hero_body_class() is defined in entry-script.php, which is
+ * loaded via get_template_part() inside the Loop. To avoid registering the
+ * callback on every loop iteration (which would add it multiple times on
+ * archive pages), we load the file here once at theme setup — purely for the
+ * function definition — and call add_filter() a single time.
+ */
+require_once get_template_directory() . '/entry-script.php';
+add_filter( 'body_class', 'canard_entry_hero_body_class' );

@@ -1,25 +1,38 @@
-( function( $ ) {
+( function() {
 
 	/**
-	 * Adds and removes a hover/focus class on the search form when the
-	 * submit button is hovered or receives keyboard focus.
+	 * Adds and removes a hover/focus class on the search form when the submit
+	 * button is hovered or receives keyboard focus.
+	 *
+	 * Uses native DOM events — no jQuery required.
 	 */
-	$( window ).on( 'load', function() {
+	window.addEventListener( 'load', function() {
+		const searchSubmit = document.querySelector( '.search-submit' );
+		if ( ! searchSubmit ) {
+			return;
+		}
 
 		function searchAddClass() {
-			$( this ).closest( '.search-form' ).addClass( 'hover' );
+			const form = this.closest( '.search-form' );
+			if ( form ) {
+				form.classList.add( 'hover' );
+			}
 		}
-		function searchRemoveClass() {
-			$( this ).closest( '.search-form' ).removeClass( 'hover' );
-		}
-		const searchSubmit = $( '.search-submit' );
-		searchSubmit.hover( searchAddClass, searchRemoveClass );
-		searchSubmit.focusin( searchAddClass );
-		searchSubmit.focusout( searchRemoveClass );
 
+		function searchRemoveClass() {
+			const form = this.closest( '.search-form' );
+			if ( form ) {
+				form.classList.remove( 'hover' );
+			}
+		}
+
+		searchSubmit.addEventListener( 'mouseenter', searchAddClass );
+		searchSubmit.addEventListener( 'mouseleave', searchRemoveClass );
+		searchSubmit.addEventListener( 'focus',      searchAddClass );
+		searchSubmit.addEventListener( 'blur',       searchRemoveClass );
 	} );
 
-} )( jQuery );
+} )();
 
 ( function() {
 
@@ -45,18 +58,12 @@
 	}
 	form.setAttribute( 'aria-expanded', 'false' );
 
-	button.onclick = function() {
-		if ( -1 !== container.className.indexOf( 'toggled' ) ) {
-			document.body.className = document.body.className.replace( ' search-toggled', '' );
-			container.className     = container.className.replace( ' toggled', '' );
-			button.setAttribute( 'aria-expanded', 'false' );
-			form.setAttribute( 'aria-expanded', 'false' );
-		} else {
-			document.body.className += ' search-toggled';
-			container.className     += ' toggled';
-			button.setAttribute( 'aria-expanded', 'true' );
-			form.setAttribute( 'aria-expanded', 'true' );
-		}
-	};
+	button.addEventListener( 'click', function() {
+		const isToggled = container.classList.contains( 'toggled' );
+		document.body.classList.toggle( 'search-toggled', ! isToggled );
+		container.classList.toggle( 'toggled', ! isToggled );
+		button.setAttribute( 'aria-expanded', isToggled ? 'false' : 'true' );
+		form.setAttribute( 'aria-expanded', isToggled ? 'false' : 'true' );
+	} );
 
 } )();

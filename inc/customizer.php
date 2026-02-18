@@ -27,7 +27,8 @@ function canard_customize_register( $wp_customize ) {
 
 	/* Author Bio */
 	$wp_customize->add_setting( 'canard_author_bio', array(
-		'sanitize_callback' => 'canard_sanitize_checkbox',
+		'default'           => false,
+		'sanitize_callback' => 'wp_validate_boolean',
 	) );
 	$wp_customize->add_control( 'canard_author_bio', array(
 		'label'             => __( 'Show author bio on single posts.', 'canard' ),
@@ -37,16 +38,6 @@ function canard_customize_register( $wp_customize ) {
 	) );
 }
 add_action( 'customize_register', 'canard_customize_register' );
-
-/**
- * Sanitizes a checkbox value to a boolean.
- *
- * @param mixed $input Raw input value.
- * @return bool
- */
-function canard_sanitize_checkbox( $input ) {
-	return (bool) $input;
-}
 
 /**
  * Enqueues the live-preview JS for the Theme Customizer.

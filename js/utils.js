@@ -19,23 +19,13 @@ window.canardUtils = {
 	 * @return {Function} Debounced wrapper function.
 	 */
 	debounce: function( func, wait ) {
-		let timeout, args, context, timestamp;
-		return function() {
-			context   = this;
-			args      = [].slice.call( arguments, 0 );
-			timestamp = new Date();
-			const later = function() {
-				const last = ( new Date() ) - timestamp;
-				if ( last < wait ) {
-					timeout = setTimeout( later, wait - last );
-				} else {
-					timeout = null;
-					func.apply( context, args );
-				}
-			};
-			if ( ! timeout ) {
-				timeout = setTimeout( later, wait );
-			}
+		let timeout;
+		return function( ...args ) {
+			const context = this;
+			clearTimeout( timeout );
+			timeout = setTimeout( function() {
+				func.apply( context, args );
+			}, wait );
 		};
 	}
 

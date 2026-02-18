@@ -65,17 +65,6 @@ table {
 	padding-right: 0;
 }
 
-.social-navigation li {
-	float: right;
-}
-.social-navigation li:first-child {
-	margin-left: 5px;
-	margin-right: 0;
-}
-.social-navigation li:last-child {
-	margin-left: 0;
-	margin-right: 5px;
-}
 
 .secondary-navigation li {
 	float: right;
@@ -382,11 +371,6 @@ table {
 		right: 100%;
 	}
 
-	.social-navigation {
-		float: left;
-		padding-left: 0;
-		padding-right: 15px;
-	}
 
 	.secondary-navigation {
 		float: right;

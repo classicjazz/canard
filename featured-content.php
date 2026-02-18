@@ -4,6 +4,11 @@
  *
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $featured_posts = canard_get_featured_posts();
 if ( empty( $featured_posts ) ) {
 	return;

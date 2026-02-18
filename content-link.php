@@ -1,11 +1,23 @@
 <?php
 /**
+ * The template part for displaying link-format posts.
+ *
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<a class="post-link" href="<?php echo esc_url( canard_get_link_url() ); ?>" target="_blank"><span class="genericon genericon-link"><span class="screen-reader-text"><?php printf( __( 'External link to %s', 'canard' ), the_title( '', '', false ) ); ?></span></span></a>
+	<a class="post-link" href="<?php echo esc_url( canard_get_link_url() ); ?>" target="_blank"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg><span class="screen-reader-text"><?php
+		printf(
+			/* translators: %s: Post title. */
+			esc_html__( 'External link to %s', 'canard' ),
+			esc_html( get_the_title() )
+		);
+	?></span></a>
 
 	<header class="entry-header">
 		<?php

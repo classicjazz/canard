@@ -15,7 +15,6 @@ A flexible and versatile magazine theme.
 Canard is a flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device.
 
 * Responsive layout.
-* Social menu.
 * Jetpack.me compatibility for Infinite Scroll, Featured Content, Responsive Videos, Site Logo.
 * The GPL v2.0 or later license. :) Use it to make something cool.
 
@@ -41,45 +40,6 @@ Canard offers two widget areas, which can be configured in Appearance → Widget
 
 * An optional sidebar widget area, which appears on the right.
 * An optional footer widget area.
-
-= How do I add the Social Links to the header? =
-
-Canard allows you display links to your social media profiles, like Twitter and Facebook, with icons.
-
-1. Create a new Custom Menu, and assign it to the Social Links Menu location.
-2. Add links to each of your social services using the Links panel.
-3. Icons for your social links will automatically appear if it's available.
-
-Available icons: (Linking to any of the following sites will automatically display its icon in your social menu).
-
-* CodePen
-* Digg
-* Dribbble
-* Dropbox
-* Email (mailto: links)
-* Facebook
-* Flickr
-* Foursquare
-* GitHub
-* Google+
-* Instagram
-* LinkedIn
-* Path
-* Pinterest
-* Polldaddy
-* Reddit
-* RSS Feed (urls with /feed/)
-* Spotify
-* StumbleUpon
-* Tumblr
-* Twitch
-* Twitter
-* Vimeo
-* Vine
-* WordPress
-* YouTube
-
-Social networks that aren't currently supported will be indicated by a generic share icon.
 
 == Quick Specs (all measurements in pixels) ==
 

@@ -14,18 +14,12 @@
 
 	sidebar.setAttribute( 'aria-expanded', 'false' );
 
-	button.onclick = function() {
-		if ( -1 !== sidebar.className.indexOf( 'toggled' ) ) {
-			sidebar.className = sidebar.className.replace( ' toggled', '' );
-			button.className  = button.className.replace( ' toggled', '' );
-			sidebar.setAttribute( 'aria-expanded', 'false' );
-			button.setAttribute( 'aria-expanded', 'false' );
-		} else {
-			sidebar.className += ' toggled';
-			button.className  += ' toggled';
-			sidebar.setAttribute( 'aria-expanded', 'true' );
-			button.setAttribute( 'aria-expanded', 'true' );
-		}
-	};
+	button.addEventListener( 'click', function() {
+		const toggled = sidebar.classList.contains( 'toggled' );
+		sidebar.classList.toggle( 'toggled' );
+		button.classList.toggle( 'toggled' );
+		sidebar.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );
+		button.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );
+	} );
 
 } )();

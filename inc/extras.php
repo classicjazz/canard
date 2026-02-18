@@ -29,7 +29,7 @@ if ( ! function_exists( 'canard_excerpt_more' ) && ! is_admin() ) :
 /**
  * Replaces "[...]" (appended to automatically generated excerpts) with an ellipsis.
  *
- * @since Canard 1.0.3
+ * @since Canard 2.0.0
  */
 function canard_excerpt_more( $more ) {
 	return ' &hellip;';
@@ -41,7 +41,7 @@ if ( ! function_exists( 'canard_continue_reading' ) && ! is_admin() ) :
 /**
  * Appends a "Continue reading" link to all instances of the_excerpt.
  *
- * @since Canard 1.0.4
+ * @since Canard 2.0.0
  *
  * @param string $the_excerpt The post excerpt.
  * @return string The excerpt with a Continue reading link appended.
@@ -82,5 +82,5 @@ function canard_get_link_url() {
 	$content = get_the_content();
 	$has_url = get_url_in_content( $content );
 
-	return ( $has_url && has_post_format( 'link' ) ) ? $has_url : apply_filters( 'the_permalink', get_permalink() );
+	return ( $has_url && has_post_format( 'link' ) ) ? $has_url : get_the_permalink();
 }

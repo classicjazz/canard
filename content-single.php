@@ -1,7 +1,14 @@
 <?php
 /**
+ * The template part for displaying single post content.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
