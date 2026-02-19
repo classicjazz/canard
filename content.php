@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			} elseif ( has_post_format( 'image' ) || has_post_format( 'gallery' ) ) {
 				echo '<div class="post-thumbnail">';
 			}
-			the_post_thumbnail( 'canard-post-thumbnail' );
+			the_post_thumbnail( 'canard-post-thumbnail', array( 'loading' => 'lazy' ) );
 		?>
 
 		<?php if ( is_sticky() ) : ?>

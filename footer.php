@@ -27,17 +27,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</nav><!-- .footer-navigation -->
 	<?php endif; ?>
 
-	<?php if ( has_nav_menu( 'secondary' ) ) : ?>
-		<nav class="bottom-navigation" aria-label="<?php esc_attr_e( 'Secondary Navigation', 'canard' ); ?>">
-			<?php
-				wp_nav_menu( array(
-					'theme_location'  => 'secondary',
-					'depth'           => 1,
-				) );
-			?>
-		</nav><!-- .bottom-navigation -->
-	<?php endif; ?>
-
 
 </div><!-- #page -->
 

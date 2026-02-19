@@ -203,15 +203,28 @@ function canard_google_fonts_url() {
 }
 
 /**
- * Outputs preconnect resource hints for Google Fonts to improve LCP.
+ * Adds preconnect resource hints for Google Fonts via the proper WordPress
+ * API so they are deduplicated, filterable, and output in the correct position
+ * by wp_resource_hints() — not via a raw wp_head echo.
  * Only emitted when Google Fonts are actually in use.
+ *
+ * @param array  $urls          URLs to print for resource hints.
+ * @param string $relation_type The relation type the URLs are printed for.
+ * @return array Filtered resource hint URLs.
  */
-add_action( 'wp_head', function() {
-	if ( canard_google_fonts_url() ) {
-		echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-		echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+function canard_resource_hints( $urls, $relation_type ) {
+	if ( 'preconnect' === $relation_type && canard_google_fonts_url() ) {
+		$urls[] = array(
+			'href' => 'https://fonts.googleapis.com',
+		);
+		$urls[] = array(
+			'href'        => 'https://fonts.gstatic.com',
+			'crossorigin' => true,
+		);
 	}
-}, 1 );
+	return $urls;
+}
+add_filter( 'wp_resource_hints', 'canard_resource_hints', 10, 2 );
 
 /**
  * Enqueue scripts and styles.
@@ -227,7 +240,8 @@ function canard_scripts() {
 		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
 	}
 
-	wp_enqueue_style( 'canard-style', get_stylesheet_uri(), array(), CANARD_VERSION );
+	// Main stylesheet.
+	wp_enqueue_style( 'canard-style', get_template_directory_uri() . '/style.css', array(), CANARD_VERSION );
 
 	// Shared utility functions (debounce). No dependencies — plain JS.
 	wp_enqueue_script( 'canard-utils', get_template_directory_uri() . '/js/utils.js', array(), CANARD_VERSION, true );

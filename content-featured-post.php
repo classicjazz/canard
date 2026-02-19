@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php
 		// Output the featured image.
 		if ( has_post_thumbnail() ) {
-			the_post_thumbnail( 'canard-featured-content-thumbnail' );
+			the_post_thumbnail( 'canard-featured-content-thumbnail', array( 'loading' => 'lazy' ) );
 		}
 	?>
 	</a>

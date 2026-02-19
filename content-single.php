@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<header class="entry-header">
 		<?php if ( has_post_thumbnail() && ( ! has_post_format() || has_post_format( 'image' ) || has_post_format( 'gallery' ) ) ) : ?>
 			<div class="post-thumbnail">
-				<?php the_post_thumbnail( 'canard-single-thumbnail' ); ?>
+				<?php the_post_thumbnail( 'canard-single-thumbnail', array( 'loading' => 'eager', 'fetchpriority' => 'high' ) ); ?>
 			</div>
 		<?php endif; ?>
 
