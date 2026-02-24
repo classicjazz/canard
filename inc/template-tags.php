@@ -153,7 +153,7 @@ function canard_post_nav_background() {
 	$next     = get_adjacent_post( false, '', false );
 	$css      = '';
 
-	if ( is_attachment() && 'attachment' === $previous->post_type ) {
+	if ( is_attachment() && $previous && 'attachment' === $previous->post_type ) {
 		return;
 	}
 

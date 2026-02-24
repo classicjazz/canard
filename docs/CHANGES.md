@@ -68,6 +68,7 @@ The file previously emitted a raw `<script>` block inline in the page when a fea
 * **API modernisation:** Replaced both calls to `wp_get_attachment_image_src()` in `canard_post_nav_background()` with `wp_get_attachment_image_url()`, which returns the URL string directly and has been available since WordPress 4.4.
 * **Transient key:** Renamed the transient key in `canard_categorized_blog()` from `canard_categories` to `canard_cat_count_v1` to avoid collisions with other plugins or themes on multisite installs. The flusher `canard_category_transient_flusher()` has been updated to match.
 * **`wp_kses` avatar `img` allowlist expanded:** WordPress 6.3+ emits `loading="lazy"` and `decoding="async"` on `get_avatar()` output. Both attributes added to the `img` allowlist entry to prevent `wp_kses()` from silently stripping them.
+* **Bug fix — null `$previous` in `canard_post_nav_background()`:** On an attachment page whose parent post cannot be found, `get_post( get_post()->post_parent )` returns `null`. The subsequent `$previous->post_type` access emitted a PHP warning ("Attempt to read property 'post_type' on null"). Fixed by adding a null check — `$previous &&` — before the property access.
 
 ### `inc/customizer.php`
 
@@ -196,12 +197,10 @@ The social navigation menu location, all associated template markup, and all ass
 
 **Deleted:**
 * `js/skip-link-focus-fix.js` — no longer required for modern browsers.
-* `inc/updater.old.php` — dead code, not included anywhere.
 * `genericons/` — entire directory. No file in the theme references Genericons any longer. Safe to delete.
 
 **Added:**
 * `js/utils.js` — shared `debounce` utility.
 * `category.php` — native category archive template. Displays a full-width hero banner at the top of category archive pages, followed by the standard post loop with pagination. Integrated with the same `entry-hero` layout structure used by single posts.
-* `theme.json` — replaces the deprecated `add_theme_support( 'editor-color-palette' )` call. Declares the same six-colour palette (Black, Dark Gray, Medium Gray, Light Gray, White, Red) under `settings.color.palette`. Also declares `contentSize` and `wideSize` to match the theme's layout widths. Safe to use with classic (non-block) themes from WordPress 5.9 onwards.
 * `docs/CHANGES.md` — this file.
 * `docs/category-images.md` — documents how child themes can supply per-category banner images and colours using the `canard_category_header_image` and `canard_category_color` filters, or by overriding the functions entirely.
