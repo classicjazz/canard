@@ -57,17 +57,18 @@ function canard_entry_meta() {
 	$posted_on = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( get_permalink() ), $time_string );
 
 	$allowed_meta_html = array(
-		'span' => array( 'class' => array() ),
-		'a'    => array( 'class' => array(), 'href' => array(), 'rel' => array() ),
+		'span' => array( 'class' => array(), 'itemprop' => array() ),
+		'a'    => array( 'class' => array(), 'href' => array(), 'rel' => array(), 'itemprop' => array(), 'property' => array() ),
 		'time' => array( 'class' => array(), 'datetime' => array() ),
 		'img'  => array(
-			'src'     => array(),
-			'class'   => array(),
-			'alt'     => array(),
-			'width'   => array(),
-			'height'  => array(),
-			'loading' => array(),
-			'decoding' => array(),
+			'src'           => array(),
+			'class'         => array(),
+			'alt'           => array(),
+			'width'         => array(),
+			'height'        => array(),
+			'loading'       => array(),
+			'decoding'      => array(),
+			'fetchpriority' => array(),
 		),
 	);
 
@@ -88,9 +89,13 @@ endif;
 if ( ! function_exists( 'canard_entry_footer' ) ) :
 /**
  * Outputs HTML with meta information for the categories, tags, and comments.
+ *
+ * @uses canard_entry_meta() — disable via the canard_entry_footer_show_meta filter.
  */
 function canard_entry_footer() {
-	canard_entry_meta();
+	if ( apply_filters( 'canard_entry_footer_show_meta', true ) ) {
+		canard_entry_meta();
+	}
 
 	if ( 'post' === get_post_type() ) {
 		/* translators: used between list items, there is a space after the comma */
@@ -106,21 +111,21 @@ endif;
  *
  * @return bool
  */
-function canard_categorized_blog() {
-	if ( false === ( $all_the_cool_cats = get_transient( 'canard_cat_count_v1' ) ) ) {
-		$all_the_cool_cats = get_categories( array(
+function canard_categorized_blog(): bool {
+	$cat_count = get_transient( 'canard_cat_count_v1' );
+
+	if ( false === $cat_count ) {
+		$results   = get_categories( array(
 			'fields'     => 'ids',
 			'hide_empty' => 1,
 			// We only need to know if there is more than one category.
 			'number'     => 2,
 		) );
-
-		$all_the_cool_cats = is_countable( $all_the_cool_cats ) ? count( $all_the_cool_cats ) : 0;
-
-		set_transient( 'canard_cat_count_v1', $all_the_cool_cats );
+		$cat_count = is_countable( $results ) ? count( $results ) : 0;
+		set_transient( 'canard_cat_count_v1', $cat_count );
 	}
 
-	return $all_the_cool_cats > 1;
+	return $cat_count > 1;
 }
 
 /**
@@ -179,6 +184,8 @@ function canard_post_nav_background() {
 		';
 	}
 
-	wp_add_inline_style( 'canard-style', $css );
+	if ( $css ) {
+		wp_add_inline_style( 'canard-style', $css );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'canard_post_nav_background' );

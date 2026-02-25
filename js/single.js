@@ -10,7 +10,9 @@
 	 * filter). This block reads that class and performs the DOM rearrangement
 	 * that was previously an inline <script> in entry-script.php.
 	 *
-	 * Runs immediately (not on load) so the reflow happens before paint.
+	 * Runs synchronously (no DOMContentLoaded wrapper) to avoid layout flash.
+	 * The has-entry-hero body class is set server-side in entry-script.php.
+	 * If you move this to a load/DOMContentLoaded callback, test for FOUC.
 	 */
 	if ( document.body.classList.contains( 'has-entry-hero' ) ) {
 		const entryHeader = document.querySelector( '.hentry.has-post-thumbnail .entry-header' );

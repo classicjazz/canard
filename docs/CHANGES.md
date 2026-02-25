@@ -1,51 +1,42 @@
 # Canard Theme — Change Log
 
+---
+
 ## PHP
 
 ### Security & Escaping
 
+* **ABSPATH guards:** Added `if ( ! defined( 'ABSPATH' ) ) exit;` to all template and include files to prevent direct script access, including `header.php`, `author-bio.php`, `content.php`, `content-none.php`, `content-link.php`, `content-single.php`, `content-page.php`, `content-featured-post.php`, `featured-content.php`, and `category.php`.
 * **Strict types removal:** Removed invalid `<?php declare( strict_types = 1 ); ?>` from the first line of all 26 PHP files to ensure compatibility.
-* **ABSPATH guards:** Added `if ( ! defined( 'ABSPATH' ) ) exit;` to all template and include files to prevent direct script access, including `content.php`, `content-none.php`, `content-link.php`, `content-single.php`, `content-featured-post.php`, and `featured-content.php`.
 * **Escaping — global:** Replaced `_e()` with `esc_html_e()` and wrapped `get_the_title()` / `get_search_query()` in `esc_html()` across all templates.
+* **Escaping — `header.php`:** `bloginfo('charset')`, `bloginfo('name')`, and `bloginfo('description')` were echoing database values without sanitization. Replaced with `esc_attr( get_bloginfo( 'charset' ) )` on the `<meta charset>` tag, `esc_html( get_bloginfo( 'name' ) )` for the site title, and `esc_html( get_bloginfo( 'description' ) )` for the site description.
 * **Escaping — `author-bio.php`:** Bare `echo get_the_author()` → `echo esc_html( get_the_author() )`; `the_author_meta( 'description' )` → `echo esc_html( get_the_author_meta( 'description' ) )`; `printf( __(), get_the_author() )` → `printf( esc_html__(), esc_html( get_the_author() ) )`.
 * **Escaping — `content-none.php`:** The `printf( __() )` call that outputs an `<a>` tag now wraps the translation string in `wp_kses()` with an explicit `array( 'a' => array( 'href' => array() ) )` allowlist instead of passing it through unsanitised.
 * **Escaping — `content-link.php`:** `printf( __( 'External link to %s' ), the_title() )` → `printf( esc_html__(), esc_html( get_the_title() ) )`.
 * **Escaping — `content-featured-post.php`:** `href="<?php the_permalink(); ?>"` replaced with `href="<?php echo esc_url( get_permalink() ); ?>"`.
 * **Escaping — `inc/template-tags.php`:** The `echo` statements for `$byline` and `$posted_on` in `canard_entry_meta()` are now wrapped in `wp_kses()` with an explicit allowlist of `span`, `a`, `time`, and `img` elements. The `$categories_list` output in `canard_entry_categories()` is now wrapped in `wp_kses_post()`.
-* **HTML5 semantics:** Removed redundant `role="..."` attributes (e.g., `banner`, `navigation`, `main`, `complementary`) as they are implicit in modern HTML5 elements.
+* **Escaping — `inc/template-tags.php` — `wp_kses()` allowlist expanded in `canard_entry_meta()`:** Added `itemprop` and `property` attributes to `<a>` and `<span>`, and added `fetchpriority` to `<img>`. These attributes are emitted by WordPress core functions (`get_avatar()`) and plugins, and were being silently stripped by the overly tight allowlist.
 * **Loose comparisons tightened:** Two instances of `'post' == get_post_type()` in `content.php` replaced with `'post' === get_post_type()`. `'0' != get_comments_number()` in `comments.php` replaced with `0 !== (int) get_comments_number()` for PHP 8 type safety.
 
 ### `functions.php`
 
-* **Bug fix — child stylesheet double-load:** `canard_scripts()` previously used `get_stylesheet_uri()` to enqueue the parent stylesheet as `canard-style`. In a child theme, `get_stylesheet_uri()` resolves to the child's `style.css`, not the parent's — so the `canard-style` handle was silently pointing at the wrong file. WordPress simultaneously auto-enqueued the child stylesheet as `canard-child-style-css`, resulting in the child stylesheet loading twice while the parent stylesheet was never loaded at all. Fixed by replacing `get_stylesheet_uri()` with `get_template_directory_uri() . '/style.css'`, which always resolves to the parent theme directory regardless of whether a child theme is active.
-
-  **Child theme action required:** Child themes must explicitly enqueue their own stylesheet in their own `functions.php`:
-
-  ```php
-  add_action( 'wp_enqueue_scripts', 'my_child_theme_scripts' );
-  function my_child_theme_scripts() {
-      wp_enqueue_style(
-          'canard-child-style',
-          get_stylesheet_uri(),
-          array( 'canard-style' ),
-          wp_get_theme()->get( 'Version' )
-      );
-  }
-  ```
-
-  The `array( 'canard-style' )` dependency ensures the parent stylesheet always loads first.
-
+* **`canard-style` handle pinned to parent theme:** All asset enqueues in `canard_scripts()` use `get_template_directory_uri()`, which always resolves to the parent theme directory. This ensures the `canard-style` handle always points at the parent's `style.css` regardless of whether a child theme is active. Child themes must explicitly enqueue their own stylesheet with `canard-style` declared as a dependency to guarantee correct load order.
 * **Version management:** Added `CANARD_VERSION` constant to replace hardcoded version strings in all enqueues.
 * **Google Fonts:** Merged separate font requests into a single `canard_google_fonts_url()` function using the v2 API (`/css2`) with `&display=swap`.
 * **Google Fonts — preconnect hints:** Added `canard_resource_hints()` hooked to the `wp_resource_hints` filter, which emits `<link rel="preconnect">` hints for `fonts.googleapis.com` and `fonts.gstatic.com` when Google Fonts are in use. Uses the correct WordPress API rather than a raw `wp_head` echo, ensuring hints are deduplicated and filterable by child themes and plugins.
 * **HTML5 support:** Expanded `add_theme_support( 'html5', ... )` to include `script` and `style`.
+* **`navigation-widgets` and `customize-selective-refresh-widgets` support added:** `navigation-widgets` (added in WP 5.5) opts navigation widgets into semantic HTML5 markup, preventing WordPress from outputting a `<div>` wrapper when the html5 feature flag is active. `customize-selective-refresh-widgets` is broadly recommended for themes with registered sidebars and dramatically improves Customizer preview performance.
 * **Classic widgets:** Replaced the `canard_disable_block_widgets()` function and its `after_setup_theme` hook with `add_filter( 'use_widgets_block_editor', '__return_false' )` — simpler, more reliable, no named function needed.
 * **Script dependencies:** Removed the `jquery` dependency from `canard-navigation`, `canard-search`, `canard-featured-content`, `canard-single`, and `canard-posts` enqueues. jQuery is no longer a front-end dependency on any page type.
-* **Social navigation removed:** Removed the `social` entry from `register_nav_menus()`.
-* **Genericons removed:** Removed both `genericons` `wp_enqueue_style()` calls (front-end in `canard_scripts()` and editor in `canard_editor_styles()`).
 * **`editor-color-palette` deprecation resolved:** `add_theme_support( 'editor-color-palette', ... )` was deprecated in WordPress 5.9. Removed from `functions.php` and replaced with `theme.json` (see New Files below).
+* **Block editor styles:** Replaced the previous pattern of manually enqueuing block editor styles via `wp_enqueue_style()` on the `enqueue_block_editor_assets` hook with the preferred `add_theme_support( 'editor-styles' )` + `add_editor_style()` pattern (the recommended path since WP 5.8). This applies automatic `.editor-styles-wrapper` body-class scoping, handles RTL correctly, and uses WP core infrastructure that may gain future capabilities.
+* **Standardised pagination:** `archive.php`, `index.php`, and `search.php` were using `the_posts_navigation()` (prev/next only) while `category.php` used `the_posts_pagination()` with numbered pages. All listing templates now use `the_posts_pagination()` with consistent `mid_size`, `prev_text`, and `next_text` arguments.
+* **Featured-content script conditionally loaded:** `canard-featured-content.js` is now only enqueued on `is_front_page()`. It was previously loaded unconditionally on every page request, including single posts, pages, and archives, where it is completely irrelevant.
+* **`canard_google_fonts_url()` memoized:** The function was called three times per page load (in `canard_resource_hints()`, `canard_scripts()`, and the editor styles function) and re-evaluated all four `_x()` translation checks on each call. A `static $url = null;` guard now caches the result after the first call. This is the standard PHP pattern for memoizing pure functions in WordPress themes.
 * **`canard_get_category_header_image()` added:** Returns the URL of the banner image for the current category archive, or `false` if none is configured. Wrapped in `if ( ! function_exists() )` so child themes can override it entirely. Exposes the `canard_category_header_image` filter so child themes can supply images without replacing the function. See `docs/category-images.md` for usage.
 * **`canard_get_category_color()` added:** Returns the solid-colour fallback used in the category header when no image is provided. The default colour is read at runtime from the `red` entry in `theme.json` via `wp_get_global_settings()` (WordPress 5.9+), so the category header automatically reflects any future palette update. Falls back to `#d11415` if `wp_get_global_settings()` is unavailable. Exposes the `canard_category_color` filter for child theme overrides.
+* **Social navigation removed:** Removed the `social` entry from `register_nav_menus()`.
+* **Genericons removed:** Removed both `genericons` `wp_enqueue_style()` calls (front-end in `canard_scripts()` and editor in `canard_editor_styles()`).
 * **Cleanup:** Removed the WordPress.com updater inclusion.
 
 ### Template Files
@@ -55,8 +46,9 @@
 * **`content.php`:** Replaced `<span class="genericon genericon-pinned">` with an inline `<svg aria-hidden="true" focusable="false">` pin icon. Replaced `strpos( $post->post_content, '<!--more' )` with `str_contains( get_the_content(), '<!--more' )` — `get_the_content()` is the correct in-Loop API and `str_contains()` is the idiomatic PHP 8 form.
 * **`content-link.php`:** Replaced `<span class="genericon genericon-link">` with an inline `<svg aria-hidden="true" focusable="false">` external link icon.
 * **`content-single.php`:** `the_post_thumbnail( 'canard-single-thumbnail' )` now passes `array( 'loading' => 'eager', 'fetchpriority' => 'high' )`. The `canard-single-thumbnail` size (1920×768 px) is the first visible image on a single post and the Largest Contentful Paint element. WordPress 5.5+ defaults to `loading="lazy"` on all images including this one, which actively harms LCP. The explicit `eager` + `fetchpriority="high"` attributes override that default.
-* **`content-featured-post.php`:** `the_post_thumbnail( 'canard-featured-content-thumbnail' )` now passes `array( 'loading' => 'lazy' )`. Featured content thumbnails are below the primary hero area and should not compete with it for bandwidth.
+* **`content-featured-post.php`:** `the_post_thumbnail( 'canard-featured-content-thumbnail' )` now passes `array( 'loading' => 'lazy' )`. Featured content thumbnails are below the primary hero area and should not compete with it for bandwidth. The template was also rendering `<a class="post-thumbnail" href="..."></a>` (an empty anchor with no content) when `has_post_thumbnail()` returned false — an accessibility violation (WCAG 2.4.4 — Link Purpose). The anchor is now only rendered inside the `has_post_thumbnail()` check.
 * **`content.php`:** `the_post_thumbnail( 'canard-post-thumbnail' )` now passes `array( 'loading' => 'lazy' )`. Archive thumbnails are below the fold and benefit from lazy loading. Explicit rather than relying on WordPress's auto-lazy behaviour.
+* **`category.php` — Removed redundant `role="main"` attribute:** The `<main>` element has an implicit ARIA landmark role of `main`. The explicit attribute is unnecessary and fails the WCAG 2.1 "avoid redundant ARIA" guideline. `category.php` was the only template in the theme with this attribute; all others (`single.php`, `archive.php`, `index.php`) do not include it.
 * **`comments.php`:** Cleaned up escaping and navigation roles.
 
 ### `entry-script.php` — Inline `<script>` Removed
@@ -69,26 +61,47 @@ The file previously emitted a raw `<script>` block inline in the page when a fea
 * **Transient key:** Renamed the transient key in `canard_categorized_blog()` from `canard_categories` to `canard_cat_count_v1` to avoid collisions with other plugins or themes on multisite installs. The flusher `canard_category_transient_flusher()` has been updated to match.
 * **`wp_kses` avatar `img` allowlist expanded:** WordPress 6.3+ emits `loading="lazy"` and `decoding="async"` on `get_avatar()` output. Both attributes added to the `img` allowlist entry to prevent `wp_kses()` from silently stripping them.
 * **Bug fix — null `$previous` in `canard_post_nav_background()`:** On an attachment page whose parent post cannot be found, `get_post( get_post()->post_parent )` returns `null`. The subsequent `$previous->post_type` access emitted a PHP warning ("Attempt to read property 'post_type' on null"). Fixed by adding a null check — `$previous &&` — before the property access.
+* **`wp_add_inline_style()` guarded in `canard_post_nav_background()`:** The function was calling `wp_add_inline_style()` even when `$css` was empty (i.e., neither adjacent post had a featured image), appending a no-op to the stylesheet output. The call is now guarded by `if ( $css )`.
+* **`canard_entry_footer()` now exposes `canard_entry_footer_show_meta` filter:** The function internally called `canard_entry_meta()` with no way for a child theme to suppress it without completely overriding `canard_entry_footer()`. Added a filter: `apply_filters( 'canard_entry_footer_show_meta', true )`. Child themes can now opt out of the meta block cleanly.
+* **`canard_categorized_blog()` refactored:** Replaced the assignment-inside-condition pattern with explicit variable separation. The misleading variable name `$all_the_cool_cats` (a count integer, not an array) has been replaced with `$cat_count`. This matches the WordPress VIP code review guide recommendation.
+
+### `inc/custom-header.php`
+
+**`canard_header_style()` refactored to use `wp_add_inline_style()`:** The function was echoing a raw `<style>` tag via the `wp_head` callback. This bypasses WordPress asset management and is incompatible with Content Security Policy headers that use nonce-based `style-src` directives. Refactored to build the CSS string and pass it to `wp_add_inline_style( 'canard-style', $css )`. This matches the pattern already used in `canard_post_nav_background()`.
 
 ### `inc/customizer.php`
 
-Removed the custom `canard_sanitize_checkbox()` function and its `(bool)` cast. The cast is unreliable: the string `"false"` evaluates to `true` in PHP. The setting now uses `wp_validate_boolean()` as its `sanitize_callback`. An explicit `'default' => false` has been added to the setting registration, which was previously absent.
+* **Checkbox sanitization:** Removed the custom `canard_sanitize_checkbox()` function and its `(bool)` cast. The cast is unreliable: the string `"false"` evaluates to `true` in PHP. The setting now uses `wp_validate_boolean()` as its `sanitize_callback`. An explicit `'default' => false` has been added to the setting registration, which was previously absent.
+* **CSRF documentation comment added:** Added a developer documentation comment explaining that the Customizer API handles its own nonce verification, but any new AJAX endpoints or form submissions added to the theme must implement `wp_nonce_field()` / `check_ajax_referer()`. This establishes the expectation for future contributors and prevents CSRF vulnerabilities from being introduced inadvertently.
 
 ### `inc/extras.php`
 
 * Updated `@since` tags in `canard_excerpt_more()` and `canard_continue_reading()` from `1.0.3` / `1.0.4` to `2.0.0`.
 * Removed `apply_filters( 'the_permalink', get_permalink() )` from `canard_get_link_url()`. The `the_permalink` filter hook was deprecated in WordPress 6.8. Replaced with `get_the_permalink()` directly.
+* **Separated function definition from filter registration:** `canard_excerpt_more()` and `canard_continue_reading()` previously guarded the `add_filter()` call inside the `function_exists()` check, making it impossible for a child theme to define the function and still have the filter run on admin pages (e.g., for REST API excerpt generation). The function definition and filter registration are now separate, matching WordPress coding standards.
+
+### `inc/jetpack.php`
+
+**`canard_jetpack_featured_image_display()` refactored:** Replaced dense ternary chains and nested `isset()` / `array_merge()` patterns with early-return guards and explicitly named variables (`$show_on_post`, `$show_on_page`). Uses the PHP 8 null-coalescing operator (`?? []`) for option reading. Functionally identical.
+
+### HTML5 Semantics & Accessibility
+
+* **Redundant `role` attributes removed:** Removed redundant `role="..."` attributes (e.g., `banner`, `navigation`, `main`, `complementary`) as they are implicit in modern HTML5 elements.
+
+### PHP 8.x Modernisation & Type Safety
+
+**Type hints added:** Parameter and return type hints added to all public/hookable functions:
+
+* `canard_body_classes( array $classes ): array` in `inc/extras.php`
+* `canard_excerpt_length( int $length ): int` in `inc/extras.php`
+* `canard_continue_reading( string $the_excerpt ): string` in `inc/extras.php`
+* `canard_categorized_blog(): bool` in `inc/template-tags.php`
+* `canard_google_fonts_url(): string` in `functions.php`
+* `canard_resource_hints( array $urls, string $relation_type ): array` in `functions.php`
 
 ---
 
 ## JavaScript
-
-### Global Improvements
-
-* **ES6 refactoring:** Replaced `var` with `const` and `let` throughout all scripts.
-* **Strict equality:** Replaced `'undefined' === typeof x` checks with simple truthy/falsy `!x` logic.
-* **`className` string manipulation:** Replaced all `.className.indexOf()`, `.className +=`, and `.className.replace()` patterns with `classList.contains()`, `classList.add()`, `classList.remove()`, and `classList.toggle()` throughout all scripts.
-* **Event handlers:** Replaced all `button.onclick = function()` assignments with `button.addEventListener( 'click', function() )` for consistency and child-theme extensibility.
 
 ### jQuery Fully Removed
 
@@ -102,6 +115,13 @@ All five scripts that previously declared jQuery as a dependency have been rewri
 | **single.js** | Rewritten in vanilla JS. `$('.author-info')`, `.prependTo()`, `.insertAfter()`, `$(window).width()`, and all Jetpack sharedaddy/table DOM operations replaced with `querySelector`, `insertBefore`, `Element.after()`, `window.innerWidth`, and `querySelectorAll().forEach()`. |
 | **posts.js** | Rewritten in vanilla JS. `$('.site-main .hentry').each()`, `.hasClass()`, `.find()`, `.css()`, and `$(window).width()` replaced with `querySelectorAll`, `classList.contains`, `style` properties, and `window.innerWidth`. Fixed character encoding corruption (em dashes); renamed shadowed variables. |
 
+### Global Improvements
+
+* **ES6 refactoring:** Replaced `var` with `const` and `let` throughout all scripts.
+* **Strict equality:** Replaced `'undefined' === typeof x` checks with simple truthy/falsy `!x` logic.
+* **`className` string manipulation:** Replaced all `.className.indexOf()`, `.className +=`, and `.className.replace()` patterns with `classList.contains()`, `classList.add()`, `classList.remove()`, and `classList.toggle()` throughout all scripts.
+* **Event handlers:** Replaced all `button.onclick = function()` assignments with `button.addEventListener( 'click', function() )` for consistency and child-theme extensibility.
+
 ### File-Specific Changes
 
 | File | Change |
@@ -111,6 +131,13 @@ All five scripts that previously declared jQuery as a dependency have been rewri
 | **customizer.js** | Removed jQuery IIFE; all `$()` selectors replaced with `document.querySelector()` / `document.querySelectorAll()`; `.text()` replaced with `.textContent`; `.addClass()` / `.removeClass()` replaced with `classList`. |
 | **header.js** | Added null guard for `siteBranding` before accessing `clientHeight`. |
 | **sidebar.js** | `button.onclick` replaced with `button.addEventListener( 'click', ... )`. |
+
+### Accessibility & Correctness
+
+* **`js/navigation.js` — Accessible names added to dropdown toggle buttons (WCAG 2.1 SC 4.1.2):** Toggle `<button>` elements were injected with `aria-expanded` but no accessible name, so screen readers announced just "button" with no context. Buttons now derive their label from the parent link text: `aria-label="Toggle [Menu Item] submenu"`. Falls back to `"Toggle submenu"` if no text is available.
+* **`js/navigation.js` — Global touchstart handler closes open menus when tapping outside navigation:** Previously, a user on a touch device who opened a submenu then tapped post content would leave the submenu visually "open" (the `focus` class persisting). Added a `document.addEventListener( 'touchstart' )` handler that removes `focus` from all `.main-navigation` items when a tap lands outside `.main-navigation`.
+* **`js/featured-content.js` and `js/posts.js` — Use `currentSrc` instead of `src` for background images:** Both scripts were reading `thumbnail.src` to set `background-image: url()`. This ignores the `srcset` attribute and may load a full-resolution image as the CSS background even when a smaller responsive variant has already been fetched. Changed to `thumbnail.currentSrc || thumbnail.src`, which uses the URL the browser already selected from the `srcset` (respecting device pixel ratio and viewport).
+* **`js/single.js` — Added synchronous-execution comment to entry-hero block:** The entry-hero DOM rearrangement runs synchronously (without a `DOMContentLoaded` wrapper) to avoid a layout flash (FOUC) on pages with featured images. The reason for this was documented in `entry-script.php` (a PHP file), not in the JS file itself. Added a prominent comment block so JS developers do not inadvertently "fix" the missing wrapper and introduce a visible layout flash.
 
 ---
 

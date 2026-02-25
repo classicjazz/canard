@@ -22,7 +22,7 @@
 			const thumbnail  = article.querySelector( 'img' );
 
 			if ( entryImage && thumbnail ) {
-				entryImage.style.backgroundImage = 'url(' + thumbnail.src + ')';
+				entryImage.style.backgroundImage = 'url(' + ( thumbnail.currentSrc || thumbnail.src ) + ')';
 				article.classList.add( 'background-done' );
 			}
 		} );

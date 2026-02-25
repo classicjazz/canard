@@ -4,6 +4,10 @@
  *
  * @package Canard
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <div class="author-info">

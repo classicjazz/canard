@@ -12,14 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<a class="post-thumbnail" href="<?php echo esc_url( get_permalink() ); ?>">
-	<?php
-		// Output the featured image.
-		if ( has_post_thumbnail() ) {
-			the_post_thumbnail( 'canard-featured-content-thumbnail', array( 'loading' => 'lazy' ) );
-		}
-	?>
-	</a>
+	<?php if ( has_post_thumbnail() ) : ?>
+		<a class="post-thumbnail" href="<?php echo esc_url( get_permalink() ); ?>">
+			<?php the_post_thumbnail( 'canard-featured-content-thumbnail', array( 'loading' => 'lazy' ) ); ?>
+		</a>
+	<?php endif; ?>
 
 	<header class="entry-header">
 		<?php

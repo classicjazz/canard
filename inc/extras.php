@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $classes Classes for the body element.
  * @return array
  */
-function canard_body_classes( $classes ) {
+function canard_body_classes( array $classes ): array {
 	// Adds a class of group-blog to blogs with more than 1 published author.
 	if ( is_multi_author() ) {
 		$classes[] = 'group-blog';
@@ -25,7 +25,7 @@ function canard_body_classes( $classes ) {
 }
 add_filter( 'body_class', 'canard_body_classes' );
 
-if ( ! function_exists( 'canard_excerpt_more' ) && ! is_admin() ) :
+if ( ! function_exists( 'canard_excerpt_more' ) ) :
 /**
  * Replaces "[...]" (appended to automatically generated excerpts) with an ellipsis.
  *
@@ -34,10 +34,13 @@ if ( ! function_exists( 'canard_excerpt_more' ) && ! is_admin() ) :
 function canard_excerpt_more( $more ) {
 	return ' &hellip;';
 }
-add_filter( 'excerpt_more', 'canard_excerpt_more' );
 endif;
 
-if ( ! function_exists( 'canard_continue_reading' ) && ! is_admin() ) :
+if ( ! is_admin() ) {
+	add_filter( 'excerpt_more', 'canard_excerpt_more' );
+}
+
+if ( ! function_exists( 'canard_continue_reading' ) ) :
 /**
  * Appends a "Continue reading" link to all instances of the_excerpt.
  *
@@ -46,7 +49,7 @@ if ( ! function_exists( 'canard_continue_reading' ) && ! is_admin() ) :
  * @param string $the_excerpt The post excerpt.
  * @return string The excerpt with a Continue reading link appended.
  */
-function canard_continue_reading( $the_excerpt ) {
+function canard_continue_reading( string $the_excerpt ): string {
 	$the_excerpt = sprintf( '%1$s <a href="%2$s" class="more-link">%3$s</a>',
 		$the_excerpt,
 		esc_url( get_permalink( get_the_ID() ) ),
@@ -55,8 +58,11 @@ function canard_continue_reading( $the_excerpt ) {
 	);
 	return $the_excerpt;
 }
-add_filter( 'the_excerpt', 'canard_continue_reading', 9 );
 endif;
+
+if ( ! is_admin() ) {
+	add_filter( 'the_excerpt', 'canard_continue_reading', 9 );
+}
 
 /**
  * Sets a custom excerpt length.
@@ -64,7 +70,7 @@ endif;
  * @param int $length Default excerpt word count.
  * @return int
  */
-function canard_excerpt_length( $length ) {
+function canard_excerpt_length( int $length ): int {
 	return 65;
 }
 add_filter( 'excerpt_length', 'canard_excerpt_length', 999 );

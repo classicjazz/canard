@@ -109,8 +109,12 @@ if ( ! function_exists( 'canard_setup' ) ) :
 				'caption',
 				'script',
 				'style',
+				'navigation-widgets',
 			)
 		);
+
+		// Enables smoother widget previews in the Customizer.
+		add_theme_support( 'customize-selective-refresh-widgets' );
 
 		/*
 		 * Enable support for Post Formats.
@@ -172,7 +176,12 @@ add_action( 'widgets_init', 'canard_widgets_init' );
  *
  * @return string Google Fonts stylesheet URL, or empty string if all fonts are disabled.
  */
-function canard_google_fonts_url() {
+function canard_google_fonts_url(): string {
+	static $url = null;
+	if ( null !== $url ) {
+		return $url;
+	}
+
 	$families = array();
 
 	/* translators: If characters in your language are not supported by Lato, translate this to 'off'. */
@@ -196,10 +205,12 @@ function canard_google_fonts_url() {
 	}
 
 	if ( empty( $families ) ) {
-		return '';
+		$url = '';
+		return $url;
 	}
 
-	return 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
+	$url = 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
+	return $url;
 }
 
 /**
@@ -212,7 +223,7 @@ function canard_google_fonts_url() {
  * @param string $relation_type The relation type the URLs are printed for.
  * @return array Filtered resource hint URLs.
  */
-function canard_resource_hints( $urls, $relation_type ) {
+function canard_resource_hints( array $urls, string $relation_type ): array {
 	if ( 'preconnect' === $relation_type && canard_google_fonts_url() ) {
 		$urls[] = array(
 			'href' => 'https://fonts.googleapis.com',
@@ -248,9 +259,12 @@ function canard_scripts() {
 
 	wp_enqueue_script( 'canard-navigation', get_template_directory_uri() . '/js/navigation.js', array( 'canard-utils' ), CANARD_VERSION, true );
 
-	wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array(), CANARD_VERSION, true );
+	// Only enqueue featured-content script on the front page where it's relevant.
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'canard-featured-content', get_template_directory_uri() . '/js/featured-content.js', array(), CANARD_VERSION, true );
+	}
 
-	wp_enqueue_script( 'canard-header', get_template_directory_uri() . '/js/header.js', array(), CANARD_VERSION, true );
+	wp_enqueue_script( 'canard-header', get_template_directory_uri() . '/js/header.js', array( 'canard-utils' ), CANARD_VERSION, true );
 
 	wp_enqueue_script( 'canard-search', get_template_directory_uri() . '/js/search.js', array(), CANARD_VERSION, true );
 
@@ -278,18 +292,21 @@ function canard_scripts() {
 add_action( 'wp_enqueue_scripts', 'canard_scripts' );
 
 /**
- * Enqueue styles for the block editor.
+ * Register editor styles via the preferred add_editor_style() API.
+ * This uses WP core's editor style scoping (.editor-styles-wrapper),
+ * handles RTL correctly, and is the recommended path since WP 5.8.
  */
 function canard_editor_styles() {
-	wp_enqueue_style( 'canard-block-style', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
-	wp_enqueue_style( 'canard-editor-block-style', get_template_directory_uri() . '/editor-blocks.css', array(), CANARD_VERSION );
+	add_theme_support( 'editor-styles' );
+	add_editor_style( 'blocks.css' );
+	add_editor_style( 'editor-blocks.css' );
 
 	$fonts_url = canard_google_fonts_url();
 	if ( $fonts_url ) {
-		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
+		add_editor_style( $fonts_url );
 	}
 }
-add_action( 'enqueue_block_editor_assets', 'canard_editor_styles' );
+add_action( 'after_setup_theme', 'canard_editor_styles', 11 );
 
 /**
  * Implement the Custom Header feature.

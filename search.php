@@ -41,7 +41,11 @@ get_header(); ?>
 
 				<?php endwhile; ?>
 
-				<?php the_posts_navigation(); ?>
+				<?php the_posts_pagination( array(
+					'mid_size'  => 2,
+					'prev_text' => __( '&larr; Previous', 'canard' ),
+					'next_text' => __( 'Next &rarr;', 'canard' ),
+				) ); ?>
 
 			<?php else : ?>
 
