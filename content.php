@@ -11,7 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<?php if ( has_post_thumbnail() && 'post' === get_post_type() && ( ! has_post_format() || has_post_format( 'image' ) || has_post_format( 'gallery' ) ) ) : ?>
+	<?php
+	// Cache get_post_type() once — called twice in this template (thumbnail
+	// conditional and entry-meta conditional). Saves one function call per post
+	// on archive pages.
+	$post_type = get_post_type();
+	?>
+	<?php if ( has_post_thumbnail() && 'post' === $post_type && ( ! has_post_format() || has_post_format( 'image' ) || has_post_format( 'gallery' ) ) ) : ?>
 
 		<?php
 			if ( ! has_post_format() ) {
@@ -19,7 +25,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			} elseif ( has_post_format( 'image' ) || has_post_format( 'gallery' ) ) {
 				echo '<div class="post-thumbnail">';
 			}
-			the_post_thumbnail( 'canard-post-thumbnail', array( 'loading' => 'lazy' ) );
+			// sizes corrected: the post list sits inside #primary .content-area
+			// which is narrower than viewport when the sidebar is present.
+			// Default 100vw caused the browser to download a full-width image
+			// even on desktop where the container is ~620 px wide.
+			the_post_thumbnail( 'canard-post-thumbnail', array(
+				'loading' => 'lazy',
+				'sizes'   => '(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px',
+			) );
 		?>
 
 		<?php if ( is_sticky() ) : ?>
@@ -66,7 +79,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	</div><!-- .entry-summary -->
 
-	<?php if ( 'post' === get_post_type() ) : ?>
+	<?php if ( 'post' === $post_type ) : ?>
 		<div class="entry-meta">
 			<?php canard_entry_meta(); ?>
 		</div><!-- .entry-meta -->

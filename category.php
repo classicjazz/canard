@@ -15,12 +15,22 @@ get_header(); ?>
 	<header class="entry-header entry-hero">
 		<?php
 		$category_image = canard_get_category_header_image();
-		if ( $category_image ) : ?>
+		if ( $category_image ) :
+			// Retrieve attachment dimensions to reserve layout space before the
+			// image loads, preventing Cumulative Layout Shift (CLS).
+			$cat_img_meta = wp_get_attachment_metadata( get_term_meta( get_queried_object_id(), '_category_image_id', true ) );
+			$img_w        = $cat_img_meta['width']  ?? 1920;
+			$img_h        = $cat_img_meta['height'] ?? 420;
+		?>
 		<div class="post-thumbnail">
 			<img class="category-header"
 			     src="<?php echo esc_url( $category_image ); ?>"
+			     width="<?php echo absint( $img_w ); ?>"
+			     height="<?php echo absint( $img_h ); ?>"
 			     alt="<?php echo esc_attr( single_cat_title( '', false ) ); ?>"
-			     loading="lazy" />
+			     loading="eager"
+			     fetchpriority="high"
+			     sizes="100vw" />
 		</div>
 		<?php else :
 			$color = canard_get_category_color();

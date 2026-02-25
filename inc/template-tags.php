@@ -36,9 +36,26 @@ function canard_entry_meta() {
 	 */
 	$author_bio_avatar_size = apply_filters( 'canard_author_bio_avatar_size', 20 );
 
+	// Read the WP_User object once so we avoid two separate $authordata
+	// dereferences for email and ID.
+	$author = get_userdata( get_the_author_meta( 'ID' ) );
+
+	// Cache get_avatar() output keyed on email + size. On archive pages with
+	// multiple posts by the same author this replaces N gravatar lookups with 1.
+	$avatar_html = false;
+	if ( $author ) {
+		$avatar_cache_key = 'canard_avatar_' . md5( $author->user_email ) . '_' . $author_bio_avatar_size;
+		$avatar_html      = wp_cache_get( $avatar_cache_key, 'canard_theme' );
+
+		if ( false === $avatar_html ) {
+			$avatar_html = get_avatar( $author->user_email, $author_bio_avatar_size );
+			wp_cache_set( $avatar_cache_key, $avatar_html, 'canard_theme', HOUR_IN_SECONDS );
+		}
+	}
+
 	$byline = sprintf( '<span class="author vcard">%1$s<a class="url fn n" href="%2$s">%3$s</a></span>',
-		get_avatar( get_the_author_meta( 'user_email' ), $author_bio_avatar_size ),
-		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+		$avatar_html ?: '',
+		esc_url( get_author_posts_url( $author ? $author->ID : 0 ) ),
 		esc_html( get_the_author() )
 	);
 
@@ -122,7 +139,10 @@ function canard_categorized_blog(): bool {
 			'number'     => 2,
 		) );
 		$cat_count = is_countable( $results ) ? count( $results ) : 0;
-		set_transient( 'canard_cat_count_v1', $cat_count );
+		// WEEK_IN_SECONDS TTL ensures stale data doesn't persist indefinitely
+		// on sites without a persistent cache backend. The edit_category and
+		// save_post hooks below still invalidate immediately on real changes.
+		set_transient( 'canard_cat_count_v1', $cat_count, WEEK_IN_SECONDS );
 	}
 
 	return $cat_count > 1;
@@ -133,6 +153,11 @@ function canard_categorized_blog(): bool {
  */
 function canard_category_transient_flusher() {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	// Revisions also trigger save_post; skip them to avoid flushing the
+	// category count transient on every auto-draft save of a post revision.
+	if ( wp_is_post_revision( get_the_ID() ) ) {
 		return;
 	}
 	delete_transient( 'canard_cat_count_v1' );
@@ -154,38 +179,57 @@ function canard_post_nav_background() {
 		return;
 	}
 
-	$previous = ( is_attachment() ) ? get_post( get_post()->post_parent ) : get_adjacent_post( false, '', true );
-	$next     = get_adjacent_post( false, '', false );
-	$css      = '';
+	// Cache the generated CSS in the object cache so that the
+	// wp_get_attachment_image_url() / get_post_thumbnail_id() calls (each a
+	// get_post_meta() hit) are paid at most once per post per cache TTL.
+	$cache_key = 'canard_nav_bg_' . get_the_ID();
+	$css       = wp_cache_get( $cache_key, 'canard_theme' );
 
-	if ( is_attachment() && $previous && 'attachment' === $previous->post_type ) {
-		return;
-	}
+	if ( false === $css ) {
+		$previous = ( is_attachment() ) ? get_post( get_post()->post_parent ) : get_adjacent_post( false, '', true );
+		$next     = get_adjacent_post( false, '', false );
+		$css      = '';
 
-	if ( $previous && has_post_thumbnail( $previous->ID ) ) {
-		$prev_url = wp_get_attachment_image_url( get_post_thumbnail_id( $previous->ID ), 'post-thumbnail' );
-		$css .= '
-			.post-navigation .nav-previous { background-image: url(' . esc_url( $prev_url ) . '); }
-			.post-navigation .nav-previous .post-title, .post-navigation .nav-previous a:hover .post-title, .post-navigation .nav-previous .meta-nav { color: #fff; }
-			.post-navigation .nav-previous a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
-			.post-navigation .nav-previous a:focus, .post-navigation .nav-previous a:hover { background-color: rgba(0, 0, 0, 0.6); }
-			.post-navigation .nav-previous a:focus .post-title { color: #fff; }
-		';
-	}
+		if ( is_attachment() && $previous && 'attachment' === $previous->post_type ) {
+			wp_cache_set( $cache_key, $css, 'canard_theme', HOUR_IN_SECONDS );
+			return;
+		}
 
-	if ( $next && has_post_thumbnail( $next->ID ) ) {
-		$next_url = wp_get_attachment_image_url( get_post_thumbnail_id( $next->ID ), 'post-thumbnail' );
-		$css .= '
-			.post-navigation .nav-next { background-image: url(' . esc_url( $next_url ) . '); }
-			.post-navigation .nav-next .post-title, .post-navigation .nav-next a:hover .post-title, .post-navigation .nav-next .meta-nav { color: #fff; }
-			.post-navigation .nav-next a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
-			.post-navigation .nav-next a:focus, .post-navigation .nav-next a:hover { background-color: rgba(0, 0, 0, 0.6); }
-			.post-navigation .nav-next a:focus .post-title { color: #fff; }
-		';
+		if ( $previous && has_post_thumbnail( $previous->ID ) ) {
+			$prev_url = wp_get_attachment_image_url( get_post_thumbnail_id( $previous->ID ), 'post-thumbnail' );
+			$css .= '
+				.post-navigation .nav-previous { background-image: url(' . esc_url( $prev_url ) . '); }
+				.post-navigation .nav-previous .post-title, .post-navigation .nav-previous a:hover .post-title, .post-navigation .nav-previous .meta-nav { color: #fff; }
+				.post-navigation .nav-previous a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
+				.post-navigation .nav-previous a:focus, .post-navigation .nav-previous a:hover { background-color: rgba(0, 0, 0, 0.6); }
+				.post-navigation .nav-previous a:focus .post-title { color: #fff; }
+			';
+		}
+
+		if ( $next && has_post_thumbnail( $next->ID ) ) {
+			$next_url = wp_get_attachment_image_url( get_post_thumbnail_id( $next->ID ), 'post-thumbnail' );
+			$css .= '
+				.post-navigation .nav-next { background-image: url(' . esc_url( $next_url ) . '); }
+				.post-navigation .nav-next .post-title, .post-navigation .nav-next a:hover .post-title, .post-navigation .nav-next .meta-nav { color: #fff; }
+				.post-navigation .nav-next a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
+				.post-navigation .nav-next a:focus, .post-navigation .nav-next a:hover { background-color: rgba(0, 0, 0, 0.6); }
+				.post-navigation .nav-next a:focus .post-title { color: #fff; }
+			';
+		}
+
+		wp_cache_set( $cache_key, $css, 'canard_theme', HOUR_IN_SECONDS );
 	}
 
 	if ( $css ) {
 		wp_add_inline_style( 'canard-style', $css );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'canard_post_nav_background' );
+
+// Register the hook inside template_redirect so it is never added on archives,
+// the front page, or search — removing a no-op call from wp_enqueue_scripts on
+// every non-singular page load.
+add_action( 'template_redirect', function() {
+	if ( is_single() || is_attachment() ) {
+		add_action( 'wp_enqueue_scripts', 'canard_post_nav_background' );
+	}
+} );

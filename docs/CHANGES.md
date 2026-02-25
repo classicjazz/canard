@@ -2,6 +2,54 @@
 
 ---
 
+## Performance Optimisations
+
+### Asset Loading
+
+* **`functions.php` — Scripts deferred via native WP 6.3+ `strategy` API:** All front-end scripts except `canard-single` now enqueue with `array( 'in_footer' => true, 'strategy' => 'defer' )` instead of the plain `true` shorthand. This uses WordPress's built-in dependency-aware deferral (available since WP 6.3, required by this theme's WP 6.9+ target) rather than a `script_loader_tag` string-manipulation filter, which correctly promotes dependents and avoids tag-rewriting edge cases. `canard-single` is explicitly excluded because it runs entry-hero DOM rearrangement synchronously to prevent a layout flash (FOUC).
+
+* **`functions.php` — `canard-blocks.css` loaded conditionally:** `blocks.css` is now only enqueued on singular posts/pages and the front page (`is_singular() || is_front_page()`). Archives, search result pages, and other listing views do not render block-generated HTML and do not need block styles. Saves one stylesheet round-trip on every non-singular page.
+
+* **`functions.php` — `canard-comments.css` loaded conditionally:** Comment-thread styles are now split into `comments.css` and enqueued only on singular pages where comments are open or present (`is_singular() && ( comments_open() || get_comments_number() )`). The stylesheet is registered with `canard-style` as a dependency so it always loads after the main stylesheet. Saves ~4–8 KB (uncompressed) on every non-singular page.
+
+* **`header.php` — Custom header image `loading` and `fetchpriority` attributes added:** The custom header `<img>` now receives `loading="eager" fetchpriority="high"` on the front page (where it is the LCP candidate) and `loading="lazy" fetchpriority="auto"` on all other pages (single posts, archives) where it is decorative and below the post hero. Previously the attribute was absent, which caused the browser to compete for bandwidth between the header image and the true LCP resource on inner pages.
+
+### Database & Query Efficiency
+
+* **`inc/template-tags.php` — `canard_post_nav_background()` results cached in object cache:** The function previously called `wp_get_attachment_image_url()` and `get_post_thumbnail_id()` (each a `get_post_meta()` database hit) on every singular page load. The generated CSS is now stored in the WP object cache under the key `canard_nav_bg_{post_id}` with a one-hour TTL. On sites with a persistent cache backend (Redis / Memcached) this eliminates the meta lookups on repeat requests.
+
+* **`inc/template-tags.php` — `canard_post_nav_background()` hook deferred to `template_redirect`:** The `add_action( 'wp_enqueue_scripts', ... )` call was registered unconditionally at `functions.php` load time, causing a no-op function invocation on every archive, front page, and search request. The registration is now wrapped in a `template_redirect` callback that only adds the hook when `is_single() || is_attachment()`. `template_redirect` fires before `wp_enqueue_scripts` so the hook is still registered in time.
+
+### Object Caching
+
+* **`inc/template-tags.php` — `get_avatar()` output cached in object cache:** Avatar HTML in `canard_entry_meta()` is now cached with key `canard_avatar_{md5(email)}_{size}` and a one-hour TTL. On archive pages with multiple posts by the same author this replaces N Gravatar HTTP-lookup round trips with one. The `WP_User` object is also read once via `get_userdata()` and reused for both the avatar email and the author posts URL, replacing two separate `get_the_author_meta()` global dereferences.
+
+### Image Handling
+
+* **`content.php` — Corrected `sizes` attribute on archive post thumbnails:** `canard-post-thumbnail` (870×773 px) was rendering with the browser default `sizes="100vw"`, causing it to download a full-width image even on desktop where `#primary .content-area` is ~620 px wide. Corrected to `(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px`. No new image sizes are registered; this change only affects which existing size the browser selects from the srcset.
+
+* **`content-featured-post.php` — Corrected `sizes` attribute on featured content thumbnails:** `canard-featured-content-thumbnail` (915×500 px) is used in a full-width carousel on the front page but the site max-width is 1300 px. `sizes` corrected to `(max-width: 1300px) 100vw, 1300px` to prevent the browser from requesting an over-sized image. No new image sizes registered.
+
+* **`category.php` — Category hero image changed from `lazy` to `eager` with `fetchpriority="high"`:** The category hero `<img>` is the topmost element on category archive pages and is the LCP candidate. Lazy-loading an LCP image is an anti-pattern that actively harms Core Web Vitals scores. Changed to `loading="eager" fetchpriority="high"` and added `sizes="100vw"`.
+
+* **`category.php` — Explicit `width` and `height` added to category hero `<img>`:** The browser now has the image dimensions before the file loads and can reserve layout space, eliminating the Cumulative Layout Shift (CLS) caused by the image pushing content down as it loads. Dimensions are read from attachment metadata via `wp_get_attachment_metadata()` with fallbacks of 1920×420 for child themes that supply images by URL rather than attachment ID.
+
+### PHP Micro-optimisations
+
+* **`content.php` — `get_post_type()` called once per loop iteration:** The function was called twice in `content.php` (thumbnail conditional and entry-meta conditional). The result is now assigned to `$post_type` once and reused.
+
+* **`inc/template-tags.php` — Transient flusher guarded against post revisions:** `canard_category_transient_flusher()` was already guarded against autosaves but still flushed `canard_cat_count_v1` on every post revision save. Added a `wp_is_post_revision()` check to skip revision saves, preventing unnecessary cache invalidation on draft edits.
+
+* **`inc/template-tags.php` — Explicit TTL added to `canard_cat_count_v1` transient:** `set_transient()` was called without a third argument, resulting in no expiry. On sites without a persistent cache backend this means the transient accumulates indefinitely. Added `WEEK_IN_SECONDS` as the TTL. The `edit_category` and `save_post` hooks continue to invalidate the transient immediately on real category changes.
+
+### Additional Improvements
+
+* **`functions.php` — `dns-prefetch` hint added for Gravatar:** `canard_resource_hints()` now emits a `<link rel="dns-prefetch" href="https://secure.gravatar.com">` hint on all front-end pages. On archive pages with multiple authors this starts Gravatar's DNS resolution immediately on page parse, reducing the stall time before avatar images can be requested.
+
+* **`functions.php` — `canard_get_category_color()` cleaned up:** The function previously called `wp_get_global_settings( array( 'color', 'palette', 'theme' ) )` and walked the resulting palette array to find the `red` slug. Canard is a classic theme with no `theme.json`, so this call always returns an empty array and fell through to the `#d11415` default on every call — dead code. The `wp_get_global_settings()` branch has been removed entirely. The `canard_category_color` filter remains in place for child theme overrides.
+
+---
+
 ## PHP
 
 ### Security & Escaping

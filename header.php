@@ -50,7 +50,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php if ( get_header_image() ) : ?>
 			<div class="header-image">
 				<div class="header-image-inner">
-					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &mdash; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php header_image(); ?>" width="<?php echo absint( get_custom_header()->width ); ?>" height="<?php echo absint( get_custom_header()->height ); ?>" alt=""></a>
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &mdash; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php header_image(); ?>" width="<?php echo absint( get_custom_header()->width ); ?>" height="<?php echo absint( get_custom_header()->height ); ?>" loading="<?php echo is_front_page() ? 'eager' : 'lazy'; ?>" fetchpriority="<?php echo is_front_page() ? 'high' : 'auto'; ?>" alt=""></a>
 				</div><!-- .header-image-inner -->
 			</div><!-- .header-image -->
 		<?php endif; ?>
