@@ -2,7 +2,7 @@
 Theme Name: Canard
 Theme URI: https://github.com/classicjazz/canard
 Description: A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device.
-Version: 2.5.1
+Version: 2.5.2
 Author: Automattic, Michael Connelly
 Author URI: https://www.mikeconnelly.com
 License: GNU General Public License v2 or later
@@ -1877,6 +1877,7 @@ body:not(.single) .content-area .format-image.has-post-thumbnail .entry-title {
 	padding-left: 30px;
 	padding-right: 30px;
 	position: relative;
+	z-index: 2;  /* must exceed .post-thumbnail::before z-index:1 so text renders above the dark overlay */
 }
 body:not(.single) .content-area .format-gallery .post-thumbnail,
 body:not(.single) .content-area .format-image .post-thumbnail {
@@ -1897,15 +1898,14 @@ body:not(.single) .content-area .format-image .post-thumbnail img {
 }
 body:not(.single) .content-area .format-gallery .post-thumbnail:before,
 body:not(.single) .content-area .format-image .post-thumbnail:before {
-	background: #000;
+	background: rgba( 0, 0, 0, 0.3 );  /* was: background:#000 + opacity:0.3 — same result, no separate opacity needed */
 	content: "";
-	display: block;
-	height: 100%;
+	position: absolute;  /* was missing — left/bottom/z-index are positioning props and had zero effect on static elements */
+	top: 0;
 	left: 0;
-	opacity: 0.3;
+	right: 0;
 	bottom: 0;
-	width: 100%;
-	z-index: -1;
+	z-index: 1;          /* was -1, which also had no effect without position — now correctly layers above background-image */
 }
 
 .post-link {
