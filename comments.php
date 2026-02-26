@@ -67,6 +67,61 @@ if ( post_password_required() ) {
 		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'canard' ); ?></p>
 	<?php endif; ?>
 
-	<?php comment_form(); ?>
+	<?php
+	/*
+	 * Security: harden the default comment form fields.
+	 *
+	 * 1. Remove the URL / website field. It is an unauthenticated free-text
+	 *    field that is a primary spam vector and a stored-XSS surface if any
+	 *    downstream template echoes the value without esc_url(). Canard does
+	 *    not display commenter URLs anywhere in its templates, so the field
+	 *    provides no user value.
+	 *
+	 * 2. Set type="email" on the email field. The HTML5 attribute triggers
+	 *    native browser validation and helps password managers differentiate
+	 *    the field from text inputs.
+	 *
+	 * 3. Add autocomplete hints so browsers can pre-fill the name and email
+	 *    fields correctly without guessing.
+	 *
+	 * WordPress core handles nonce generation and verification for the comment
+	 * submission form internally — no additional wp_nonce_field() call is
+	 * needed here.
+	 */
+	add_filter( 'comment_form_default_fields', function( array $fields ): array {
+		// Remove the website / URL field entirely.
+		unset( $fields['url'] );
+
+		// Harden the email field: set type="email" and add autocomplete.
+		if ( isset( $fields['email'] ) ) {
+			$fields['email'] = str_replace(
+				array( 'type="text"', "type='text'" ),
+				'type="email"',
+				$fields['email']
+			);
+			// Add autocomplete="email" if not already present.
+			if ( false === strpos( $fields['email'], 'autocomplete' ) ) {
+				$fields['email'] = str_replace(
+					'type="email"',
+					'type="email" autocomplete="email"',
+					$fields['email']
+				);
+			}
+		}
+
+		// Add autocomplete="name" to the author (name) field if present.
+		if ( isset( $fields['author'] ) && false === strpos( $fields['author'], 'autocomplete' ) ) {
+			$fields['author'] = str_replace(
+				'id="author"',
+				'id="author" autocomplete="name"',
+				$fields['author']
+			);
+		}
+
+		return $fields;
+	} );
+
+	comment_form();
+	?>
 
 </div><!-- #comments -->

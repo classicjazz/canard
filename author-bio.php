@@ -20,7 +20,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 		 */
 		$author_bio_avatar_size = apply_filters( 'canard_author_bio_avatar_size', 60 );
 
-		echo get_avatar( get_the_author_meta( 'user_email' ), $author_bio_avatar_size );
+		/*
+		 * Security: get_avatar() returns an <img> HTML string. Plugins or child
+		 * themes may hook get_avatar to inject extra attributes or markup. Pass
+		 * the output through wp_kses() with the same allowlist used in
+		 * canard_entry_meta() so that any filter-injected content is stripped
+		 * before it reaches the page.
+		 */
+		$avatar_allowlist = array(
+			'img' => array(
+				'src'           => array(),
+				'class'         => array(),
+				'alt'           => array(),
+				'width'         => array(),
+				'height'        => array(),
+				'loading'       => array(),
+				'decoding'      => array(),
+				'fetchpriority' => array(),
+			),
+		);
+		echo wp_kses( get_avatar( get_the_author_meta( 'user_email' ), $author_bio_avatar_size ), $avatar_allowlist );
 		?>
 	</div><!-- .author-avatar -->
 

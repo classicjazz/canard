@@ -21,7 +21,18 @@ get_header(); ?>
 				<header class="page-header">
 					<?php
 						the_archive_title( '<h1 class="page-title">', '</h1>' );
-						the_archive_description( '<div class="taxonomy-description">', '</div>' );
+						/*
+						 * Security: the_archive_description() does not apply wp_kses_post()
+						 * to the taxonomy term description field. Users with manage_categories
+						 * capability can store arbitrary HTML in that field. Use
+						 * get_the_archive_description() + wp_kses_post() so that script tags
+						 * and other dangerous markup are stripped before output.
+						 * See also: the get_the_archive_description filter in functions.php.
+						 */
+						$archive_desc = get_the_archive_description();
+						if ( $archive_desc ) {
+							echo '<div class="taxonomy-description">' . wp_kses_post( $archive_desc ) . '</div>';
+						}
 					?>
 				</header><!-- .page-header -->
 
@@ -37,10 +48,15 @@ get_header(); ?>
 
 				<?php endwhile; ?>
 
-				<?php the_posts_pagination( array(
+				<?php
+				/*
+				 * Security: use esc_html__() rather than __() so that pagination
+				 * link labels are treated as plain text.
+				 */
+				the_posts_pagination( array(
 					'mid_size'  => 2,
-					'prev_text' => __( '&larr; Previous', 'canard' ),
-					'next_text' => __( 'Next &rarr;', 'canard' ),
+					'prev_text' => esc_html__( '&larr; Previous', 'canard' ),
+					'next_text' => esc_html__( 'Next &rarr;', 'canard' ),
 				) ); ?>
 
 			<?php else : ?>

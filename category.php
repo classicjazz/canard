@@ -16,11 +16,32 @@ get_header(); ?>
 		<?php
 		$category_image = canard_get_category_header_image();
 		if ( $category_image ) :
+			/*
+			 * Security (IDOR): retrieve the attachment ID stored in term meta and
+			 * verify that the attachment is publicly accessible before reading its
+			 * metadata. An editor-role user who sets _category_image_id to the
+			 * attachment ID of a private post's image could otherwise retrieve that
+			 * image's dimensions (a side-channel) and potentially expose the image
+			 * URL itself. We confirm the attachment has a public-facing status
+			 * ('inherit' = attached to a published post, or '0' parent = unattached
+			 * media library item) before proceeding.
+			 */
+			$attachment_id  = absint( get_term_meta( get_queried_object_id(), '_category_image_id', true ) );
+			$cat_img_meta   = array();
+
+			if ( $attachment_id > 0 ) {
+				$attachment_status = get_post_status( $attachment_id );
+				// 'inherit' means the attachment's visibility mirrors its parent post.
+				// Only read metadata when the attachment itself is publicly accessible.
+				if ( 'inherit' === $attachment_status || 'publish' === $attachment_status ) {
+					$cat_img_meta = (array) wp_get_attachment_metadata( $attachment_id );
+				}
+			}
+
 			// Retrieve attachment dimensions to reserve layout space before the
 			// image loads, preventing Cumulative Layout Shift (CLS).
-			$cat_img_meta = wp_get_attachment_metadata( get_term_meta( get_queried_object_id(), '_category_image_id', true ) );
-			$img_w        = $cat_img_meta['width']  ?? 1920;
-			$img_h        = $cat_img_meta['height'] ?? 420;
+			$img_w = isset( $cat_img_meta['width'] )  ? absint( $cat_img_meta['width'] )  : 1920;
+			$img_h = isset( $cat_img_meta['height'] ) ? absint( $cat_img_meta['height'] ) : 420;
 		?>
 		<div class="post-thumbnail">
 			<img class="category-header"
@@ -42,7 +63,20 @@ get_header(); ?>
 			<div class="entry-header-inner">
 				<?php
 				the_archive_title( '<h1 class="entry-title">', '</h1>' );
-				the_archive_description( '<div class="taxonomy-description">', '</div>' );
+				/*
+				 * Security: the_archive_description() outputs the taxonomy term
+				 * description field. Users with manage_categories capability can
+				 * store arbitrary HTML in this field. the_archive_description()
+				 * passes the value through wpautop() but does not apply wp_kses_post().
+				 * We use get_the_archive_description() and sanitise with wp_kses_post()
+				 * before echoing so that <script> and other dangerous tags are stripped.
+				 * See also: the get_the_archive_description filter registered in
+				 * functions.php which applies the same sanitisation globally.
+				 */
+				$archive_desc = get_the_archive_description();
+				if ( $archive_desc ) {
+					echo '<div class="taxonomy-description">' . wp_kses_post( $archive_desc ) . '</div>';
+				}
 				?>
 			</div>
 		</div>
@@ -69,10 +103,19 @@ get_header(); ?>
 				<?php endwhile; ?>
 
 				<?php
+				/*
+				 * Security: use esc_html__() rather than __() for the pagination
+				 * link labels. __() returns a raw translated string; if a translation
+				 * file is compromised or a .po contributor includes markup, it would
+				 * be passed through the_posts_pagination()'s internal wp_kses_post()
+				 * — which is an implementation detail that has changed across WP
+				 * versions. esc_html__() makes the intent explicit and ensures the
+				 * strings are treated as plain text regardless of internal changes.
+				 */
 				the_posts_pagination( array(
 					'mid_size'  => 2,
-					'prev_text' => __( '&larr; Previous', 'canard' ),
-					'next_text' => __( 'Next &rarr;', 'canard' ),
+					'prev_text' => esc_html__( '&larr; Previous', 'canard' ),
+					'next_text' => esc_html__( 'Next &rarr;', 'canard' ),
 				) );
 				?>
 

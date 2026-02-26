@@ -436,6 +436,24 @@ add_filter( 'body_class', 'canard_entry_hero_body_class' );
 
 /**
  * -------------------------------------------------------------------------
+ * Security: Taxonomy Archive Description Sanitisation
+ * -------------------------------------------------------------------------
+ *
+ * WordPress outputs the taxonomy term description through the_archive_description()
+ * without applying wp_kses_post(). Users with the manage_categories capability can
+ * store arbitrary HTML (including <script> tags) in the description field. This
+ * filter sanitises all output from get_the_archive_description() to a safe HTML
+ * subset before it is printed by archive.php and category.php.
+ *
+ * Note: archive.php and category.php also call wp_kses_post() directly at the
+ * point of echo for defence in depth. This filter covers any other template or
+ * plugin that calls the_archive_description() or get_the_archive_description()
+ * without its own sanitisation step.
+ */
+add_filter( 'get_the_archive_description', 'wp_kses_post' );
+
+/**
+ * -------------------------------------------------------------------------
  * Category Header Image
  * -------------------------------------------------------------------------
  *
