@@ -3,7 +3,7 @@
  * The template for displaying category archive pages.
  *
  * @package Canard
- * @since 1.2.0
+ * @since 2.5.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -55,8 +55,29 @@ get_header(); ?>
 		</div>
 		<?php else :
 			$color = canard_get_category_color();
+			/*
+			 * 1.5 modernisation: the background colour is now injected via
+			 * wp_add_inline_style() rather than a style="" attribute. This
+			 * changes specificity from inline (highest) to class-level, which
+			 * means child-theme rules targeting .category-color-fallback will
+			 * now win if they declare a background-color. Treat as a minor
+			 * breaking change — document in CHANGES.md and bump the theme version.
+			 *
+			 * The term ID is included in the CSS rule so concurrent page loads
+			 * for different categories each get the correct colour. WordPress
+			 * deduplicates identical inline style strings automatically.
+			 */
+			$term_id = absint( get_queried_object_id() );
+			wp_add_inline_style(
+				'canard-style',
+				sprintf(
+					'body.term-%1$d .category-color-fallback { background-color: %2$s; }',
+					$term_id,
+					sanitize_hex_color( $color ) ?: '#d11415'
+				)
+			);
 		?>
-		<div class="post-thumbnail category-color-fallback" style="background-color: <?php echo esc_attr( $color ); ?>;"></div>
+		<div class="post-thumbnail category-color-fallback"></div>
 		<?php endif; ?>
 
 		<div class="entry-header-wrapper">

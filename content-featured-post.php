@@ -15,8 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( has_post_thumbnail() ) : ?>
 		<a class="post-thumbnail" href="<?php echo esc_url( get_permalink() ); ?>">
 			<?php the_post_thumbnail( 'canard-featured-content-thumbnail', array(
-			'loading' => 'lazy',
-			'sizes'   => '(max-width: 1300px) 100vw, 1300px',
+			'loading'       => 'eager',
+			'fetchpriority' => 'high',
+			'sizes'         => '(max-width: 1300px) 100vw, 1300px',
 		) ); ?>
 		</a>
 	<?php endif; ?>

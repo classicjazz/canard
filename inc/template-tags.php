@@ -11,7 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'canard_entry_categories' ) ) :
 /**
- * Outputs HTML with meta information for the post categories.
+ * Outputs the category list for the current post.
+ *
+ * Only rendered for the 'post' post type and only when the site has more than
+ * one non-empty category (see canard_categorized_blog()). Single-category sites
+ * omit this block to avoid redundant navigation.
+ *
+ * @return void
  */
 function canard_entry_categories() {
 	if ( 'post' === get_post_type() ) {
@@ -26,7 +32,13 @@ endif;
 
 if ( ! function_exists( 'canard_entry_meta' ) ) :
 /**
- * Outputs HTML with meta information for the author, post date/time, and comments.
+ * Outputs the author byline, post date, and comment count for the current post.
+ *
+ * On single posts with the author bio Customizer option enabled, the byline is
+ * omitted here because it appears in the author-bio template instead. The date
+ * and comment link are always shown.
+ *
+ * @return void
  */
 function canard_entry_meta() {
 	/**
@@ -98,6 +110,8 @@ function canard_entry_meta() {
 
 	$posted_on = sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>', esc_url( get_permalink() ), $time_string );
 
+	// Explicit allowlist rather than wp_kses_post() because the byline string
+	// contains only these elements and we do not want to permit block-level markup.
 	$allowed_meta_html = array(
 		'span' => array( 'class' => array(), 'itemprop' => array() ),
 		'a'    => array( 'class' => array(), 'href' => array(), 'rel' => array(), 'itemprop' => array(), 'property' => array() ),
@@ -130,9 +144,13 @@ endif;
 
 if ( ! function_exists( 'canard_entry_footer' ) ) :
 /**
- * Outputs HTML with meta information for the categories, tags, and comments.
+ * Outputs the entry footer: meta, tags, and edit link.
  *
- * @uses canard_entry_meta() — disable via the canard_entry_footer_show_meta filter.
+ * Meta output is controlled by the canard_entry_footer_show_meta filter,
+ * allowing child themes to suppress it without overriding this function.
+ *
+ * @uses canard_entry_meta()
+ * @return void
  */
 function canard_entry_footer() {
 	if ( apply_filters( 'canard_entry_footer_show_meta', true ) ) {
@@ -164,9 +182,7 @@ function canard_categorized_blog(): bool {
 			'number'     => 2,
 		) );
 		$cat_count = is_countable( $results ) ? count( $results ) : 0;
-		// WEEK_IN_SECONDS TTL ensures stale data doesn't persist indefinitely
-		// on sites without a persistent cache backend. The edit_category and
-		// save_post hooks below still invalidate immediately on real changes.
+		// Expire after a week as a backstop; the hooks below invalidate immediately on real changes.
 		set_transient( 'canard_cat_count_v1', $cat_count, WEEK_IN_SECONDS );
 	}
 
@@ -177,24 +193,15 @@ function canard_categorized_blog(): bool {
  * Flushes the transient used in canard_categorized_blog() when categories change.
  *
  * @param int $post_id The ID of the post being saved, passed by the save_post hook.
+ * @return void
  */
 function canard_category_transient_flusher( int $post_id = 0 ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
-	/*
-	 * Bug fix: the previous implementation called get_the_ID() here, which
-	 * returns the global Loop post ID — not the post being saved. In the
-	 * save_post admin context the Loop is not running, so get_the_ID() returned
-	 * false or a stale value, making the wp_is_post_revision() guard unreliable.
-	 *
-	 * The save_post hook passes the post ID as its first argument. We accept it
-	 * as $post_id and use that for the revision check.
-	 *
-	 * The edit_category hook passes the term ID, not a post ID. Passing a
-	 * non-post integer to wp_is_post_revision() returns false (not a revision),
-	 * which is the correct behaviour — category edits should always flush.
-	 */
+	// Use the $post_id argument passed by save_post rather than get_the_ID(),
+	// which is unreliable outside the Loop. The edit_category hook passes a term
+	// ID here; wp_is_post_revision() correctly returns false for non-post integers.
 	if ( $post_id > 0 && wp_is_post_revision( $post_id ) ) {
 		return;
 	}
@@ -207,6 +214,7 @@ add_action( 'save_post',     'canard_category_transient_flusher' );
  * Adds featured image as background image to post navigation elements.
  *
  * @see wp_add_inline_style()
+ * @return void
  */
 function canard_post_nav_background() {
 	if ( ! is_single() ) {
@@ -247,7 +255,7 @@ function canard_post_nav_background() {
 		if ( $previous && ! post_password_required( $previous->ID ) && has_post_thumbnail( $previous->ID ) ) {
 			$prev_url = wp_get_attachment_image_url( get_post_thumbnail_id( $previous->ID ), 'post-thumbnail' );
 			$css .= '
-				.post-navigation .nav-previous { background-image: url(' . esc_url( $prev_url ) . '); }
+				.post-navigation .nav-previous { background-image: url("' . esc_url( $prev_url ) . '"); }
 				.post-navigation .nav-previous .post-title, .post-navigation .nav-previous a:hover .post-title, .post-navigation .nav-previous .meta-nav { color: #fff; }
 				.post-navigation .nav-previous a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
 				.post-navigation .nav-previous a:focus, .post-navigation .nav-previous a:hover { background-color: rgba(0, 0, 0, 0.6); }
@@ -258,7 +266,7 @@ function canard_post_nav_background() {
 		if ( $next && ! post_password_required( $next->ID ) && has_post_thumbnail( $next->ID ) ) {
 			$next_url = wp_get_attachment_image_url( get_post_thumbnail_id( $next->ID ), 'post-thumbnail' );
 			$css .= '
-				.post-navigation .nav-next { background-image: url(' . esc_url( $next_url ) . '); }
+				.post-navigation .nav-next { background-image: url("' . esc_url( $next_url ) . '"); }
 				.post-navigation .nav-next .post-title, .post-navigation .nav-next a:hover .post-title, .post-navigation .nav-next .meta-nav { color: #fff; }
 				.post-navigation .nav-next a { background-color: rgba(0, 0, 0, 0.3); border: 0; text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.3); }
 				.post-navigation .nav-next a:focus, .post-navigation .nav-next a:hover { background-color: rgba(0, 0, 0, 0.6); }

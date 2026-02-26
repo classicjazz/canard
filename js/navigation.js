@@ -1,4 +1,16 @@
+/**
+ * @fileoverview Navigation interactions: dropdown toggles, touch menus, and keyboard focus management.
+ */
+
 ( function() {
+
+	// Guard against utils.js failing to load; provides a no-op passthrough so
+	// navigation features continue to function without debouncing.
+	if ( ! window.canardUtils || typeof window.canardUtils.debounce !== 'function' ) {
+		console.warn( 'Canard navigation.js: canardUtils not available — debounced resize handler disabled.' );
+		window.canardUtils = window.canardUtils || {};
+		window.canardUtils.debounce = function( fn ) { return fn; };
+	}
 
 	const debounce = window.canardUtils.debounce;
 
@@ -29,7 +41,11 @@
 		} );
 
 		if ( window.innerWidth > 959 ) {
-			document.querySelectorAll( '.main-navigation .dropdown-toggle' ).forEach( function( btn ) {
+			// Remove buttons from BOTH navigation contexts; omitting .widget_nav_menu
+			// causes those buttons to persist permanently after a mobile→desktop resize.
+			document.querySelectorAll(
+				'.main-navigation .dropdown-toggle, .widget_nav_menu .dropdown-toggle'
+			).forEach( function( btn ) {
 				btn.parentNode.removeChild( btn );
 			} );
 		}
@@ -39,15 +55,15 @@
 	window.addEventListener( 'resize', debounce( menuDropdownToggle, 500 ) );
 
 	window.addEventListener( 'load', function() {
-		// Targets the first div inside #masthead, which wraps the navigation.
 		const masthead = document.getElementById( 'masthead' );
-		const menu     = masthead ? masthead.querySelector( 'div' ) : null;
+		// Use the stable #site-navigation ID rather than a positional div selector,
+		// which would match the wrong element when the secondary nav is absent.
+		const menu     = masthead ? masthead.querySelector( '#site-navigation' ) : null;
 		if ( ! menu || ! menu.children.length ) {
 			return;
 		}
 
-		// Delegate dropdown-toggle clicks on the document so dynamically
-		// inserted buttons (from menuDropdownToggle above) are covered.
+		// Delegate dropdown-toggle clicks so dynamically inserted buttons are covered.
 		document.addEventListener( 'click', function( event ) {
 			const btn = event.target.closest( '.dropdown-toggle' );
 			if ( ! btn ) {
@@ -66,13 +82,14 @@
 		} );
 
 		if ( 'ontouchstart' in window ) {
+			// On touch devices, the first tap on a parent menu item opens the submenu
+			// rather than following the link, matching hover behaviour on desktop.
 			menu.querySelectorAll( '.menu-item-has-children > a' ).forEach( function( link ) {
 				link.addEventListener( 'touchstart', function( e ) {
 					const li = this.parentElement;
 					if ( ! li.classList.contains( 'focus' ) ) {
 						e.preventDefault();
 						li.classList.toggle( 'focus' );
-						// Close siblings.
 						Array.from( li.parentNode.children ).forEach( function( sibling ) {
 							if ( sibling !== li ) {
 								sibling.classList.remove( 'focus' );
@@ -82,15 +99,18 @@
 				} );
 			} );
 
-			// Close open submenus when tapping outside the navigation.
+			// passive:true because this handler never calls e.preventDefault();
+			// omitting it forces the browser to wait before committing each scroll frame.
 			document.addEventListener( 'touchstart', function( e ) {
 				if ( ! e.target.closest( '.main-navigation' ) ) {
 					document.querySelectorAll( '.main-navigation .focus' )
 						.forEach( function( el ) { el.classList.remove( 'focus' ); } );
 				}
-			} );
+			}, { passive: true } );
 		}
 
+		// Add/remove 'focus' on ancestor menu items so CSS can show sub-menus
+		// when keyboard focus is inside them (keyboard nav parity with hover).
 		menu.querySelectorAll( 'a' ).forEach( function( link ) {
 			link.addEventListener( 'focus', function() {
 				let el = this.parentElement;
@@ -115,6 +135,10 @@
 
 } )();
 
+/**
+ * Mobile menu toggle — shows/hides the primary navigation list and keeps
+ * aria-expanded in sync on both the button and the <ul>.
+ */
 ( function() {
 
 	const container = document.getElementById( 'site-navigation' );
@@ -139,6 +163,22 @@
 	}
 
 	button.addEventListener( 'click', function() {
+		// Dismiss the search panel before toggling nav so the two drop-downs
+		// never overlap in portrait mode on iPhone / iPad.
+		const searchContainer = document.getElementById( 'search-header' );
+		if ( searchContainer && searchContainer.classList.contains( 'toggled' ) ) {
+			searchContainer.classList.remove( 'toggled' );
+			document.body.classList.remove( 'search-toggled' );
+			const searchButton = searchContainer.getElementsByTagName( 'button' )[0];
+			if ( searchButton ) {
+				searchButton.setAttribute( 'aria-expanded', 'false' );
+			}
+			const searchForm = searchContainer.getElementsByTagName( 'form' )[0];
+			if ( searchForm ) {
+				searchForm.setAttribute( 'aria-expanded', 'false' );
+			}
+		}
+
 		const toggled = container.classList.contains( 'toggled' );
 		container.classList.toggle( 'toggled' );
 		button.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );

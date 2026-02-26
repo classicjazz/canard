@@ -1,8 +1,13 @@
+/**
+ * @fileoverview Adds 'no-site-branding' to <body> when the site branding container has
+ * zero height, indicating both the logo and site title/description are hidden.
+ * CSS uses this class to adjust header layout for logo-less configurations.
+ */
+
 ( function() {
 
 	const siteBranding = document.getElementsByClassName( 'site-branding' )[0];
 
-	// Guard against pages where .site-branding is absent, and skip if it has height.
 	if ( ! siteBranding || siteBranding.clientHeight > 0 ) {
 		return;
 	}

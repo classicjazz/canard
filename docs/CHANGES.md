@@ -1,484 +1,554 @@
-# Canard Theme — Change Log
+# Canard — Change Log
 
-**Version 2.5.0**
+This document covers all changes from the upstream Automattic release (v1.0.21) to
+this fork (v2.7.0). It is intended for child theme authors and site owners migrating
+from the original theme. For installation and general usage, see `readme.txt`.
 
----
-
-## Table of Contents
-
-1. [Executive Summary: Theme Modernization Overview](#1-executive-summary-theme-modernization-overview)
-2. [PHP & Backend Logic](#2-php--backend-logic)
-   - [2.1 Security & Escaping](#21-security--escaping)
-   - [2.2 Performance & Caching](#22-performance--caching)
-   - [2.3 API Modernization](#23-api-modernization)
-3. [JavaScript & Asset Management](#3-javascript--asset-management)
-   - [3.1 jQuery Removal](#31-jquery-removal)
-   - [3.2 ES6 & Global Improvements](#32-es6--global-improvements)
-   - [3.3 File-Specific Changes](#33-file-specific-changes)
-   - [3.4 Accessibility & Correctness](#34-accessibility--correctness)
-4. [CSS & Design Systems](#4-css--design-systems)
-   - [4.1 Genericons Replaced with SVG](#41-genericons-replaced-with-svg)
-   - [4.2 Social Navigation Removed](#42-social-navigation-removed)
-   - [4.3 Category Header System](#43-category-header-system)
-   - [4.4 Bug Fixes & Modernization](#44-bug-fixes--modernization)
-5. [Template & HTML Enhancements](#5-template--html-enhancements)
-   - [5.1 Schema, Structured Data & ARIA](#51-schema-structured-data--aria)
-   - [5.2 HTML5 Semantics](#52-html5-semantics)
-6. [Removals & Cleanup](#6-removals--cleanup)
-   - [6.1 Deleted Files](#61-deleted-files)
-   - [6.2 Deprecated Functions Removed](#62-deprecated-functions-removed)
-   - [6.3 Removed Third-Party Dependencies](#63-removed-third-party-dependencies)
-   - [6.4 Added Files](#64-added-files)
+**Requirements:** WordPress 6.9+, PHP 8.0+. jQuery is no longer a front-end
+dependency and is not loaded by this theme on any page type.
 
 ---
 
-## 1. Executive Summary: Theme Modernization Overview
+## Breaking Changes
 
-Canard 2.5.0 is a significant architectural release. Three interconnected modernization initiatives drove the majority of the changes: a full transition to vanilla JavaScript, the retirement of the Genericons icon font in favor of inline and CSS SVG, and a targeted effort to improve Core Web Vitals scores and eliminate outstanding security surface area.
+These changes require action if you are running a child theme against the upstream
+release.
 
-### JavaScript Modernization
+- **`footer#colophon` selector change.** The footer container was a `<div>`; it is
+  now a `<footer>` element. Child theme CSS rules using `div#colophon` must be
+  updated to `footer#colophon`.
 
-All five front-end scripts — **`navigation.js`**, **`search.js`**, **`featured-content.js`**, **`single.js`**, and **`posts.js`** — have been fully rewritten in vanilla ES6 JavaScript. jQuery has been removed as a front-end dependency on every page type. The `jquery` declaration has been stripped from all five script enqueues in **`functions.php`**. A new shared utility module, **`js/utils.js`**, provides a `debounce` implementation used across scripts.
+- **Category color fallback specificity reduced.** The `.category-color-fallback`
+  `background-color` was previously set via an inline `style=""` attribute (highest
+  possible specificity). It is now injected via `wp_add_inline_style()` scoped to
+  `body.term-{id}`, giving it class-level specificity. Child theme rules that were
+  being overridden by the inline style — and compensating with `!important` — will
+  now win without it. Remove any `!important` declarations targeting this property.
 
-### Genericons Retirement and SVG Migration
+- **`pre` border now uses `border-inline-start`.** The `pre` element previously used
+  `border-left`. It now uses the logical property `border-inline-start`. Child theme
+  rules targeting `border-left-color` on `pre` must be updated to
+  `border-inline-start-color`.
 
-Genericons, the icon font used throughout the theme for navigation controls, UI chrome, and social icons, has been removed entirely. The **`genericons/`** directory can be deleted. Template icons previously rendered via `<span class="genericon ...">` elements have been replaced with inline `<svg aria-hidden="true" focusable="false">` elements. CSS pseudo-element icons previously using font-character glyph codes (`\fXXX`) have been replaced with SVG `background-image` data URIs directly in **`style.css`** and **`editor-blocks.css`**.
+- **`.site-content-inner` is now a flex container.** The two-column layout shell
+  (`.site-main` + `.widget-area`) was previously float-based. It is now
+  `display: flex`. The `display: flow-root` rule that Canard Child applied to
+  `body:not(.single) .content-area article.hentry` was counteracting the old float
+  context and is now dead code — it can be removed from the child theme.
 
-### Core Web Vitals and Security Focus
+- **Social navigation removed.** The `social` menu location no longer exists.
+  `register_nav_menus()` no longer registers it, and all social `<nav>` template
+  blocks have been removed from `header.php` and `footer.php`. If your child theme
+  registers or renders the social menu location, those references can be removed.
 
-Loading behavior has been corrected throughout the theme to align with Core Web Vitals best practices. LCP images — including the single-post hero thumbnail in **`content-single.php`**, the category hero in **`category.php`**, and the custom header image in **`header.php`** — now receive `loading="eager" fetchpriority="high"` to prevent browsers from deferring the page's most important image. Below-fold images receive explicit `loading="lazy"` attributes. `sizes` attributes have been corrected on archive and featured-content thumbnails to prevent browsers from downloading over-sized image variants.
-
-Security improvements address five distinct vulnerability classes: stored XSS via unescaped output, IDOR via unvalidated attachment IDs, reverse tabnapping via missing `rel="noopener noreferrer"` on `target="_blank"` links, CSS injection via the Customizer postMessage channel, and cache poisoning in a multisite persistent-cache scenario. ABSPATH guards have been added to all 26 template and include files.
-
----
-
-## 2. PHP & Backend Logic
-
-### 2.1 Security & Escaping
-
-#### ABSPATH Guards
-
-Added `if ( ! defined( 'ABSPATH' ) ) exit;` to all template and include files to prevent direct HTTP access. Files covered: **`header.php`**, **`author-bio.php`**, **`content.php`**, **`content-none.php`**, **`content-link.php`**, **`content-single.php`**, **`content-page.php`**, **`content-featured-post.php`**, **`featured-content.php`**, and **`category.php`**.
-
-#### Strict Types Removal
-
-Removed the invalid `<?php declare( strict_types = 1 ); ?>` declaration from the first line of all 26 PHP files. This declaration has no effect on non-strict function calls made by WordPress core and was causing parse confusion in some environments.
-
-#### Output Escaping — Global
-
-- `_e()` replaced with `esc_html_e()` throughout all templates.
-- `get_the_title()` and `get_search_query()` calls wrapped in `esc_html()` at every point of echo.
-
-#### Output Escaping — File-Specific Changes
-
-- **`header.php`**: `bloginfo('charset')` → `esc_attr( get_bloginfo( 'charset' ) )`; `bloginfo('name')` and `bloginfo('description')` → `esc_html( get_bloginfo(...) )`. The `header_image()` template tag (which calls `echo` internally) replaced with `echo esc_url( get_header_image() )` to prevent reflected XSS from a stored `javascript:` or `data:` URI in the custom header URL field.
-
-- **`header.php`**: `loading` and `fetchpriority` attribute values, though currently static strings, now pass through `esc_attr()` per WordPress VIP coding standards so the pattern remains safe if conditionals are later extended to read from theme options or filters.
-
-- **`author-bio.php`**: Bare `echo get_the_author()` → `echo esc_html( get_the_author() )`; `the_author_meta('description')` → `echo esc_html( get_the_author_meta('description') )`; `get_avatar()` output wrapped in `wp_kses()` using the `img` element allowlist, because the `get_avatar` filter allows downstream plugins to inject additional attributes.
-
-- **`content-none.php`**: The `printf( __() )` call producing an `<a>` tag now wraps the translation string in `wp_kses()` with an explicit `array( 'a' => array( 'href' => array() ) )` allowlist.
-
-- **`content-link.php`**: `printf( __( 'External link to %s' ), the_title() )` → `printf( esc_html__(), esc_html( get_the_title() ) )`.
-
-- **`content-featured-post.php`**: `href="<?php the_permalink(); ?>"` → `href="<?php echo esc_url( get_permalink() ); ?>"`.
-
-- **`inc/template-tags.php`**: `echo` statements for `$byline` and `$posted_on` in **`canard_entry_meta()`** wrapped in `wp_kses()` with an explicit allowlist of `span`, `a`, `time`, and `img` elements. The `$categories_list` output in **`canard_entry_categories()`** wrapped in `wp_kses_post()`.
-
-- **`inc/template-tags.php`**: The `wp_kses()` allowlist in **`canard_entry_meta()`** expanded to include `itemprop` and `property` on `<a>` and `<span>` elements, and `fetchpriority` on `<img>` elements. These attributes are emitted by WordPress core (`get_avatar()`) and were being silently stripped.
-
-- **`archive.php`** / **`category.php`**: `the_archive_description()` replaced with `wp_kses_post( get_the_archive_description() )`. Users with the `manage_categories` capability can store arbitrary HTML including `<script>` tags in the term description field. A `get_the_archive_description` → `wp_kses_post` filter is also registered globally in **`functions.php`** as a safety net.
-
-- **`search.php`** / **`archive.php`** / **`category.php`**: Pagination labels passed to `the_posts_pagination()` via the `prev_text` and `next_text` arguments changed from `__()` to `esc_html__()` to prevent a compromised translation file from injecting markup.
-
-#### Security — Logic-Level Fixes
-
-- **`inc/extras.php` — `canard_get_link_url()`**: `get_url_in_content()` returns the raw `href` value from post content without protocol validation. A link-format post containing a `javascript:` or `data:` URI would have been passed to `esc_url()`; while `esc_url()` strips `javascript:` URIs, `data:` URIs survive in some WordPress versions, and the `target="_blank"` pairing creates a phishing vector. The extracted URL is now validated with **`wp_http_validate_url()`** (HTTP/HTTPS only); non-conforming values fall back to **`get_the_permalink()`**.
-
-- **`content-link.php`**: Added `rel="noopener noreferrer"` to the `target="_blank"` external-link anchor. Without `rel="noopener"` the opened page holds a `window.opener` reference and can redirect the originating tab (reverse tabnapping). Per OWASP and WordPress VIP standards.
-
-- **`inc/template-tags.php` — `canard_post_nav_background()`**: Password-protected adjacent-post thumbnails were being exposed as visible `background-image` CSS rules before the visitor had entered the post password — an IDOR that leaked the image without authentication. Added **`post_password_required()`** checks for both the `$previous` and `$next` adjacent posts before reading or emitting their thumbnail URLs.
-
-- **`category.php` — attachment visibility check**: The `_category_image_id` term meta value is set by child themes or plugins. **`wp_get_attachment_metadata()`** was called with that ID without verifying accessibility, allowing an editor-role user to retrieve dimensions of a private post's image as a side-channel (IDOR). The attachment ID is now validated with **`get_post_status()`** before metadata is read; only attachments with status `inherit` or `publish` are processed.
-
-- **`customizer.js` — hex colour validation**: The `header_textcolor` Customizer binding previously assigned the `to` value directly to `el.style.color` after only checking for `'blank'`. An attacker manipulating the postMessage channel could inject arbitrary CSS values. The value is now validated against a strict hex regex (`/^#[0-9a-fA-F]{3,8}$/`) before assignment.
-
-- **`inc/template-tags.php` — `canard_entry_meta()`**: Avatar HTML retrieved from the object cache is now re-validated through `wp_kses()` before use, in addition to the existing validation on the final composed string. On sites with a shared Redis/Memcached backend, a poisoned cache entry could otherwise supply arbitrary HTML.
-
-- **`inc/template-tags.php` — multisite cache key isolation**: Object cache keys `canard_nav_bg_{post_id}` and `canard_avatar_{hash}_{size}` used a flat namespace. On a multisite network with a non-blog-specific persistent cache backend, post ID 42 on site 1 and post ID 42 on site 2 shared the same cache entry. Both keys are now prefixed with **`get_current_blog_id()`**.
-
-- **`comments.php` — comment form hardening** via the **`comment_form_default_fields`** filter: (1) The URL/website field is removed — it is an unauthenticated free-text field and a stored-XSS surface if any downstream template echoes commenter URLs without `esc_url()`. Canard does not display commenter URLs. (2) The email input type changed from `type="text"` to `type="email"`. (3) `autocomplete="email"` and `autocomplete="name"` hints added.
-
-- **`inc/customizer.php` — checkbox sanitization**: Removed the custom **`canard_sanitize_checkbox()`** function and its `(bool)` cast — the cast is unreliable because the string `"false"` evaluates to `true` in PHP. The setting now uses **`wp_validate_boolean()`** as its `sanitize_callback`. An explicit `'default' => false` has been added to the setting registration, which was previously absent.
-
-#### Loose Comparison Tightening
-
-- Two instances of `'post' == get_post_type()` in **`content.php`** replaced with `'post' === get_post_type()`.
-- `'0' != get_comments_number()` in **`comments.php`** replaced with `0 !== (int) get_comments_number()` for PHP 8 type safety.
+- **Duplicate bottom navigation removed.** `footer.php` previously re-rendered the
+  `secondary` menu location in a `.bottom-navigation` block that duplicated what
+  `header.php` already outputs. This block has been removed. If your child theme was
+  hiding it via CSS, that rule can be removed.
 
 ---
 
-### 2.2 Performance & Caching
+## New Features
 
-#### Conditional Asset Loading
+### Category Archive Template (`category.php`)
 
-- **`functions.php` — `canard-blocks.css`**: Enqueued only on singular posts/pages and the front page (`is_singular() || is_front_page()`). Archives, search pages, and other listing views do not render block HTML. Saves one stylesheet round-trip on every non-singular page.
+A dedicated category archive template has been added. It displays a full-width hero
+banner at the top — either a category image or a solid-color fallback — followed by
+the standard post loop with numbered pagination. The hero uses the same `entry-hero`
+layout structure as single posts.
 
-- **`functions.php` — `canard-comments.css`**: Split into a dedicated **`comments.css`** and enqueued only when `is_singular() && ( comments_open() || get_comments_number() )`. Registered with `canard-style` as a dependency to guarantee load order. Saves ~4–8 KB (uncompressed) on every non-singular page.
+Two new pluggable functions and filters allow child themes to supply per-category
+images and colors without overriding the template entirely:
 
-- **`functions.php` — `canard-featured-content.js`**: Now enqueued only on `is_front_page()`. Previously loaded unconditionally on every page request including single posts and archives where it is entirely irrelevant.
+- `canard_get_category_header_image()` — returns the banner image URL for the current
+  category, or `false`. Wrapped in `if ( ! function_exists() )`. Exposes the
+  `canard_category_header_image` filter.
+- `canard_get_category_color()` — returns the solid-color fallback (`#d11415` by
+  default). Exposes the `canard_category_color` filter.
 
-#### Script Deferral via WP 6.3+ Strategy API
+See `docs/category-images.md` for usage.
 
-**`functions.php`**: All front-end scripts except **`canard-single`** now enqueue with `array( 'in_footer' => true, 'strategy' => 'defer' )`. This uses WordPress's built-in dependency-aware deferral (available since WP 6.3, required by the theme's WP 6.9+ target) rather than a `script_loader_tag` string-manipulation filter, which correctly promotes dependents and avoids tag-rewriting edge cases. **`canard-single`** is explicitly excluded because it performs synchronous entry-hero DOM rearrangement to prevent a layout flash (FOUC).
+### Child Theme Filter: `canard_entry_footer_show_meta`
 
-#### Object Caching
+`canard_entry_footer()` previously called `canard_entry_meta()` with no way to
+suppress it without overriding the entire function. A filter has been added:
 
-- **`inc/template-tags.php` — `canard_post_nav_background()`**: Calls to **`wp_get_attachment_image_url()`** and **`get_post_thumbnail_id()`** (each a `get_post_meta()` database hit) on every singular page load are now replaced by a WP object cache lookup under the key `canard_nav_bg_{blog_id}_{post_id}` with a one-hour TTL. On sites with a persistent cache backend (Redis / Memcached) this eliminates the meta lookups on repeat requests.
+```php
+add_filter( 'canard_entry_footer_show_meta', '__return_false' );
+```
 
-- **`inc/template-tags.php` — `canard_entry_meta()`**: Avatar HTML is now cached with key `canard_avatar_{blog_id}_{md5(email)}_{size}` and a one-hour TTL. On archive pages with multiple posts by the same author this replaces N Gravatar HTTP-lookup round trips with one. The `WP_User` object is also read once via **`get_userdata()`** and reused for both the avatar email and the author posts URL.
+### Mutual Panel Dismissal
 
-#### Database & Query Efficiency
-
-**`inc/template-tags.php` — `canard_post_nav_background()` hook deferred to `template_redirect`**: The `add_action( 'wp_enqueue_scripts', ... )` call was registered unconditionally at **`functions.php`** load time, causing a no-op invocation on every archive, front page, and search request. Registration is now wrapped in a `template_redirect` callback that only adds the hook when `is_single() || is_attachment()`. `template_redirect` fires before `wp_enqueue_scripts` so the hook is still registered in time.
-
-#### PHP Micro-optimizations
-
-- **`content.php` — `get_post_type()` called once**: The function was previously called twice per loop iteration (thumbnail conditional and entry-meta conditional). The result is now stored in `$post_type` and reused.
-
-- **`inc/template-tags.php` — `canard_category_transient_flusher()`**: Guarded against post revisions via **`wp_is_post_revision()`** check, preventing unnecessary cache invalidation on draft edits. The function signature now correctly accepts the `$post_id` argument passed by WordPress's `save_post` hook instead of relying on **`get_the_ID()`** (a Loop function that returns unreliable values in the admin context).
-
-- **`inc/template-tags.php` — `canard_cat_count_v1` transient TTL**: Added `WEEK_IN_SECONDS` as the third argument to `set_transient()`. Without an explicit TTL the transient accumulated indefinitely on sites without a persistent cache backend. The `edit_category` and `save_post` hooks continue to invalidate the transient immediately on real category changes.
-
-- **`inc/template-tags.php`**: `wp_add_inline_style()` in **`canard_post_nav_background()`** is now guarded by `if ( $css )` to avoid appending a no-op style block when neither adjacent post has a featured image.
-
-- **`functions.php` — `canard_google_fonts_url()` memoized**: The function was called three times per page load (in **`canard_resource_hints()`**, **`canard_scripts()`**, and the editor styles function), re-evaluating all four `_x()` translation checks on each call. A `static $url = null;` guard now caches the result after the first call.
-
-#### Image Handling (Core Web Vitals)
-
-- **`content-single.php`**: **`the_post_thumbnail( 'canard-single-thumbnail' )`** now passes `array( 'loading' => 'eager', 'fetchpriority' => 'high' )`. The `canard-single-thumbnail` size (1920×768 px) is the LCP element on single posts. WordPress 5.5+ defaults to `loading="lazy"` on all images, which actively harms LCP when applied to the page's primary image.
-
-- **`category.php` — hero image**: Changed from `loading="lazy"` to `loading="eager" fetchpriority="high"`; added `sizes="100vw"`. The category hero is the topmost element on category archive pages and the LCP candidate. Lazy-loading an LCP image is an anti-pattern that actively harms Core Web Vitals scores.
-
-- **`category.php` — `width`/`height` attributes**: Explicit `width` and `height` attributes added to the category hero `<img>`. Dimensions are read from attachment metadata via **`wp_get_attachment_metadata()`** with fallbacks of 1920×420 for child themes supplying images by URL. Eliminates the Cumulative Layout Shift (CLS) caused by the image pushing content down as it loads.
-
-- **`header.php` — custom header image**: Receives `loading="eager" fetchpriority="high"` on the front page (LCP candidate) and `loading="lazy" fetchpriority="auto"` on all other pages (decorative, below post hero). Previously the attribute was absent, causing bandwidth competition on inner pages.
-
-- **`content.php` — archive thumbnails**: `sizes` corrected from browser default `100vw` to `(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px` for `canard-post-thumbnail` (870×773 px). Prevents the browser from downloading a full-width image on desktop where the content column is ~620 px wide. No new image sizes registered.
-
-- **`content-featured-post.php` — featured thumbnails**: `sizes` corrected to `(max-width: 1300px) 100vw, 1300px` for `canard-featured-content-thumbnail` (915×500 px) used in the front-page carousel. Added explicit `loading="lazy"` since featured content thumbnails are below the primary hero area and should not compete for bandwidth. No new image sizes registered.
-
-#### DNS Prefetch
-
-**`functions.php` — `canard_resource_hints()`**: Now emits a `<link rel="dns-prefetch" href="https://secure.gravatar.com">` hint on all front-end pages. On archive pages with multiple authors this starts Gravatar DNS resolution immediately on page parse, reducing stall time before avatar images can be requested.
+The mobile navigation and header search panels now dismiss each other. Opening the
+nav panel while the search panel is open closes the search panel first, and vice
+versa. State changes (ARIA attributes, CSS classes) are applied synchronously to
+avoid a layout recalculation between the two transitions.
 
 ---
 
-### 2.3 API Modernization
+## Removed
 
-#### `functions.php`
-
-- **`canard-style` handle pinned to parent theme**: All asset enqueues in **`canard_scripts()`** use **`get_template_directory_uri()`**, ensuring the `canard-style` handle always points to the parent theme's **`style.css`** regardless of child theme activation.
-
-- **`CANARD_VERSION` constant**: Added to replace hardcoded version strings in all enqueues.
-
-- **Google Fonts v2 API**: Merged separate font requests into a single **`canard_google_fonts_url()`** function using the `/css2` endpoint with `&display=swap`.
-
-- **Google Fonts preconnect hints**: Added **`canard_resource_hints()`** hooked to the **`wp_resource_hints`** filter, emitting `<link rel="preconnect">` hints for `fonts.googleapis.com` and `fonts.gstatic.com` using the correct WordPress API rather than a raw `wp_head` echo, ensuring hints are deduplicated and filterable by child themes and plugins.
-
-- **HTML5 support expanded**: **`add_theme_support( 'html5', ... )`** extended to include `script` and `style`.
-
-- **`navigation-widgets` support**: Added (WP 5.5+) to opt navigation widgets into semantic HTML5 markup, preventing WordPress from outputting a `<div>` wrapper when the html5 feature flag is active. **`customize-selective-refresh-widgets`** added for improved Customizer preview performance.
-
-- **Classic widgets**: Replaced **`canard_disable_block_widgets()`** function and its `after_setup_theme` hook with `add_filter( 'use_widgets_block_editor', '__return_false' )` — simpler, more reliable, no named function needed.
-
-- **`editor-color-palette` deprecation resolved**: Removed deprecated `add_theme_support( 'editor-color-palette', ... )` (deprecated in WP 5.9) from **`functions.php`** and replaced with **`theme.json`**.
-
-- **Block editor styles**: Replaced manual **`wp_enqueue_style()`** on the **`enqueue_block_editor_assets`** hook with `add_theme_support( 'editor-styles' )` + **`add_editor_style()`** — the recommended path since WP 5.8. This applies automatic `.editor-styles-wrapper` body-class scoping and handles RTL correctly.
-
-- **Standardised pagination**: **`archive.php`**, **`index.php`**, and **`search.php`** were using **`the_posts_navigation()`** (prev/next only) while **`category.php`** used **`the_posts_pagination()`** with numbered pages. All listing templates now use **`the_posts_pagination()`** with consistent `mid_size`, `prev_text`, and `next_text` arguments.
-
-- **`canard_get_category_header_image()` added**: Returns the banner image URL for the current category archive, or `false` if none is configured. Wrapped in `if ( ! function_exists() )` for child theme override. Exposes the **`canard_category_header_image`** filter. See **`docs/category-images.md`** for usage.
-
-- **`canard_get_category_color()` cleaned up**: The **`wp_get_global_settings( array( 'color', 'palette', 'theme' ) )`** branch that attempted to read the `red` slug from the theme palette has been removed. Canard is a classic theme with no **`theme.json`**, so this call always returned an empty array, making the branch dead code that fell through to the `#d11415` default on every call. The **`canard_category_color`** filter remains in place for child theme overrides.
-
-#### `inc/template-tags.php`
-
-- **`wp_get_attachment_image_src()` → `wp_get_attachment_image_url()`**: Both calls in **`canard_post_nav_background()`** replaced with **`wp_get_attachment_image_url()`**, which returns the URL string directly and has been available since WordPress 4.4.
-
-- **Transient key renamed**: `canard_categories` → `canard_cat_count_v1` in **`canard_categorized_blog()`** to avoid collisions with other plugins or themes on multisite installs. The flusher **`canard_category_transient_flusher()`** updated to match.
-
-- **`wp_kses` avatar `img` allowlist updated**: WordPress 6.3+ emits `loading="lazy"` and `decoding="async"` on **`get_avatar()`** output. Both attributes added to the `img` allowlist entry to prevent **`wp_kses()`** from silently stripping them.
-
-- **`canard_entry_footer()` — `canard_entry_footer_show_meta` filter**: Added `apply_filters( 'canard_entry_footer_show_meta', true )` so child themes can suppress the meta block without completely overriding the function.
-
-- **`canard_categorized_blog()` refactored**: Assignment-inside-condition pattern replaced with explicit variable separation. The misleading variable name `$all_the_cool_cats` (a count integer, not an array) replaced with `$cat_count` per WordPress VIP code review guidelines.
-
-- **Bug fix — null `$previous` in `canard_post_nav_background()`**: On an attachment page whose parent post cannot be found, `get_post( get_post()->post_parent )` returns `null`. The subsequent `$previous->post_type` access emitted a PHP warning ("Attempt to read property 'post_type' on null"). Fixed by adding a `$previous &&` null check before the property access.
-
-#### `inc/custom-header.php`
-
-**`canard_header_style()` refactored to use `wp_add_inline_style()`**: The function was echoing a raw `<style>` tag via the `wp_head` callback — incompatible with Content Security Policy headers using nonce-based `style-src` directives. Refactored to build the CSS string and pass it to `wp_add_inline_style( 'canard-style', $css )`, matching the pattern already used in **`canard_post_nav_background()`**.
-
-#### `inc/customizer.php`
-
-Added a developer documentation comment explaining that the Customizer API handles its own nonce verification, but any new AJAX endpoints or form submissions added to the theme must implement `wp_nonce_field()` / `check_ajax_referer()`. This establishes the expectation for future contributors and prevents CSRF vulnerabilities from being introduced inadvertently.
-
-#### `inc/extras.php`
-
-- **`the_permalink` filter deprecation**: Removed `apply_filters( 'the_permalink', get_permalink() )` from **`canard_get_link_url()`**. The **`the_permalink`** filter hook was deprecated in WordPress 6.8. Replaced with **`get_the_permalink()`** directly.
-
-- **Function definition / filter registration separated**: **`canard_excerpt_more()`** and **`canard_continue_reading()`** previously guarded the `add_filter()` call inside the `function_exists()` check, making it impossible for a child theme to define the function and still have the filter run on admin pages (e.g., for REST API excerpt generation). Function definition and filter registration are now separate, matching WordPress coding standards.
-
-- **`canard_continue_reading()` — `$the_excerpt` sanitized**: This filter runs at priority 9, before other excerpt filters at higher priorities have finished. The incoming `$the_excerpt` value is now passed through **`wp_kses_post()`** before the "Continue reading" link is appended.
-
-- **`@since` tags updated**: **`canard_excerpt_more()`** and **`canard_continue_reading()`** updated from `1.0.3` / `1.0.4` to `2.5.0`.
-
-#### `inc/jetpack.php`
-
-**`canard_jetpack_featured_image_display()` refactored**: Replaced dense ternary chains and nested `isset()` / `array_merge()` patterns with early-return guards and explicitly named variables (`$show_on_post`, `$show_on_page`). Uses the PHP 8 null-coalescing operator (`?? []`) for option reading. Functionally identical.
-
-#### `entry-script.php` — Inline Script Removed
-
-The file previously emitted a raw `<script>` block inline in the page when a featured image hero layout was needed. Inline scripts are blocked by Content Security Policy headers and bypass WordPress's asset pipeline. The file has been rewritten as a `body_class` filter: when hero layout conditions are met, the class `has-entry-hero` is added to `<body>`. The DOM manipulation has been moved into **`single.js`**. The `add_filter()` call has been moved to **`functions.php`** so it registers exactly once rather than once per post on archive pages. No behavior change for end users.
-
-#### PHP 8.x Type Hints
-
-Parameter and return type hints added to all public/hookable functions:
-
-- `canard_body_classes( array $classes ): array` — **`inc/extras.php`**
-- `canard_excerpt_length( int $length ): int` — **`inc/extras.php`**
-- `canard_continue_reading( string $the_excerpt ): string` — **`inc/extras.php`**
-- `canard_categorized_blog(): bool` — **`inc/template-tags.php`**
-- `canard_google_fonts_url(): string` — **`functions.php`**
-- `canard_resource_hints( array $urls, string $relation_type ): array` — **`functions.php`**
-
-#### Template Files — HTML & Semantic Updates
-
-- **`header.php`**: Added **`wp_body_open()`**; upgraded XFN profile link to HTTPS; added descriptive `aria-label` to all navigation elements and the custom header image anchor; removed the legacy pingback link tag; added **`absint()`** to `get_custom_header()->width` and `->height` output; simplified the `site-top` conditional to `has_nav_menu( 'secondary' )` only.
-
-- **`footer.php`**: Updated WordPress.org link to HTTPS; applied `esc_html__()` to theme credits; separated the theme credit author link from the translated string; removed the duplicate `.bottom-navigation` block that re-rendered the secondary menu already output in **`header.php`** — sites hiding this with CSS can remove that rule.
-
-- **`content.php`**: Replaced `strpos( $post->post_content, '<!--more' )` with `str_contains( get_the_content(), '<!--more' )` — **`get_the_content()`** is the correct in-Loop API and `str_contains()` is the idiomatic PHP 8 form.
-
-- **`category.php`**: Removed redundant `role="main"` attribute from the `<main>` element. The `<main>` element carries an implicit ARIA landmark role; the explicit attribute fails the WCAG 2.1 "avoid redundant ARIA" guideline.
-
-- **`content-featured-post.php`**: Fixed an accessibility violation (WCAG 2.4.4 — Link Purpose) where `<a class="post-thumbnail" href="..."></a>` was rendered as an empty anchor with no accessible content when **`has_post_thumbnail()`** returned false. The anchor is now only rendered inside the **`has_post_thumbnail()`** check.
-
-- **HTML5 role attributes removed**: Removed redundant `role` attributes (`banner`, `navigation`, `main`, `complementary`) from HTML5 sectioning elements where they are already implicit.
+- **jQuery.** All five scripts that previously declared jQuery as a dependency have
+  been rewritten in vanilla JavaScript. jQuery is not loaded on any page type.
+- **Genericons.** The `genericons/` directory and all font files have been removed.
+  All icon glyphs are now rendered as inline SVG elements or SVG `background-image`
+  data URIs. The directory is safe to delete from any existing installation.
+- **`js/skip-link-focus-fix.js`.** No longer required for modern browsers.
+- **Social navigation.** All template markup, menu registration, and ~130 lines of
+  CSS including all 26 domain-specific icon rules have been removed.
+- **WordPress.com updater.** The WordPress.com updater inclusion has been removed
+  from `functions.php`.
+- **`inc/jetpack-fonts.php`.** Consolidated into `inc/jetpack.php`. See the Jetpack
+  section below.
+- **`editor-color-palette` theme support declaration.** Deprecated since WordPress
+  5.9 and removed. No `theme.json` replacement has been added; Canard is a classic
+  theme and the block editor color palette is not a declared theme feature.
 
 ---
 
-## 3. JavaScript & Asset Management
+## Performance
 
-### 3.1 jQuery Removal
+### Script Loading
 
-All five scripts that previously declared jQuery as a dependency have been fully rewritten in vanilla JavaScript. jQuery is no longer loaded as a front-end dependency on any page. The `jquery` dependency declaration has been removed from the **`canard-navigation`**, **`canard-search`**, **`canard-featured-content`**, **`canard-single`**, and **`canard-posts`** enqueues in **`functions.php`**.
+- **Deferred script enqueues.** All front-end scripts except `canard-single` now
+  enqueue with WordPress's native `strategy: 'defer'` API (available since WP 6.3),
+  replacing a manual `script_loader_tag` string-manipulation filter. `canard-single`
+  is explicitly excluded because it runs entry-hero DOM rearrangement synchronously
+  to prevent a layout flash.
+- **`canard-featured-content.js` conditionally enqueued.** Previously loaded on every
+  page; now only enqueued on `is_front_page()`.
 
-| File | What Changed |
+### Conditional Stylesheet Loading
+
+- **`canard-blocks.css`** is now only enqueued on singular posts/pages and the front
+  page (`is_singular() || is_front_page()`). Archives and search result pages no
+  longer load it.
+- **`canard-comments.css`** is intended to be enqueued only on singular pages where
+  comments are open or present. See Known Issues.
+
+### Image Loading
+
+- **Single post hero** (`content-single.php`): `loading="eager" fetchpriority="high"`
+  added. WordPress 5.5+ lazy-loads all images by default; the single post hero is the
+  LCP element and requires an explicit override.
+- **Category hero** (`category.php`): Changed from `loading="lazy"` to
+  `loading="eager" fetchpriority="high"`. The category hero is the topmost element on
+  archive pages and the LCP candidate. Explicit `width` and `height` attributes are
+  now set from attachment metadata (with 1920×420 fallbacks) to prevent CLS.
+- **Custom header image** (`header.php`): `loading="eager" fetchpriority="high"` on
+  the front page; `loading="lazy" fetchpriority="auto"` on all other pages.
+- **Archive and featured-content thumbnails** (`content.php`,
+  `content-featured-post.php`): `loading="lazy"` set explicitly rather than relying
+  on WordPress's auto-lazy behavior.
+- **`sizes` attribute corrected on archive thumbnails** (`content.php`): Corrected to
+  `(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px`, preventing the
+  browser from fetching a full-width image on desktop.
+- **`sizes` attribute corrected on featured content thumbnails**
+  (`content-featured-post.php`): Corrected to `(max-width: 1300px) 100vw, 1300px`.
+- **`aspect-ratio: 16/9` removed from `.post-thumbnail img`** (`style.css`): The
+  theme registers multiple image sizes with different natural ratios. The hardcoded
+  rule was squashing near-square thumbnails. CLS prevention now relies on the
+  `width`/`height` attributes WordPress outputs on every `<img>` element, from which
+  modern browsers derive the intrinsic aspect ratio automatically.
+
+### Object Caching
+
+- **Post navigation background CSS** (`inc/template-tags.php`): The generated CSS
+  is now stored in the WP object cache under `canard_nav_bg_{blog_id}_{post_id}` with
+  a one-hour TTL, eliminating repeat meta lookups on sites with Redis or Memcached.
+  The hook registration has also been deferred to `template_redirect` so it only fires
+  on single post and attachment pages.
+- **Avatar HTML** (`inc/template-tags.php`): `get_avatar()` output is cached under
+  `canard_avatar_{blog_id}_{md5(email)}_{size}` with a one-hour TTL, replacing
+  per-request Gravatar lookups on archive pages with multiple posts by the same author.
+- **`canard_google_fonts_url()`** (`functions.php`): Memoized via the WP object cache
+  with a `DAY_IN_SECONDS` TTL. The function was previously called three times per page
+  load and re-evaluated all translation checks on each call.
+- **All object cache keys are prefixed with `get_current_blog_id()`** to prevent
+  cross-site cache collisions on multisite networks.
+
+### DNS Prefetch
+
+- A `dns-prefetch` hint for `secure.gravatar.com` is now emitted on all front-end
+  pages via `canard_resource_hints()`, starting Gravatar DNS resolution early on
+  archive pages with multiple authors.
+
+---
+
+## Accessibility and Internationalization
+
+### rem Font Sizes
+
+Heading `font-size` values in `style.css` have been converted from `px` to `rem`
+tokens (`var(--text-4xl)` through `var(--text-base)` for `h1`–`h6`). Pixel
+equivalents at default browser settings are unchanged. Headings now scale
+proportionally when a user increases their browser root font size, which is a common
+accessibility accommodation.
+
+### CSS Logical Properties
+
+Physical direction properties throughout `style.css` have been replaced with CSS
+logical equivalents (`margin-left` → `margin-inline-start`, `border-left` →
+`border-inline-start`, etc.). Affected properties include `.alignleft`/`.alignright`
+margins, `.aligncenter` auto-margins, the `pre` border accent, and the
+`.site-main`/`.widget-area` border and padding at the 960px breakpoint.
+
+`rtl.css` has been rebuilt using logical properties, eliminating approximately 90
+lines of physical-direction overrides. The `pre` RTL border override and the
+`comment-navigation`/`posts-navigation` float-reversal overrides have been removed
+entirely — they are no longer needed.
+
+### ARIA and Semantics
+
+- **Redundant `role` attributes removed** from all templates. HTML5 landmark elements
+  (`<header>`, `<nav>`, `<main>`, `<aside>`) carry implicit ARIA roles; the explicit
+  attributes are unnecessary and produce validator warnings.
+- **`footer#colophon` now carries `role="contentinfo"`** explicitly, because it is a
+  child of `#page` (a `<div>`) rather than a direct child of `<body>`. The implicit
+  landmark role on `<footer>` only applies in the latter case. Without the explicit
+  role, screen readers did not expose the footer as the page's `contentinfo` landmark.
+- **`tabindex="-1"` added to `#content`** (`header.php`). The skip link target must
+  be programmatically focusable (WCAG 2.4.3). In WebKit and older Blink, `<div>`
+  elements are not keyboard-focusable without this attribute.
+- **Dropdown toggle buttons now have accessible names** (`navigation.js`). Buttons
+  derive their label from the parent link text: `aria-label="Toggle [Menu Item]
+  submenu"`. Fixes WCAG 2.1 SC 4.1.2 — previously screen readers announced only
+  "button" with no context.
+- **Comment navigation `<h2>` replaced with `<span>`** (`comments.php`). The visually
+  hidden heading inside `<nav aria-label="Comment Navigation">` created a spurious
+  heading level in the document outline. The `<nav>`'s `aria-label` already provides
+  full context.
+- **Empty anchor removed when no post thumbnail exists** (`content-featured-post.php`).
+  A `<a class="post-thumbnail">` with no content was rendered when
+  `has_post_thumbnail()` returned false — a WCAG 2.4.4 violation. The anchor is now
+  only rendered inside the `has_post_thumbnail()` check.
+- **`prefers-reduced-motion` media query added** (`style.css`). An
+  `@media (prefers-reduced-motion: reduce)` block sets near-zero durations on
+  animations and transitions for users who have requested reduced motion (WCAG 2.1
+  SC 2.3.3). Existing transition rules are left in place for users without the
+  preference.
+- **`.screen-reader-text`** updated: deprecated `clip: rect()` replaced with
+  `clip-path: inset(50%)` and `white-space: nowrap`.
+
+### Pagination Standardized
+
+`archive.php`, `index.php`, and `search.php` were using `the_posts_navigation()`
+(prev/next only) while `category.php` used `the_posts_pagination()` (numbered pages).
+All listing templates now use `the_posts_pagination()` with consistent `mid_size`,
+`prev_text`, and `next_text` arguments.
+
+---
+
+## Security Hardening
+
+A full audit was conducted across all PHP templates, include files, and JavaScript
+files. The following categories of issues were addressed:
+
+- **Output escaping.** `_e()` replaced with `esc_html_e()`; `get_the_title()`,
+  `get_search_query()`, `bloginfo()`, and author meta values wrapped in `esc_html()`;
+  `href` values wrapped in `esc_url()`; HTML-returning functions (`get_avatar()`,
+  `$categories_list`, entry meta) wrapped in `wp_kses()` with explicit allowlists.
+  `the_archive_description()` replaced with `wp_kses_post( get_the_archive_description() )`
+  in `archive.php` and `category.php`, with a global filter also registered in
+  `functions.php` as a safety net.
+- **ABSPATH guards.** `if ( ! defined( 'ABSPATH' ) ) exit;` added to all template and
+  include files that were missing it. All PHP files in the theme now carry this guard.
+- **`declare(strict_types=1)` removed.** Invalid in WordPress theme files; removed
+  from all 26 PHP files.
+- **Inline `<style>` output replaced with `wp_add_inline_style()`.** Both
+  `canard_header_style()` in `inc/custom-header.php` and the category color injection
+  in `category.php` previously echoed raw `<style>` tags. Both now use
+  `wp_add_inline_style()`, which is compatible with Content Security Policy headers.
+- **Inline `<script>` removed from `entry-script.php`.** The file previously emitted
+  an inline script block. Inline scripts are blocked by CSP headers. The logic has
+  been moved into `single.js`, triggered by a `has-entry-hero` body class set via a
+  `body_class` filter in `functions.php`.
+- **IDOR: password-protected post thumbnails no longer exposed** in post navigation
+  (`inc/template-tags.php`). `get_adjacent_post()` returns password-protected posts
+  to all visitors. Featured image URLs from those posts were being injected as visible
+  CSS background rules before the password had been entered. Both adjacent posts are
+  now checked with `post_password_required()` before their thumbnail URLs are read.
+- **IDOR: category image attachment visibility validated** (`category.php`). The
+  `_category_image_id` term meta value is now validated with `get_post_status()`
+  before metadata is read; only attachments with status `inherit` or `publish` are
+  processed.
+- **URL scheme validation** (`inc/extras.php`). `canard_get_link_url()` now validates
+  extracted URLs with `wp_http_validate_url()` (HTTP/HTTPS only) before use, replacing
+  the previous `esc_url()`-only approach which did not reliably strip `data:` URIs.
+- **`rel="noopener noreferrer"` added** to the `target="_blank"` external link in
+  `content-link.php`, preventing reverse tabnapping.
+- **JavaScript — CSS injection fixed** (`featured-content.js`, `posts.js`). Image
+  `src` values were previously concatenated directly into `background-image: url()`
+  strings. Both files now use a shared `safeCssUrl()` helper that validates the URL
+  format and wraps the value in double-quoted, encoded form.
+- **JavaScript — `window.canardUtils` frozen** (`utils.js`). The shared utilities
+  object is now frozen with `Object.freeze()` to prevent third-party scripts from
+  replacing `debounce` with a malicious implementation. Consumer scripts
+  (`posts.js`, `navigation.js`, `single.js`) now open with a load-failure guard that
+  installs a no-op passthrough if `canardUtils` is unavailable, preserving
+  functionality under network errors or ad-blocker interference.
+- **JavaScript — hex color validation consolidated** (`customizer.js`). The
+  `header_textcolor` binding now validates against a single self-documenting regex
+  (`/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/`) before assignment,
+  replacing a fragile two-part check that required parallel maintenance.
+
+---
+
+## JavaScript
+
+### jQuery Removal
+
+All five scripts that declared jQuery as a dependency have been rewritten in vanilla
+JavaScript. Changes are consistent across all files:
+
+- `var` → `const` / `let`
+- `.className` string manipulation → `classList.contains()`, `.add()`, `.remove()`,
+  `.toggle()`
+- `button.onclick =` assignments → `addEventListener( 'click', ... )`
+- `'undefined' === typeof x` guards → simple truthy/falsy checks
+
+| File | Summary |
 |---|---|
-| **`search.js`** | jQuery IIFE and `.hover()` / `.focusin()` / `.focusout()` calls replaced with `addEventListener( 'mouseenter' / 'mouseleave' / 'focus' / 'blur' )`. |
-| **`featured-content.js`** | Rewritten using `querySelectorAll`, `forEach`, `classList`, and `style.backgroundImage`. The `$(window).on('load')` wrapper replaced with `window.addEventListener('load')`. |
-| **`navigation.js`** | Fully rewritten in vanilla JS. Event delegation via `document.addEventListener('click')` replaces jQuery's `.on('click', '.dropdown-toggle')`. `btn.className = 'dropdown-toggle'` replaced with `btn.classList.add('dropdown-toggle')`. |
-| **`single.js`** | Rewritten in vanilla JS. `$('.author-info')`, `.prependTo()`, `.insertAfter()`, `$(window).width()`, and all Jetpack sharedaddy/table DOM operations replaced with `querySelector`, `insertBefore`, `Element.after()`, `window.innerWidth`, and `querySelectorAll().forEach()`. |
-| **`posts.js`** | Rewritten in vanilla JS. `$('.site-main .hentry').each()`, `.hasClass()`, `.find()`, `.css()`, and `$(window).width()` replaced with `querySelectorAll`, `classList.contains`, `style` properties, and `window.innerWidth`. Fixed character encoding corruption (em dashes); renamed shadowed variables. |
+| `search.js` | jQuery IIFE and `.hover()` / `.focusin()` / `.focusout()` calls replaced with `addEventListener`. `querySelector` → `querySelectorAll` with `forEach` so all search forms on a page (header + widget area) receive hover feedback, not just the first. |
+| `featured-content.js` | Rewritten using `querySelectorAll`, `forEach`, `classList`, and `style.backgroundImage`. `$(window).on('load')` → `window.addEventListener('load')`. |
+| `navigation.js` | Fully rewritten. Event delegation via `document.addEventListener('click')` replaces jQuery's `.on('click', '.dropdown-toggle')`. Desktop cleanup now removes `.dropdown-toggle` buttons from both `.main-navigation` and `.widget_nav_menu` contexts. `document` `touchstart` listener now registered with `{ passive: true }`, resolving mobile scroll jank. Mobile nav selector fixed from fragile `masthead.querySelector('div')` to `masthead.querySelector('#site-navigation')`. |
+| `single.js` | Rewritten in vanilla JS. Also absorbs the entry-hero DOM rearrangement previously emitted as an inline `<script>` by `entry-script.php`. `nextSibling` guard fixed to `nextElementSibling` to prevent redundant DOM reinsertion on every resize tick. |
+| `customizer.js` | All `$()` selectors replaced with `querySelector` / `querySelectorAll`; `.text()` → `.textContent`; jQuery class methods → `classList`. |
+
+### New File: `js/utils.js`
+
+A shared `debounce` utility is now exposed as `window.canardUtils.debounce`. The
+object is frozen with `Object.freeze()`. All consumer scripts include a load-failure
+guard; see the Security section.
+
+### Bug Fixes in `posts.js`
+
+- **Persistent black thumbnail box fixed.** `applyBackground()` was previously gated
+  on the image `load` event. For `loading="lazy"` images outside the initial viewport,
+  that event never fires until the user scrolls, leaving a solid-black thumbnail box
+  visible indefinitely. `applyBackground()` is now called immediately using
+  `thumbnail.getAttribute('src')` as a fallback, then upgraded to `currentSrc` when
+  `load` fires.
+- **Card height computation fixed.** `setHeight()` was using a hardcoded `marginSize`
+  constant (60px desktop / 30px mobile) that did not match the actual computed
+  `padding-top` value, causing thumbnails to extend into the text region. Replaced
+  with `parseInt( getComputedStyle( entry ).paddingTop, 10 )`.
+- **Infinite scroll event fixed.** The handler was listening for
+  `'inf_scr_posts_loaded'` on `document`. The correct Jetpack event is `'is.post-load'`
+  dispatched on `document.body`. Both the event name and the target were wrong; the
+  handler never fired and no infinite-scroll batch was ever processed.
+- **Scoped `querySelectorAll` selector fixed.** The selector `'.site-main .hentry'`
+  always returned zero results when called with a scoped `Element` (as in
+  infinite-scroll batches) because the `.site-main` ancestor is outside the subtree.
+  Changed to `'.hentry'`.
+- **Uniform card height across each batch.** `setHeight()` previously computed each
+  article's height independently, producing variable-height cards. The script now
+  waits for all images in a batch to load, then measures every article in a single
+  `requestAnimationFrame` and writes the batch maximum uniformly to all
+  `.post-thumbnail` elements.
+- **`currentSrc` vs `src` for background images** (`featured-content.js`, `posts.js`).
+  Both scripts now use `thumbnail.currentSrc || thumbnail.src` so the background image
+  matches the srcset-selected URL the browser already fetched, rather than the base
+  `src`.
 
 ---
 
-### 3.2 ES6 & Global Improvements
+## CSS and Styling
 
-- **`var` → `const` / `let`**: Replaced throughout all scripts.
-- **Strict equality**: Replaced `'undefined' === typeof x` checks with simple truthy/falsy `!x` logic.
-- **`className` string manipulation**: Replaced all `.className.indexOf()`, `.className +=`, and `.className.replace()` patterns with `classList.contains()`, `classList.add()`, `classList.remove()`, and `classList.toggle()` throughout all scripts.
-- **Event handlers**: Replaced all `button.onclick = function()` assignments with `button.addEventListener( 'click', function() )` for consistency and child-theme extensibility.
+### Design Tokens
 
----
+A `:root` block is now the first rule in `style.css`, declaring CSS custom properties
+for all design values: `--color-accent` (`#d11415`), `--color-text`, `--color-muted`,
+`--color-border`, font-family tokens (`--font-body`, `--font-display`, `--font-ui`,
+`--font-mono`), a rem-based type scale (`--text-xs` through `--text-4xl`), and
+`--space-base`. All ~250–300 hardcoded hex values and pixel sizes throughout
+`style.css` have been replaced with `var(--token)` references. Child themes can
+override any value by redeclaring the token in their own `:root` block.
 
-### 3.3 File-Specific Changes
+### Float → Flexbox
 
-| File | Change |
-|---|---|
-| **`utils.js`** | **New file.** Shared `debounce` implementation exposed as `window.canardUtils.debounce`. Uses the standard `clearTimeout` / `setTimeout` pattern. Rest parameters (`...args`) replace `[].slice.call( arguments, 0 )`. |
-| **`single.js`** | Absorbed the entry-hero DOM manipulation previously in the inline `<script>` in `entry-script.php`. |
-| **`customizer.js`** | Removed jQuery IIFE; all `$()` selectors replaced with `document.querySelector()` / `document.querySelectorAll()`; `.text()` replaced with `.textContent`; `.addClass()` / `.removeClass()` replaced with `classList`. Hex colour validated before `el.style.color` assignment (see Security, Section 2.1). |
-| **`header.js`** | Added null guard for `siteBranding` before accessing `clientHeight`. |
-| **`sidebar.js`** | `button.onclick` replaced with `button.addEventListener( 'click', ... )`. |
+- **`.site-content-inner`** converted from float-based to `display: flex` at the
+  960px+ breakpoint. `float: left` / `float: right` removed from `.site-main` and
+  `.widget-area`. Visual output is identical.
+- **`.post-navigation` / `.posts-navigation`** converted from float-clearfix to
+  `display: flex; flex-wrap: wrap` with `flex: 0 0 50%` on each child.
+  `text-align: right` on `.nav-next` replaced with `text-align: end`.
+- **`.clearfix` compatibility shim retained** (`::after` pseudo-element clearfix) for
+  one version cycle for child themes using `class="clearfix"` inside converted layout
+  shells. This shim will be removed in a future version.
 
----
+### Genericons → SVG
 
-### 3.4 Accessibility & Correctness
+All icon glyphs previously rendered via the Genericons font are now inline SVG
+elements (in templates) or SVG `background-image` data URIs (in CSS pseudo-elements).
 
-- **`navigation.js` — accessible names for dropdown toggles (WCAG 2.1 SC 4.1.2)**: Toggle `<button>` elements were injected with `aria-expanded` but no accessible name, so screen readers announced just "button" with no context. Buttons now derive their label from the parent link text: `aria-label="Toggle [Menu Item] submenu"`. Falls back to `"Toggle submenu"` if no text is available.
+**CSS pseudo-element replacements (`style.css`):**
 
-- **`navigation.js` — global `touchstart` handler**: A `document.addEventListener( 'touchstart' )` handler now removes the `focus` class from all `.main-navigation` items when a tap lands outside `.main-navigation`. Previously, a touch-device user who opened a submenu then tapped post content would leave the submenu visually open.
-
-- **`featured-content.js` / `posts.js` — `currentSrc` for background images**: Both scripts were reading `thumbnail.src` to set `background-image: url()`, ignoring the `srcset` attribute and potentially loading a full-resolution image even when a smaller responsive variant had already been fetched. Changed to `thumbnail.currentSrc || thumbnail.src`.
-
-- **`single.js` — synchronous-execution comment**: The entry-hero DOM rearrangement runs synchronously without a `DOMContentLoaded` wrapper to avoid a FOUC on pages with featured images. A prominent comment block now explains this so JS developers do not inadvertently "fix" the missing wrapper and introduce a visible layout flash.
-
----
-
-## 4. CSS & Design Systems
-
-### 4.1 Genericons Replaced with SVG
-
-Genericons has been fully removed. All icon glyphs previously rendered via the Genericons icon font are now rendered using either inline SVG elements (for template icons) or SVG `background-image` data URIs (for CSS pseudo-element icons). The **`genericons/`** directory and its font files are no longer referenced and may be deleted.
-
-#### CSS Pseudo-element Icons — `style.css`
-
-| Selector | Former Glyph | Replacement |
+| Selector | Former glyph | Replacement |
 |---|---|---|
-| `blockquote:before` | `\f106` quotation mark | SVG quotation mark, fill `#dddddd` |
-| `.search-form:before` | `\f400` magnifying glass | SVG magnifying glass, fill `#d11415` |
-| `.menu-toggle:before` | `\f419` hamburger | SVG hamburger, fill `#222222` |
-| `.toggled .menu-toggle:before` | `\f406` close | SVG ×, fill `#ffffff` |
-| `.dropdown-toggle:before` | `\f431` chevron-down | SVG chevron-down, fill `#d11415` |
-| `.dropdown-toggle.toggled:before` | `\f432` chevron-up | SVG chevron-up, fill `#d11415` |
-| `.search-toggle:before` | `\f400` magnifying glass | SVG magnifying glass, fill `#222222` |
-| `.toggled .search-toggle:before` | `\f406` close | SVG ×, fill `#ffffff` |
-| `.sidebar-toggle:before` | `\f476` ellipsis | SVG three-dot, fill `#222222` |
-| `.toggled.sidebar-toggle:before` | `\f406` close | SVG ×, fill `#ffffff` |
+| `blockquote:before` | `\f106` quotation mark | SVG quotation mark |
+| `.search-form:before` | `\f400` magnifying glass | SVG magnifying glass |
+| `.menu-toggle:before` | `\f419` hamburger | SVG hamburger |
+| `.toggled .menu-toggle:before` | `\f406` close | SVG × |
+| `.dropdown-toggle:before` | `\f431` chevron-down | SVG chevron-down |
+| `.dropdown-toggle.toggled:before` | `\f432` chevron-up | SVG chevron-up |
+| `.search-toggle:before` | `\f400` magnifying glass | SVG magnifying glass |
+| `.toggled .search-toggle:before` | `\f406` close | SVG × |
+| `.sidebar-toggle:before` | `\f476` ellipsis | SVG three-dot |
+| `.toggled.sidebar-toggle:before` | `\f406` close | SVG × |
 | `.posts-navigation .nav-next a:after` | `\f429` right arrow | SVG right chevron |
 | `.posts-navigation .nav-previous a:before` | `\f430` left arrow | SVG left chevron |
 | `.comment-navigation .nav-next a:after` | `\f429` right arrow | SVG right chevron |
 | `.comment-navigation .nav-previous a:before` | `\f430` left arrow | SVG left chevron |
-| `.main-navigation .menu-item-has-children > a:after` | `\f431` chevron-down | SVG chevron-down, fill `#d11415` |
+| `.main-navigation .menu-item-has-children > a:after` | `\f431` chevron-down | SVG chevron-down |
 
-#### Template `<span>` Icons Replaced with Inline `<svg>` Elements
+**Template icon replacements:**
 
-| File | Former Element | Replacement |
+| File | Former element | Replacement |
 |---|---|---|
-| **`content.php`** | `<span class="genericon genericon-pinned">` | Inline `<svg>` pin icon, `aria-hidden="true" focusable="false"` |
-| **`content-link.php`** | `<span class="genericon genericon-link">` | Inline `<svg>` external-link icon, `aria-hidden="true" focusable="false"` |
-| **`footer.php`** | `<span class="genericon genericon-wordpress sep">` | Inline `<svg>` WordPress logo mark, `aria-hidden="true" focusable="false"`, `class="sep"` retained |
+| `content.php` | `<span class="genericon genericon-pinned">` | Inline SVG pin icon |
+| `content-link.php` | `<span class="genericon genericon-link">` | Inline SVG external-link icon |
+| `footer.php` | `<span class="genericon genericon-wordpress sep">` | Inline SVG WordPress logo mark |
 
-#### CSS Selector Updates — `style.css`
+All replacement SVG elements carry `aria-hidden="true" focusable="false"`.
 
-- `.sticky-post .genericon` → `.sticky-post svg` (sizing adjusted to 16×16 px with `vertical-align: middle`).
-- `.post-link .genericon` → `.post-link svg` (padding-based centring replaces `line-height` centring; 60 px circle container retained).
-- `.post-link:active .genericon`, `.post-link:focus .genericon`, `.post-link:hover .genericon` → targeting `svg` instead.
-- Transition list updated: `.post-link .genericon` → `.post-link svg`.
-- `.site-info .sep`: `color` / `font-size` / `line-height` replaced with `fill`, `height`, `width`, and `vertical-align` appropriate for an SVG element. The `sep:hover { transform: rotate(360deg); }` easter egg is preserved.
-- **`editor-blocks.css`**: Both Genericons `blockquote ::before` rules replaced with equivalent SVG `background-image` data URI rules matching front-end style.
-- Shared Genericons `font-family` declaration block spanning all button and navigation pseudo-elements removed entirely.
+CSS selectors updated from `.genericon` to `svg` throughout `style.css` and
+`editor-blocks.css`. The `post-link` hover easter egg is preserved.
 
----
+### Bug Fixes
 
-### 4.2 Social Navigation Removed
+- **`.post-thumbnail::before` overlay fixed** (`style.css`). The dark tint
+  pseudo-element on format-image and format-gallery archive posts was missing
+  `position: absolute`, so it was not being rendered at all. Fixed with
+  `position: absolute; inset: 0`. Entry text elements given explicit `z-index: 2`
+  so they render above the overlay.
+- **Hamburger icon vertical misalignment on iPad Portrait (768–959px) fixed**
+  (`style.css`). The `.menu-toggle` used a hardcoded `margin-top: -30px` centering
+  offset that did not recompute when `.site-branding` grew at the 768px font-size
+  breakpoint. Fixed with `transform: translateY(-50%)` in a new
+  `@media (min-width: 600px) and (max-width: 959px)` block. `.search-navigation`
+  given the same treatment so both icons share the same vertical anchor. Button and
+  pseudo-element dimensions normalized to 60×60px and 58×58px respectively across
+  the 600px breakpoint.
+- **Jetpack Infinite Scroll numbered pagination now hidden** (`style.css`). The
+  existing `.infinite-scroll .posts-navigation { display: none; }` rule did not match
+  `<nav class="navigation pagination">` (the output of `the_posts_pagination()`),
+  leaving a visible page-number bar at the bottom of the first page. The two selectors
+  have been merged.
+- **Block editor styles restored** (`editor-blocks.css`). All 47 occurrences of the
+  removed `.edit-post-visual-editor` class (deprecated in WP 5.8) replaced with
+  `.editor-styles-wrapper`. Custom typography, link, blockquote, heading, and code
+  styles were silently absent in the block editor since WP 6.x.
+- **`.alignwide` and `.alignfull` rules added** to both `blocks.css` (frontend) and
+  `editor-blocks.css` (editor preview).
+- **`::placeholder` modernized** (`style.css`). Placeholder hacks replaced with
+  `::placeholder { color: #777; opacity: 1; }`.
+- **Focus ring modernized** (`style.css`). `:focus:not(:focus-visible) { outline:
+  none; }` implemented for keyboard-accessible focus management.
+- **Legacy vendor prefixes removed.** All `-webkit-box`, `-ms-flexbox`, and
+  `-webkit-transform` prefixes stripped.
+- **`speak: none` declarations removed** (`blocks.css`). Not a valid CSS property.
 
-The social navigation menu location, all associated template markup, and all associated CSS have been removed.
+### Normalization and Cleanup
 
-- **PHP**: `social` removed from **`register_nav_menus()`**; social `<nav>` blocks removed from **`header.php`** and **`footer.php`**; the `site-top` conditional in **`header.php`** simplified from `has_nav_menu( 'secondary' ) || has_nav_menu( 'social' )` to `has_nav_menu( 'secondary' )`.
-
-- **`style.css`**: Entire `.social-navigation` ruleset removed (~130 lines), including base layout, link styles, `:hover` / `:focus` states, and all 26 domain-specific `content: "\fXXX"` icon rules. `.site-social`, `.site-social-inner`, and `.bottom-social > div` entries removed from all width/margin grouped selector lists. Related media query overrides removed.
-
-- **`rtl.css`**: `.social-navigation li` float-direction overrides and media query `.social-navigation { float: left; ... }` override removed.
-
-- **`readme.txt`**: The "Social menu." bullet and the "How do I add the Social Links to the header?" FAQ section removed.
-
----
-
-### 4.3 Category Header System
-
-A new **`category.php`** template introduces a full-width hero banner at the top of category archive pages. The following CSS rules support both the image and color-fallback variants of this header, and are logically paired with the PHP functions **`canard_get_category_header_image()`** and **`canard_get_category_color()`** described in Section 2.3.
-
-- **`style.css` — `.category-color-fallback`**: Renders a solid-color block at 260 px / 360 px / 420 px tall across the three responsive breakpoints, matching the visual footprint of a hero image for categories without a configured banner.
-
-- **`style.css` — `.entry-hero .post-thumbnail .category-header`**: Applies `object-fit: cover` and matching responsive heights to the `<img>` element used when a category image is configured.
-
-Both rules are added under a dedicated `/* Category header */` section comment for maintainability.
-
----
-
-### 4.4 Bug Fixes & Modernization
-
-- **`editor-blocks.css`**: Removed stray backtick; fixed typos in `.wp-block-latest-posts`; updated `.is-wide` to `.is-style-wide`; replaced `wp-block-quote__citation` with `wp-block-quote cite`.
-- **`rtl.css`**: Fixed missing units on `right: 50px`.
-- **`style.css` — placeholder**: Replaced vendor-prefixed placeholder hacks with modern `::placeholder { color: #777; opacity: 1; }`.
-- **`style.css` — focus visibility**: Implemented keyboard-accessible focus via `:focus:not(:focus-visible) { outline: none; }` to suppress the default focus ring on mouse clicks while preserving it for keyboard navigation.
-- **`style.css` — version header**: Updated `Version:` from `1.1.0` to `2.5.0` to match the `CANARD_VERSION` constant.
-- **`style.css` — License URI**: Upgraded from `http://` to `https://`.
-
-#### Accessibility
-
-Replaced deprecated `clip: rect()` with `clip-path: inset(50%)` and `white-space: nowrap` for all `.screen-reader-text` declarations.
-
-#### Legacy Cleanup
-
-- Stripped all `-webkit-box`, `-ms-flexbox`, and `-webkit-transform` vendor prefixes.
-- Cleaned up the **`style.css`** normalise block; updated `abbr[title]` to use `underline dotted`.
-- Removed all `speak: none` declarations and empty ruleset stubs in **`blocks.css`**.
+- `abbr[title]` updated to use `underline dotted`.
+- Empty ruleset stubs removed from `blocks.css`.
 
 ---
 
-## 5. Template & HTML Enhancements
+## PHP
 
-### 5.1 Schema, Structured Data & ARIA
+### WordPress API Modernization
 
-- **`inc/template-tags.php` — `wp_kses()` allowlist expansion**: `itemprop` and `property` attributes added to the allowlist for `<a>` and `<span>` elements in **`canard_entry_meta()`** to prevent Schema.org microdata attributes from being silently stripped.
+- **Script deferral.** Uses the native WP 6.3+ `strategy: 'defer'` enqueue API
+  rather than a `script_loader_tag` string-manipulation filter.
+- **Block editor styles.** Replaced manual `wp_enqueue_style()` on
+  `enqueue_block_editor_assets` with `add_theme_support( 'editor-styles' )` +
+  `add_editor_style()` — the recommended pattern since WP 5.8. Provides automatic
+  `.editor-styles-wrapper` scoping and correct RTL handling.
+- **Classic widgets.** Replaced the `canard_disable_block_widgets()` function and its
+  hook with `add_filter( 'use_widgets_block_editor', '__return_false' )`.
+- **`header_image()` replaced with `esc_url( get_header_image() )`.** The template
+  tag calls `echo` internally and bypasses the escaping layer.
+- **`wp_get_attachment_image_src()` replaced with `wp_get_attachment_image_url()`**
+  in `inc/template-tags.php`.
+- **`apply_filters( 'the_permalink', ... )` removed** from `canard_get_link_url()`.
+  The `the_permalink` filter was deprecated in WP 6.8; replaced with
+  `get_the_permalink()`.
+- **`strpos()` replaced with `str_contains()`** in `content.php` (PHP 8 idiomatic).
+- **Loose comparisons tightened** throughout. `==` → `===`; `'0' != get_comments_number()`
+  → `0 !== (int) get_comments_number()`.
 
-- **Redundant ARIA landmark roles removed**: Explicit `role` attributes (`banner`, `navigation`, `main`, `complementary`) removed from HTML5 sectioning elements where they are already implicit, complying with WCAG 2.1 "avoid redundant ARIA".
+### PHP 8 Type Safety
 
-- **Navigation `aria-label` attributes**: Descriptive `aria-label` attributes added to all `<nav>` elements in **`header.php`** so screen readers can distinguish between primary, secondary, and other navigation landmarks.
+Parameter and return type hints added to all public/hookable functions, including:
+`canard_body_classes()`, `canard_excerpt_length()`, `canard_continue_reading()`,
+`canard_categorized_blog()`, `canard_google_fonts_url()`, and
+`canard_resource_hints()`.
 
-- **Custom header image anchor**: The custom header `<img>` has `alt=""` as a decorative image, but the wrapping `<a>` now has meaningful link text via `aria-label` for screen readers.
+### Google Fonts
 
-- **`content-featured-post.php` — empty anchor fix**: The `<a class="post-thumbnail">` wrapper is now only rendered when **`has_post_thumbnail()`** returns true, eliminating a WCAG 2.4.4 Link Purpose violation.
+- **Merged into a single request** using the v2 API (`/css2`) with `&display=swap`.
+- **Preconnect hints** added for `fonts.googleapis.com` and `fonts.gstatic.com` via
+  the `wp_resource_hints` filter — the correct WordPress API rather than a raw
+  `wp_head` echo.
 
-- **`navigation.js` — button accessible names**: Dropdown toggle buttons now derive `aria-label="Toggle [Menu Item] submenu"` from their parent link text, satisfying WCAG 2.1 SC 4.1.2.
+### `functions.php`
+
+- **`CANARD_VERSION` constant added** to replace hardcoded version strings in all
+  enqueues.
+- **`add_theme_support( 'html5' )` expanded** to include `script` and `style`.
+- **`navigation-widgets` and `customize-selective-refresh-widgets` support added.**
+  `navigation-widgets` prevents WordPress from outputting a `<div>` wrapper around
+  navigation widgets when the html5 flag is active.
+  `customize-selective-refresh-widgets` improves Customizer preview performance.
+- **`add_theme_support( 'align-wide' )` added.** Without this declaration, the block
+  editor silently ignores wide and full-width alignment controls.
+- **`add_theme_support( 'wp-block-styles' )` added.** Required for full WP 6.9 block
+  compatibility.
+- **All asset enqueues use `get_template_directory_uri()`**, ensuring the
+  `canard-style` handle always resolves to the parent theme regardless of child theme
+  state.
+
+### `inc/jetpack.php`
+
+- **`inc/jetpack-fonts.php` consolidated and deleted.** The file registered the
+  `typekit_add_font_category_rules` filter without a `class_exists( 'TypekitTheme' )`
+  guard, producing a fatal error on sites without Jetpack or with the Adobe Fonts
+  module disabled. All rules have been moved into `inc/jetpack.php` under the existing
+  guard; the duplicate partial rule set in `inc/jetpack.php` has been removed; the
+  file has been deleted.
+- **Four typos in Typekit font rules fixed** during consolidation: `font-wieght`
+  spelling, a stray `{` in a font name, `'blod'` font-weight value, and missing
+  leading `.` in `:not()` class selectors — all of which caused those rules to have no
+  effect in the upstream release.
+- **`jetpack-content-options` declaration expanded.** `blog-display` and `author-bio`
+  keys were absent; both have been added to expose the corresponding toggles in
+  Jetpack → Settings → Writing → Content Options.
+
+### Transients and Cache
+
+- **Transient key renamed** from `canard_categories` to `canard_cat_count_v1` to
+  avoid multisite collisions.
+- **Explicit TTL added** to `canard_cat_count_v1` transient (`WEEK_IN_SECONDS`).
+  Previously called with no expiry argument, causing the transient to accumulate
+  indefinitely on sites without a persistent cache backend.
+- **Transient flusher guarded against autosaves and revisions.** Unnecessary cache
+  invalidation on draft edits is now skipped.
 
 ---
 
-### 5.2 HTML5 Semantics
+## Files Added, Removed, and Renamed
 
-- **`wp_body_open()` added** to **`header.php`** immediately after `<body>`, enabling plugins and child themes to inject markup at the correct hook.
+**Added:**
+- `js/utils.js` — shared `debounce` utility
+- `category.php` — native category archive template with hero banner
+- `docs/CHANGES.md` — this file
+- `docs/category-images.md` — child theme guide for per-category banner images and
+  colors
 
-- **`str_contains()` in `content.php`**: Replaced `strpos( $post->post_content, '<!--more' )` with `str_contains( get_the_content(), '<!--more' )`. **`get_the_content()`** is the correct in-Loop API; `str_contains()` is the idiomatic PHP 8 form.
+**Deleted:**
+- `js/skip-link-focus-fix.js`
+- `genericons/` — entire directory
+- `inc/jetpack-fonts.php` — consolidated into `inc/jetpack.php`
 
-- **`category.php` — new template**: Introduces a semantic `<article>` wrapper for the category hero and integrates with the same `entry-hero` layout structure used by single posts for visual consistency.
-
-- Legacy pingback link removed from **`header.php`**.
-
-- XFN profile link upgraded to HTTPS in **`header.php`**.
-
----
-
-## 6. Removals & Cleanup
-
-### 6.1 Deleted Files
-
-| File / Directory | Reason |
-|---|---|
-| **`js/skip-link-focus-fix.js`** | No longer required for modern browsers. |
-| **`genericons/`** (entire directory) | No file in the theme references Genericons any longer. Safe to delete. |
-
----
-
-### 6.2 Deprecated Functions Removed
-
-- **`canard_disable_block_widgets()`**: Replaced with `add_filter( 'use_widgets_block_editor', '__return_false' )`.
-- **`canard_sanitize_checkbox()`**: Replaced with **`wp_validate_boolean()`** as the sanitize callback.
-- WordPress.com updater inclusion removed from **`functions.php`**.
-- `apply_filters( 'the_permalink', get_permalink() )` removed from **`canard_get_link_url()`** (hook deprecated in WP 6.8).
-- `add_theme_support( 'editor-color-palette', ... )` removed (deprecated in WP 5.9); replaced with **`theme.json`**.
-- The **`wp_get_global_settings()`** branch in **`canard_get_category_color()`** removed (dead code — Canard is a classic theme with no `theme.json`).
-
----
-
-### 6.3 Removed Third-Party Dependencies
-
-- jQuery removed as a runtime front-end dependency from all five enqueued scripts.
-- Genericons icon font removed from both the front-end enqueue in **`canard_scripts()`** and the editor enqueue in **`canard_editor_styles()`**.
-- Social navigation menu location removed from **`register_nav_menus()`** and all associated template markup and CSS (~130 lines) removed.
-
----
-
-### 6.4 Added Files
-
-| File | Purpose |
-|---|---|
-| **`js/utils.js`** | Shared `debounce` utility exposed as `window.canardUtils.debounce`. |
-| **`category.php`** | Native category archive template with full-width hero banner and standard post loop with pagination. Integrated with the `entry-hero` layout structure used by single posts. |
-| **`theme.json`** | Replaces deprecated `add_theme_support( 'editor-color-palette', ... )`. |
-| **`docs/CHANGES.md`** | This change log. |
-| **`docs/category-images.md`** | Documents how child themes can supply per-category banner images and colors using the `canard_category_header_image` and `canard_category_color` filters, or by overriding the functions entirely. |

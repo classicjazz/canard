@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Theme version constant used for cache-busting enqueued assets.
  */
-define( 'CANARD_VERSION', '2.5.0' );
+define( 'CANARD_VERSION', '2.7.0' );
 
 /**
  * Set the content width based on the theme's design and stylesheet.
@@ -22,6 +22,16 @@ if ( ! isset( $content_width ) ) {
 }
 
 if ( ! function_exists( 'canard_content_width' ) ) {
+	/**
+	 * Adjusts $content_width for full-width page templates.
+	 *
+	 * The global is set to 720px at theme load. Pages use a wider content area
+	 * with no sidebar, so 869px better reflects the actual rendered width and
+	 * ensures media embeds are sized correctly on page templates.
+	 *
+	 * @global int $content_width
+	 * @return void
+	 */
 	function canard_content_width() {
 		global $content_width;
 
@@ -39,6 +49,8 @@ if ( ! function_exists( 'canard_setup' ) ) :
 	 * Note that this function is hooked into the after_setup_theme hook, which
 	 * runs before the init hook. The init hook is too late for some features, such
 	 * as indicating support for post thumbnails.
+	 *
+	 * @return void
 	 */
 	function canard_setup() {
 
@@ -74,10 +86,19 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		// Add support for responsive embeds.
 		add_theme_support( 'responsive-embeds' );
 
+		/*
+		 * Enable wide and full-width block alignment.
+		 * Without this, wide/full-width blocks silently break in the editor.
+		 */
+		add_theme_support( 'align-wide' );
+
+		/*
+		 * Opt in to opinionated core block styles (borders, spacing defaults).
+		 * Required for full WP 6.9 block compatibility.
+		 */
+		add_theme_support( 'wp-block-styles' );
+
 		// Add support for custom logo.
-		// The editor colour palette is defined in theme.json rather than via
-		// add_theme_support( 'editor-color-palette' ), which was deprecated
-		// in WordPress 5.9.
 		add_theme_support( 'custom-logo', array(
 			'width'       => 400,
 			'height'      => 90,
@@ -142,13 +163,14 @@ add_filter( 'use_widgets_block_editor', '__return_false' );
  * Register widget areas.
  *
  * @link https://developer.wordpress.org/themes/functionality/sidebars/
+ * @return void
  */
 function canard_widgets_init() {
 	register_sidebar(
 		array(
 			'name'          => __( 'Sidebar', 'canard' ),
 			'id'            => 'sidebar-1',
-			'description'   => '',
+			'description'   => '', // No description; label is sufficient in the Customizer widget panel.
 			'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</aside>',
 			'before_title'  => '<h2 class="widget-title">',
@@ -160,7 +182,7 @@ function canard_widgets_init() {
 		array(
 			'name'          => __( 'Footer', 'canard' ),
 			'id'            => 'sidebar-2',
-			'description'   => '',
+			'description'   => '', // No description; label is sufficient in the Customizer widget panel.
 			'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</aside>',
 			'before_title'  => '<h2 class="widget-title">',
@@ -177,9 +199,11 @@ add_action( 'widgets_init', 'canard_widgets_init' );
  * @return string Google Fonts stylesheet URL, or empty string if all fonts are disabled.
  */
 function canard_google_fonts_url(): string {
-	static $url = null;
-	if ( null !== $url ) {
-		return $url;
+	$cache_key   = 'canard_google_fonts_url';
+	$cache_group = 'canard_theme';
+	$cached      = wp_cache_get( $cache_key, $cache_group );
+	if ( false !== $cached ) {
+		return (string) $cached;
 	}
 
 	$families = array();
@@ -205,11 +229,12 @@ function canard_google_fonts_url(): string {
 	}
 
 	if ( empty( $families ) ) {
-		$url = '';
-		return $url;
+		wp_cache_set( $cache_key, '', $cache_group, DAY_IN_SECONDS );
+		return '';
 	}
 
 	$url = 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
+	wp_cache_set( $cache_key, $url, $cache_group, DAY_IN_SECONDS );
 	return $url;
 }
 
@@ -247,6 +272,8 @@ add_filter( 'wp_resource_hints', 'canard_resource_hints', 10, 2 );
 
 /**
  * Enqueue scripts and styles.
+ *
+ * @return void
  */
 function canard_scripts() {
 
@@ -266,15 +293,7 @@ function canard_scripts() {
 	// Main stylesheet.
 	wp_enqueue_style( 'canard-style', get_template_directory_uri() . '/style.css', array(), CANARD_VERSION );
 
-	// Comment stylesheet — only needed where comments are rendered.
-	if ( is_singular() && ( comments_open() || get_comments_number() ) ) {
-		wp_enqueue_style(
-			'canard-comments',
-			get_template_directory_uri() . '/comments.css',
-			array( 'canard-style' ),
-			CANARD_VERSION
-		);
-	}
+	// Note: comment styles are included in style.css.
 
 	// Shared utility functions (debounce). No dependencies — plain JS.
 	// Uses the native WP 6.3+ strategy API (targeting WP 6.9+), which handles
@@ -369,11 +388,6 @@ function canard_scripts() {
 		);
 	}
 
-	// canard-skip-link-focus-fix removed — the WebKit/Opera/IE hashchange focus
-	// fix it provided has been unnecessary since ~2016. IE is unsupported since
-	// WP 5.8 and Opera as a distinct engine has not existed since 2013.
-	// Native browser hash navigation handles skip-link focus correctly today.
-
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
@@ -384,6 +398,11 @@ add_action( 'wp_enqueue_scripts', 'canard_scripts' );
  * Register editor styles via the preferred add_editor_style() API.
  * This uses WP core's editor style scoping (.editor-styles-wrapper),
  * handles RTL correctly, and is the recommended path since WP 5.8.
+ *
+ * Priority 11 ensures this runs after canard_setup() at priority 10,
+ * so add_theme_support( 'editor-styles' ) is called after theme setup is complete.
+ *
+ * @return void
  */
 function canard_editor_styles() {
 	add_theme_support( 'editor-styles' );
@@ -516,12 +535,8 @@ if ( ! function_exists( 'canard_get_category_color' ) ) {
 		/**
 		 * Filters the category header fallback colour.
 		 *
-		 * Defaults to the theme accent colour (#d11415). This was previously
-		 * read from theme.json via wp_get_global_settings(), but Canard is a
-		 * classic theme with no theme.json, so that call always returned an
-		 * empty array and fell back to the hardcoded default. The dead branch
-		 * has been removed; child themes should use this filter to customise
-		 * the colour.
+		 * Defaults to the theme accent colour (#d11415). Child themes can
+		 * override this value without replacing the function.
 		 *
 		 * @param string $color CSS colour value.
 		 */

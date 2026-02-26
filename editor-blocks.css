@@ -3,22 +3,22 @@
  * Description: Gutenberg Block Editor Styles
  */
 
-.edit-post-visual-editor .editor-block-list__block,
-.edit-post-visual-editor .editor-block-list__block p,
+.editor-styles-wrapper .editor-block-list__block,
+.editor-styles-wrapper .editor-block-list__block p,
 .editor-default-block-appender textarea.editor-default-block-appender__content {
 	font-family: "PT Serif", serif;
 	font-size: 16px;
 }
 
 @media screen and ( min-width: 768px ) {
-	.edit-post-visual-editor .editor-block-list__block,
-	.edit-post-visual-editor .editor-block-list__block p,
+	.editor-styles-wrapper .editor-block-list__block,
+	.editor-styles-wrapper .editor-block-list__block p,
 	.editor-default-block-appender textarea.editor-default-block-appender__content {
 		font-size: 20px;
 	}
 }
 
-.edit-post-visual-editor .editor-block-list__block {
+.editor-styles-wrapper .editor-block-list__block {
 	color: #222;
 }
 
@@ -39,59 +39,59 @@
 	line-height: 1.54;
 }
 
-.edit-post-visual-editor h1,
-.edit-post-visual-editor h2,
-.edit-post-visual-editor h3,
-.edit-post-visual-editor h4,
-.edit-post-visual-editor h5,
-.edit-post-visual-editor h6 {
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3,
+.editor-styles-wrapper h4,
+.editor-styles-wrapper h5,
+.editor-styles-wrapper h6 {
 	clear: both;
 	font-family: "Playfair Display", serif;
 	font-weight: bold;
 	margin-top: 0;
 }
 
-.edit-post-visual-editor h1 {
+.editor-styles-wrapper h1 {
 	font-size: 49px;
 	line-height: 1.225;
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor h2 {
+.editor-styles-wrapper h2 {
 	font-size: 39px;
 	line-height: 1.54;
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor h3 {
+.editor-styles-wrapper h3 {
 	font-size: 31px;
 	line-height: 1.452;
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor h4 {
+.editor-styles-wrapper h4 {
 	font-size: 25px;
 	line-height: 1.2;
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor h5 {
+.editor-styles-wrapper h5 {
 	font-size: 20px;
 	line-height: 1.5;
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor h6 {
+.editor-styles-wrapper h6 {
 	font-size: 16px;
 	line-height: 1.5;
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor p {
+.editor-styles-wrapper p {
 	margin: 0 0 30px;
 }
 
-.edit-post-visual-editor blockquote p {
+.editor-styles-wrapper blockquote p {
 	margin-bottom: 30px;
 }
 
@@ -117,7 +117,7 @@
 	}
 }
 
-.edit-post-visual-editor a,
+.editor-styles-wrapper a,
 .editor-block-list__block a,
 .wp-block-freeform.block-library-rich-text__tinymce a {
 	color: #d11415;
@@ -125,9 +125,9 @@
 	text-decoration: none;
 }
 
-.edit-post-visual-editor a:hover,
-.edit-post-visual-editor a:focus,
-.edit-post-visual-editor a:active,
+.editor-styles-wrapper a:hover,
+.editor-styles-wrapper a:focus,
+.editor-styles-wrapper a:active,
 .editor-block-list__block a:hover,
 .editor-block-list__block a:focus,
 .editor-block-list__block a:active,
@@ -137,35 +137,35 @@
 	color: inherit;
 }
 
-.edit-post-visual-editor a:focus:not(:focus-visible),
+.editor-styles-wrapper a:focus:not(:focus-visible),
 .editor-block-list__block a:focus:not(:focus-visible),
 .wp-block-freeform.block-library-rich-text__tinymce a:focus:not(:focus-visible) {
 	outline: none;
 }
 
-.edit-post-visual-editor a:visited,
+.editor-styles-wrapper a:visited,
 .editor-block-list__block a:visited,
 .wp-block-freeform.block-library-rich-text__tinymce a:visited {
 	font-weight: normal;
 }
 
-.edit-post-visual-editor ul:not(.wp-block-gallery),
+.editor-styles-wrapper ul:not(.wp-block-gallery),
 .editor-block-list__block ul:not(.wp-block-gallery),
 .block-library-list ul,
 .wp-block-freeform.block-library-rich-text__tinymce ul {
 	list-style: square inside;
 }
 
-.edit-post-visual-editor ol,
+.editor-styles-wrapper ol,
 .editor-block-list__block ol,
 .block-library-list ol,
 .wp-block-freeform.block-library-rich-text__tinymce ol {
 	list-style: decimal inside;
 }
 
-.edit-post-visual-editor ul:not(.wp-block-gallery) li,
+.editor-styles-wrapper ul:not(.wp-block-gallery) li,
 .editor-block-list__block ul:not(.wp-block-gallery) li,
-.edit-post-visual-editor ol li,
+.editor-styles-wrapper ol li,
 .editor-block-list__block ol li,
 .block-library-list li,
 .wp-block-freeform.block-library-rich-text__tinymce ul li,
@@ -173,10 +173,10 @@
 	margin-bottom: 0;
 }
 
-.edit-post-visual-editor ul:not(.wp-block-gallery) li > ul,
+.editor-styles-wrapper ul:not(.wp-block-gallery) li > ul,
 .editor-block-list__block ul:not(.wp-block-gallery) li > ul,
 .block-library-list li > ul,
-.edit-post-visual-editor li > ol,
+.editor-styles-wrapper li > ol,
 .editor-block-list__block li > ol,
 .block-library-list li > ol,
 .wp-block-freeform.block-library-rich-text__tinymce li > ul,
@@ -185,10 +185,10 @@
 	margin-left: 30px;
 }
 
-.rtl .edit-post-visual-editor ul:not(.wp-block-gallery),
+.rtl .editor-styles-wrapper ul:not(.wp-block-gallery),
 .rtl .editor-block-list__block ul:not(.wp-block-gallery),
 .rtl .block-library-list ul,
-.rtl .edit-post-visual-editor ol,
+.rtl .editor-styles-wrapper ol,
 .rtl .editor-block-list__block ol,
 .rtl .block-library-list ol {
 	margin-left: 0;
@@ -196,7 +196,7 @@
 	padding: 0;
 }
 
-.rtl .edit-post-visual-editor ol,
+.rtl .editor-styles-wrapper ol,
 .rtl .editor-block-list__block ol,
 .rtl .block-library-list ol {
 	margin-left: 0;
@@ -304,8 +304,8 @@
 	margin-bottom: 30px;
 }
 
-.edit-post-visual-editor .editor-block-list__block .wp-block-quote.is-large p,
-.edit-post-visual-editor .editor-block-list__block .wp-block-quote.is-style-large p {
+.editor-styles-wrapper .editor-block-list__block .wp-block-quote.is-large p,
+.editor-styles-wrapper .editor-block-list__block .wp-block-quote.is-style-large p {
 	font-size: 120%;
 }
 
@@ -314,12 +314,12 @@
 	width: 100%;
 }
 
-.edit-post-visual-editor .editor-block-list__block .wp-block-cover-image .wp-block-cover-image-text,
-.edit-post-visual-editor .editor-block-list__block .wp-block-cover-image .wp-block-cover-text,
-.edit-post-visual-editor .editor-block-list__block .wp-block-cover-image h2,
-.edit-post-visual-editor .editor-block-list__block .wp-block-cover .wp-block-cover-image-text,
-.edit-post-visual-editor .editor-block-list__block .wp-block-cover .wp-block-cover-text,
-.edit-post-visual-editor .editor-block-list__block .wp-block-cover h2 {
+.editor-styles-wrapper .editor-block-list__block .wp-block-cover-image .wp-block-cover-image-text,
+.editor-styles-wrapper .editor-block-list__block .wp-block-cover-image .wp-block-cover-text,
+.editor-styles-wrapper .editor-block-list__block .wp-block-cover-image h2,
+.editor-styles-wrapper .editor-block-list__block .wp-block-cover .wp-block-cover-image-text,
+.editor-styles-wrapper .editor-block-list__block .wp-block-cover .wp-block-cover-text,
+.editor-styles-wrapper .editor-block-list__block .wp-block-cover h2 {
 	font-size: 2.0em;
 }
 
@@ -641,9 +641,9 @@
 	max-width: 100%;
 }
 
-.edit-post-visual-editor [data-align="center"] .wp-block-categories__list,
-.edit-post-visual-editor [data-align="center"] .wp-block-archives,
-.edit-post-visual-editor [data-align="center"] .wp-block-latest-posts {
+.editor-styles-wrapper [data-align="center"] .wp-block-categories__list,
+.editor-styles-wrapper [data-align="center"] .wp-block-archives,
+.editor-styles-wrapper [data-align="center"] .wp-block-latest-posts {
 	list-style-position: inside;
 }
 
@@ -663,12 +663,31 @@
 	margin-bottom: 0;
 }
 
-.edit-post-visual-editor .wp-block-latest-posts.is-grid {
+.editor-styles-wrapper .wp-block-latest-posts.is-grid {
 	list-style: none;
 	margin-left: 0;
 	margin-right: 0;
 }
 
-.edit-post-visual-editor .wp-block-latest-posts.is-grid li {
+.editor-styles-wrapper .wp-block-latest-posts.is-grid li {
 	margin-bottom: 15px;
+}
+
+
+/* ==========================================================================
+   Wide / Full alignment — mirrors frontend blocks.css rules
+   ========================================================================== */
+
+.editor-styles-wrapper .alignwide {
+	margin-left: -120px;
+	margin-right: -120px;
+	max-width: calc( 100% + 240px );
+	width: calc( 100% + 240px );
+}
+
+.editor-styles-wrapper .alignfull {
+	margin-left: calc( 50% - 50vw );
+	margin-right: calc( 50% - 50vw );
+	max-width: 100vw;
+	width: 100vw;
 }

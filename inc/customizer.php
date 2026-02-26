@@ -9,28 +9,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/*
+ * Security note for contributors: the Customizer API verifies its own nonces.
+ * Any new AJAX endpoints added to this theme must call check_ajax_referer()
+ * and output wp_nonce_field() — see https://developer.wordpress.org/apis/security/nonces/
+ */
+
 /**
  * Adds postMessage support for site title and description for the Theme Customizer.
  *
  * @param WP_Customize_Manager $wp_customize Theme Customizer object.
+ * @return void
  */
 function canard_customize_register( $wp_customize ) {
 	$wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
 	$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
 	$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
-
-	/*
-	 * SECURITY NOTE FOR FUTURE CONTRIBUTORS:
-	 * The Customizer API handles nonce verification for registered settings
-	 * internally. However, any new AJAX endpoints or custom form submissions
-	 * added to this theme MUST implement nonce verification:
-	 *
-	 *   - Output:  wp_nonce_field( 'canard_action', 'canard_nonce' )
-	 *   - Verify:  check_ajax_referer( 'canard_action', 'canard_nonce' )
-	 *
-	 * Omitting nonce checks on AJAX handlers is the most common source of
-	 * CSRF vulnerabilities in WordPress themes. Always add them proactively.
-	 */
 
 	/* Theme Options */
 	$wp_customize->add_section( 'canard_theme_options', array(
@@ -53,7 +47,11 @@ function canard_customize_register( $wp_customize ) {
 add_action( 'customize_register', 'canard_customize_register' );
 
 /**
- * Enqueues the live-preview JS for the Theme Customizer.
+ * Enqueues the Customizer live-preview script.
+ *
+ * Loaded only inside the Customizer preview iframe via customize_preview_init.
+ *
+ * @return void
  */
 function canard_customize_preview_js() {
 	wp_enqueue_script( 'canard-customizer', get_theme_file_uri( '/js/customizer.js' ), array( 'customize-preview' ), CANARD_VERSION, true );

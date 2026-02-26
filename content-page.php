@@ -14,7 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<header class="entry-header">
 		<?php if ( has_post_thumbnail() ) : ?>
 			<div class="post-thumbnail">
-				<?php the_post_thumbnail( 'canard-single-thumbnail' ); ?>
+				<?php
+				// No eager/fetchpriority override here — page thumbnails are not reliably
+				// the LCP element (pages vary widely in layout). WordPress applies its own
+				// loading="lazy" heuristic. Override in a child theme when needed.
+				the_post_thumbnail( 'canard-single-thumbnail' );
+				?>
 			</div>
 		<?php endif; ?>
 

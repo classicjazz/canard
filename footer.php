@@ -14,6 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	</div><!-- #content -->
 
+	<footer id="colophon" class="site-footer" role="contentinfo">
+	<!-- role="contentinfo" is explicit because #colophon is a child of #page
+	     (a div), not a direct child of <body>. The implicit landmark role on
+	     <footer> only applies when it is not nested inside sectioning content.
+	     Without the explicit role, screen readers do not expose this as the
+	     page's contentinfo landmark. -->
+
 	<?php get_sidebar( 'footer' ); ?>
 
 	<?php if ( has_nav_menu( 'footer' ) ) : ?>
@@ -27,6 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</nav><!-- .footer-navigation -->
 	<?php endif; ?>
 
+	</footer><!-- #colophon -->
 
 </div><!-- #page -->
 

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Sidebar toggle — shows/hides the #secondary sidebar on narrow viewports
+ * and keeps aria-expanded in sync on both the sidebar and button for screen reader compatibility.
+ */
+
 ( function() {
 
 	const sidebar = document.getElementById( 'secondary' );
@@ -9,8 +14,6 @@
 	if ( ! button ) {
 		return;
 	}
-
-	// Note: footer was declared in the original but never used — removed.
 
 	sidebar.setAttribute( 'aria-expanded', 'false' );
 

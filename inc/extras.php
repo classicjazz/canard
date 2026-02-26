@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'canard_body_classes' ) ) :
 /**
  * Adds custom classes to the array of body classes.
  *
@@ -23,15 +24,16 @@ function canard_body_classes( array $classes ): array {
 
 	return $classes;
 }
+endif;
 add_filter( 'body_class', 'canard_body_classes' );
 
 if ( ! function_exists( 'canard_excerpt_more' ) ) :
 /**
  * Replaces "[...]" (appended to automatically generated excerpts) with an ellipsis.
  *
- * @since Canard 2.0.0
+ * @since 2.0.0
  */
-function canard_excerpt_more( $more ) {
+function canard_excerpt_more( string $more ): string {
 	return ' &hellip;';
 }
 endif;
@@ -44,19 +46,14 @@ if ( ! function_exists( 'canard_continue_reading' ) ) :
 /**
  * Appends a "Continue reading" link to all instances of the_excerpt.
  *
- * @since Canard 2.0.0
+ * @since 2.0.0
  *
  * @param string $the_excerpt The post excerpt.
  * @return string The excerpt with a Continue reading link appended.
  */
 function canard_continue_reading( string $the_excerpt ): string {
-	/*
-	 * Security: this filter runs at priority 9, before later excerpt filters
-	 * have finished. The incoming $the_excerpt may contain markup injected by
-	 * plugins hooked at priority 1–8. Pass it through wp_kses_post() before
-	 * concatenating so that any injected content is sanitised to a safe
-	 * HTML subset before it is returned to the_excerpt() callers.
-	 */
+	// Sanitise before appending; this filter runs at priority 9 and earlier
+	// hooks (priority 1–8) may have injected plugin markup into $the_excerpt.
 	$the_excerpt = sprintf( '%1$s <a href="%2$s" class="more-link">%3$s</a>',
 		wp_kses_post( $the_excerpt ),
 		esc_url( get_permalink( get_the_ID() ) ),
@@ -78,6 +75,12 @@ if ( ! is_admin() ) {
  * @return int
  */
 function canard_excerpt_length( int $length ): int {
+	// 65 words gives roughly two lines of body text at the default font size —
+	// enough context to entice the reader without overflowing the archive card layout.
+	// The $length parameter (WordPress default: 55) is intentionally ignored;
+	// this function is the authoritative excerpt length for the theme.
+	// Child themes that need a different length should hook excerpt_length at
+	// a lower priority (e.g. priority 998) so their value takes precedence.
 	return 65;
 }
 add_filter( 'excerpt_length', 'canard_excerpt_length', 999 );
@@ -107,9 +110,61 @@ function canard_get_link_url() {
 	 * wp_http_validate_url() returns false for javascript:, data:, and any
 	 * other non-HTTP scheme, as well as for malformed URLs.
 	 */
+	// Only trust the extracted URL when the post actually uses the link format.
+	// A standard post whose content happens to open with a link should fall
+	// through to get_the_permalink() so the card links to the post itself.
 	$has_url = ( $raw_url && has_post_format( 'link' ) )
 		? wp_http_validate_url( $raw_url )
 		: false;
 
 	return $has_url ? $has_url : get_the_permalink();
 }
+
+/**
+ * Hardens the default comment form fields.
+ *
+ * Previously registered inside comments.php (a template file). Registering a
+ * filter inside a template causes multiple registrations on any page that calls
+ * comments_template() more than once in a custom loop. Moving to inc/extras.php
+ * ensures the filter registers exactly once per request.
+ *
+ * Changes applied:
+ *   1. Removes the URL / website field — spam vector and potential XSS surface.
+ *   2. Sets type="email" on the email field for native browser validation.
+ *   3. Adds autocomplete hints so browsers can pre-fill name and email.
+ *
+ * WordPress core handles nonce generation and verification for the comment
+ * submission form internally — no additional wp_nonce_field() call is needed.
+ */
+add_filter( 'comment_form_default_fields', function( array $fields ): array {
+	// Remove the website / URL field entirely.
+	unset( $fields['url'] );
+
+	// Harden the email field: set type="email" and add autocomplete.
+	if ( isset( $fields['email'] ) ) {
+		$fields['email'] = str_replace(
+			array( 'type="text"', "type='text'" ),
+			'type="email"',
+			$fields['email']
+		);
+		// Add autocomplete="email" if not already present.
+		if ( false === strpos( $fields['email'], 'autocomplete' ) ) {
+			$fields['email'] = str_replace(
+				'type="email"',
+				'type="email" autocomplete="email"',
+				$fields['email']
+			);
+		}
+	}
+
+	// Add autocomplete="name" to the author (name) field if present.
+	if ( isset( $fields['author'] ) && false === strpos( $fields['author'], 'autocomplete' ) ) {
+		$fields['author'] = str_replace(
+			'id="author"',
+			'id="author" autocomplete="name"',
+			$fields['author']
+		);
+	}
+
+	return $fields;
+} );

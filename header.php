@@ -67,7 +67,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$header_loading      = is_front_page() ? 'eager' : 'lazy';
 					$header_fetchprio    = is_front_page() ? 'high'  : 'auto';
 					?>
-					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &mdash; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php echo esc_url( get_header_image() ); ?>" width="<?php echo absint( get_custom_header()->width ); ?>" height="<?php echo absint( get_custom_header()->height ); ?>" loading="<?php echo esc_attr( $header_loading ); ?>" fetchpriority="<?php echo esc_attr( $header_fetchprio ); ?>" alt=""></a>
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &mdash; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php echo esc_url( get_header_image() ); ?>" width="<?php echo absint( get_custom_header()->width ); ?>" height="<?php echo absint( get_custom_header()->height ); ?>" loading="<?php echo esc_attr( $header_loading ); ?>" fetchpriority="<?php echo esc_attr( $header_fetchprio ); ?>"
+				<?php
+				/*
+				 * Accessibility: alt="" is intentionally empty. The wrapping <a>
+				 * has aria-label="Site Name — Home" which provides a complete
+				 * accessible name for the link. An alt description on the image
+				 * itself would be redundant and would cause screen readers to
+				 * announce the same text twice. WCAG 1.1.1 explicitly permits
+				 * empty alt when the image is decorative within a labelled link.
+				 */ ?>
+				alt=""></a>
 				</div><!-- .header-image-inner -->
 			</div><!-- .header-image -->
 		<?php endif; ?>
@@ -88,4 +98,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div><!-- #search-navigation -->
 	</header><!-- #masthead -->
 
-	<div id="content" class="site-content">
+	<div id="content" class="site-content" tabindex="-1">

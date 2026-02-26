@@ -1,25 +1,32 @@
+/**
+ * @fileoverview Single post page: entry-hero layout, author-info repositioning,
+ * and Jetpack Sharedaddy/Related Posts placement.
+ */
+
 ( function() {
+
+	// Guard against utils.js failing to load; provides a no-op passthrough so
+	// entry-hero layout and author-info repositioning continue without debouncing.
+	if ( ! window.canardUtils || typeof window.canardUtils.debounce !== 'function' ) {
+		console.warn( 'Canard single.js: canardUtils not available — debounced resize handler disabled.' );
+		window.canardUtils = window.canardUtils || {};
+		window.canardUtils.debounce = function( fn ) { return fn; };
+	}
 
 	const debounce = window.canardUtils.debounce;
 
 	/**
 	 * Entry-hero layout.
 	 *
-	 * When the server has determined that the entry-hero layout applies it adds
-	 * the class 'has-entry-hero' to <body> (via entry-script.php / body_class
-	 * filter). This block reads that class and performs the DOM rearrangement
-	 * that was previously an inline <script> in entry-script.php.
-	 *
-	 * Runs synchronously (no DOMContentLoaded wrapper) to avoid layout flash.
-	 * The has-entry-hero body class is set server-side in entry-script.php.
+	 * Runs synchronously (no DOMContentLoaded wrapper) to avoid a layout flash.
+	 * The 'has-entry-hero' body class is set server-side in entry-script.php.
 	 * If you move this to a load/DOMContentLoaded callback, test for FOUC.
 	 */
 	if ( document.body.classList.contains( 'has-entry-hero' ) ) {
-		const entryHeader = document.querySelector( '.hentry.has-post-thumbnail .entry-header' );
+		const entryHeader      = document.querySelector( '.hentry.has-post-thumbnail .entry-header' );
 		const siteContentInner = document.querySelector( '.site-content-inner' );
 
 		if ( entryHeader && siteContentInner ) {
-			// Wrap .entry-title and .entry-meta together inside two nested divs.
 			const targets = entryHeader.querySelectorAll( '.entry-title, .entry-meta' );
 			if ( targets.length ) {
 				const inner   = document.createElement( 'div' );
@@ -27,7 +34,6 @@
 				inner.className   = 'entry-header-inner';
 				wrapper.className = 'entry-header-wrapper';
 
-				// Move matched elements into inner, then nest inner → wrapper.
 				targets.forEach( function( el ) {
 					inner.appendChild( el );
 				} );
@@ -35,15 +41,18 @@
 				entryHeader.appendChild( wrapper );
 			}
 
-			// Hoist the entry header before .site-content-inner and mark it.
 			siteContentInner.parentNode.insertBefore( entryHeader, siteContentInner );
 			entryHeader.classList.add( 'entry-hero' );
 		}
 	}
 
 	/**
-	 * Moves the author info block into the sidebar on wide viewports,
-	 * or below the entry content on narrow viewports.
+	 * Moves .author-info into the sidebar on viewports wider than 959px,
+	 * or below .entry-content on narrower viewports.
+	 *
+	 * Uses nextElementSibling rather than nextSibling to avoid false mismatches
+	 * against whitespace text nodes between elements, which would cause a
+	 * redundant DOM move on every debounced resize tick.
 	 */
 	function authorInfo() {
 		const authorInfoEl = document.querySelector( '.author-info' );
@@ -57,7 +66,7 @@
 			}
 		} else {
 			const entryContent = document.querySelector( '.entry-content' );
-			if ( entryContent && entryContent.nextSibling !== authorInfoEl ) {
+			if ( entryContent && entryContent.nextElementSibling !== authorInfoEl ) {
 				entryContent.after( authorInfoEl );
 			}
 		}
@@ -68,11 +77,8 @@
 
 	window.addEventListener( 'load', function() {
 
-		// Move Jetpack Sharedaddy and Related Posts into the entry footer area.
-		// NOTE: These selectors target the classic Jetpack sharing module. If your
-		// Jetpack version uses block-based sharing/related posts, these will match
-		// nothing and silently no-op. Verify selectors against your Jetpack version
-		// and remove this block if the classic module is not in use.
+		// Targets the classic Jetpack sharing / rating module. If block-based
+		// sharing is in use, these selectors will not match and are harmless no-ops.
 		const entryFooter = document.querySelector( '.entry-footer' );
 		if ( entryFooter ) {
 			document.querySelectorAll( '.sd-sharing-enabled:not(#jp-post-flair), .sd-like.jetpack-likes-widget-wrapper, .sd-rating' ).forEach( function( el ) {

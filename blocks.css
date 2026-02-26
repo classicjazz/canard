@@ -31,6 +31,8 @@ p.has-drop-cap:not(:focus)::first-letter {
 	font-style: normal;
 }
 
+/* is-large is the legacy class name; is-style-large is the current block style.
+   Both are targeted for backward compatibility with older content. */
 .wp-block-quote.is-large,
 .wp-block-quote.is-style-large,
 .wp-block-quote.is-large p,
@@ -296,4 +298,33 @@ hr.wp-block-separator {
 .has-black-background-color:focus,
 .has-black-background-color:active {
 	background-color: #222;
+}
+
+
+/* ==========================================================================
+   Wide / Full alignment (frontend)
+   Requires add_theme_support( 'align-wide' ) in functions.php.
+   ========================================================================== */
+
+.alignwide {
+	margin-left: calc( -1 * ( ( 100vw - 100% ) / 2 ) );
+	margin-right: calc( -1 * ( ( 100vw - 100% ) / 2 ) );
+	max-width: 100vw;
+	width: 100vw;
+}
+
+@media screen and (min-width: 1000px) {
+	.alignwide {
+		margin-left: -120px;
+		margin-right: -120px;
+		max-width: calc( 100% + 240px );
+		width: calc( 100% + 240px );
+	}
+}
+
+.alignfull {
+	margin-left: calc( 50% - 50vw );
+	margin-right: calc( 50% - 50vw );
+	max-width: 100vw;
+	width: 100vw;
 }

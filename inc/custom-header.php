@@ -13,7 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Sets up the WordPress core custom header feature.
  *
+ * Exposes the canard_custom_header_args filter so child themes can override
+ * default dimensions and callbacks without replacing this function.
+ *
  * @uses canard_header_style()
+ * @return void
  */
 function canard_custom_header_setup() {
 	add_theme_support( 'custom-header', apply_filters( 'canard_custom_header_args', array(
@@ -49,6 +53,8 @@ function canard_header_style() {
 	}
 
 	if ( 'blank' === $header_text_color ) {
+		// 'blank' is the Customizer's sentinel value meaning "hide header text".
+		// CSS visually hides the elements while keeping them accessible to screen readers.
 		$css = '
 			.site-title,
 			.site-description {
