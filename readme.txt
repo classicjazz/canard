@@ -5,12 +5,15 @@ Tags: red, white, light, two-columns, right-sidebar, responsive-layout, custom-h
 
 Requires at least: 6.9
 Tested up to: 6.9
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 A flexible and versatile magazine theme.
 
 == Description ==
+
+This is a fork of the Wordpress theme, Canard. See docs/CHANGES.md for a comprehensive list of all changes from Automattic's version v1.0.21.
 
 Canard is a flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device.
 
