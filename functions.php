@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Theme version constant used for cache-busting enqueued assets.
  */
-define( 'CANARD_VERSION', '2.5.0' );
+define( 'CANARD_VERSION', '2.5.1' );
 
 /**
  * Set the content width based on the theme's design and stylesheet.
