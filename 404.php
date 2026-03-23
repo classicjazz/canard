@@ -1,6 +1,11 @@
 <?php
 /**
- * The template for displaying 404 pages (not found).
+ * Template for displaying 404 (Not Found) error pages.
+ *
+ * Rendered whenever WordPress cannot match the requested URL to any post,
+ * page, or other public resource. Outputs the global site header, a short
+ * explanatory message with an inline search form, the sidebar, and the
+ * global site footer.
  *
  * @package Canard
  */

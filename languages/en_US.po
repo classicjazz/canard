@@ -9,67 +9,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2021-02-04T00:57:38+00:00\n"
 "PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
-"Language: bg\n"
+"Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Claude Sonnet 4.6\n"
 
 #: functions.php:99
 msgid "Red"
-msgstr "Червена"
-
-#: functions.php:74
-msgid "Black"
-msgstr "Черна"
+msgstr "Red"
 
 #: functions.php:94
 msgid "White"
-msgstr "Бяла"
+msgstr "White"
 
 #: functions.php:89
 msgid "Light Gray"
-msgstr "Светлосив"
-
-#: functions.php:79
-msgid "Dark Gray"
-msgstr "Тъмносив"
+msgstr "Light Gray"
 
 #: functions.php:84
 msgid "Medium Gray"
-msgstr "Нормално сиво"
+msgstr "Medium Gray"
+
+#: functions.php:79
+msgid "Dark Gray"
+msgstr "Dark Gray"
+
+#: functions.php:74
+msgid "Black"
+msgstr "Black"
 
 #: inc/wpcom-colors.php:548
 msgid "Accent"
-msgstr "Акцент"
-
-#: inc/wpcom-colors.php:323
-msgid "Background"
-msgstr "Фон"
+msgstr "Accent"
 
 #: inc/wpcom-colors.php:434
 msgid "Contrast"
-msgstr "Контраст"
+msgstr "Contrast"
+
+#: inc/wpcom-colors.php:323
+msgid "Background"
+msgstr "Background"
 
 #. translators: %s: Name of current post.
 #. translators: %s: Name of current post
 #: content.php:44
 #: inc/extras.php:98
 msgid "Continue reading %s"
-msgstr "Нататък %s"
-
-#. Author of the plugin/theme
-#: wp-content/themes/pub/canard/style.css
-msgid "Automattic, Michael Connelly"
-msgstr "Automattic, Michael Connelly"
-
-#. Theme Name of the plugin/theme
-#: wp-content/themes/pub/canard/style.css
-msgid "Canard"
-msgstr "Canard"
-
-#. Description of the plugin/theme
-#: wp-content/themes/pub/canard/style.css
-msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
-msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "Continue reading %s"
 
 #. Author URI of the plugin/theme
 #. Theme URI of the plugin/theme
@@ -77,138 +62,149 @@ msgstr "A flexible and versatile theme perfect for magazines, news sites, and bl
 msgid "https://github.com/classicjazz/canard"
 msgstr "https://github.com/classicjazz/canard"
 
-#: single.php:28
-msgid "Next"
-msgstr "Следваща"
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
 
-#: single.php:28
-msgid "Next post:"
-msgstr "Следваща публикация:"
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 
-#: single.php:29
-msgid "Previous"
-msgstr "Предишна"
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
 
 #: single.php:29
 msgid "Previous post:"
-msgstr "Предишна публикация:"
+msgstr "Previous post:"
+
+#: single.php:29
+msgid "Previous"
+msgstr "Previous"
+
+#: single.php:28
+msgid "Next post:"
+msgstr "Next post:"
+
+#: single.php:28
+msgid "Next"
+msgstr "Next"
 
 #: search.php:17
 msgid "Search Results for: %s"
-msgstr "Резултати от търсене за: %s"
+msgstr "Search Results for: %s"
+
+#: inc/template-tags.php:197
+msgid "Archives"
+msgstr "Archives"
 
 #. translators: 1: Taxonomy singular name, 2: Current taxonomy term
 #: inc/template-tags.php:195
 msgid "%1$s: %2$s"
-msgstr "%1$s @ %2$s"
+msgstr "%1$s: %2$s"
 
-#: inc/template-tags.php:197
-msgid "Archives"
-msgstr "Архив"
+#: inc/template-tags.php:191
+msgid "Archives: %s"
+msgstr "Archives: %s"
 
 #: inc/template-tags.php:188
 msgctxt "post format archive title"
 msgid "Chats"
-msgstr "Разговори"
+msgstr "Chats"
 
 #: inc/template-tags.php:186
 msgctxt "post format archive title"
 msgid "Audio"
-msgstr "Аудио"
-
-#: inc/template-tags.php:191
-msgid "Archives: %s"
-msgstr "Архиви: %s"
-
-#: inc/template-tags.php:172
-msgctxt "post format archive title"
-msgid "Asides"
-msgstr "Бележки"
-
-#: inc/template-tags.php:176
-msgctxt "post format archive title"
-msgid "Images"
-msgstr "Изображения"
-
-#: inc/template-tags.php:174
-msgctxt "post format archive title"
-msgid "Galleries"
-msgstr "Галерии"
-
-#: inc/template-tags.php:180
-msgctxt "post format archive title"
-msgid "Quotes"
-msgstr "Цитати"
-
-#: inc/template-tags.php:178
-msgctxt "post format archive title"
-msgid "Videos"
-msgstr "Видео"
-
-#: inc/template-tags.php:182
-msgctxt "post format archive title"
-msgid "Links"
-msgstr "Връзки"
+msgstr "Audio"
 
 #: inc/template-tags.php:184
 msgctxt "post format archive title"
 msgid "Statuses"
-msgstr "Статуси"
+msgstr "Statuses"
 
-#: inc/template-tags.php:165
-msgctxt "yearly archives date format"
-msgid "Y"
-msgstr "Y"
+#: inc/template-tags.php:182
+msgctxt "post format archive title"
+msgid "Links"
+msgstr "Links"
+
+#: inc/template-tags.php:180
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr "Quotes"
+
+#: inc/template-tags.php:178
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr "Videos"
+
+#: inc/template-tags.php:176
+msgctxt "post format archive title"
+msgid "Images"
+msgstr "Images"
+
+#: inc/template-tags.php:174
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr "Galleries"
+
+#: inc/template-tags.php:172
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr "Asides"
+
+#: inc/template-tags.php:169
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr "F j, Y"
+
+#: inc/template-tags.php:169
+msgid "Day: %s"
+msgstr "Day: %s"
 
 #: inc/template-tags.php:167
 msgctxt "monthly archives date format"
 msgid "F Y"
 msgstr "F Y"
 
-#: inc/template-tags.php:169
-msgctxt "daily archives date format"
-msgid "F j, Y"
-msgstr "d.m.Y"
-
-#: inc/template-tags.php:169
-msgid "Day: %s"
-msgstr "Ден: %s"
-
 #: inc/template-tags.php:167
 msgid "Month: %s"
-msgstr "Месец: %s"
+msgstr "Month: %s"
 
-#: inc/template-tags.php:161
-msgid "Tag: %s"
-msgstr "Етикет: %s"
-
-#: inc/template-tags.php:159
-msgid "Category: %s"
-msgstr "Категория: %s"
-
-#: inc/template-tags.php:163
-msgid "Author: %s"
-msgstr "Автор: %s"
+#: inc/template-tags.php:165
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
 
 #: inc/template-tags.php:165
 msgid "Year: %s"
-msgstr "Година: %s"
+msgstr "Year: %s"
 
-#: inc/template-tags.php:123
-msgid "1 Comment"
-msgstr "има 1 коментар"
+#: inc/template-tags.php:163
+msgid "Author: %s"
+msgstr "Author: %s"
+
+#: inc/template-tags.php:161
+msgid "Tag: %s"
+msgstr "Tag: %s"
+
+#: inc/template-tags.php:159
+msgid "Category: %s"
+msgstr "Category: %s"
 
 #: inc/template-tags.php:123
 msgid "% Comments"
-msgstr "% Коментари"
+msgstr "% Comments"
+
+#: inc/template-tags.php:123
+msgid "1 Comment"
+msgstr "1 Comment"
 
 #: inc/template-tags.php:123
 msgid "Leave a comment"
-msgstr "Вашият коментар"
-
-#: inc/template-tags.php:56
-msgid "Post navigation"
-msgstr "Навигация в публикациите"
+msgstr "Leave a comment"
 
 #. translators: used between list items, there is a space after the comma
 #: inc/template-tags.php:75
@@ -216,45 +212,57 @@ msgstr "Навигация в публикациите"
 msgid ", "
 msgstr ", "
 
+#: inc/template-tags.php:56
+msgid "Post navigation"
+msgstr "Post navigation"
+
 #: inc/template-tags.php:31
 msgid "Newer posts"
-msgstr "По-нови"
-
-#: inc/template-tags.php:23
-msgid "Posts navigation"
-msgstr "Навигация на публикациите"
+msgstr "Newer posts"
 
 #: inc/template-tags.php:27
 msgid "Older posts"
-msgstr "По-стари"
+msgstr "Older posts"
 
-#: inc/customizer.php:20
-msgid "Theme Options"
-msgstr "Допълнителни настройки"
+#: inc/template-tags.php:23
+msgid "Posts navigation"
+msgstr "Posts navigation"
+
+#: inc/jetpack.php:20
+msgid "The featured content section displays on the front page above the header."
+msgstr "The featured content section displays on the front page above the header."
 
 #: inc/extras.php:52
 msgid "Page %s"
-msgstr "Страница %s"
+msgstr "Page %s"
+
+#: inc/customizer.php:29
+msgid "Show author bio on single posts."
+msgstr "Show author bio on single posts."
+
+#: inc/customizer.php:20
+msgid "Theme Options"
+msgstr "Theme Options"
 
 #: header.php:77
 msgid "Search"
-msgstr "Търсене"
-
-#. translators: If there are characters in your language that are not supported
-#. by Inconsolata, translate this to 'off'. Do not translate into your own
-#. language.
-#: functions.php:177
-msgctxt "Inconsolata font: on or off"
-msgid "on"
-msgstr "on"
-
-#: header.php:22
-msgid "Skip to content"
-msgstr "Към съдържанието"
+msgstr "Search"
 
 #: header.php:72
 msgid "Primary Menu"
-msgstr "Главно меню"
+msgstr "Primary Menu"
+
+#: header.php:22
+msgid "Skip to content"
+msgstr "Skip to content"
+
+#. translators: If there are characters in your language that are not supported
+#. by Playfair Display, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:216
+msgctxt "Playfair Display font: on or off"
+msgid "on"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by PT Serif, translate this to 'off'. Do not translate into your own
@@ -264,104 +272,132 @@ msgctxt "PT Serif font: on or off"
 msgid "on"
 msgstr "on"
 
-#: functions.php:150
-msgid "Footer"
-msgstr "Footer"
+#. translators: If there are characters in your language that are not supported
+#. by Inconsolata, translate this to 'off'. Do not translate into your own
+#. language.
+#: functions.php:177
+msgctxt "Inconsolata font: on or off"
+msgid "on"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by Lato, translate this to 'off'. Do not translate into your own language.
 #: functions.php:172
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "off"
+msgstr "on"
+
+#: functions.php:150
+msgid "Footer"
+msgstr "Footer"
 
 #: functions.php:140
 #: sidebar.php:14
 msgid "Sidebar"
-msgstr "Странична лента"
+msgstr "Sidebar"
+
+#: functions.php:111
+msgid "Social Location"
+msgstr "Social Location"
+
+#: functions.php:110
+msgid "Footer Location"
+msgstr "Footer Location"
+
+#: functions.php:109
+msgid "Secondary Location"
+msgstr "Secondary Location"
+
+#: functions.php:108
+msgid "Primary Location"
+msgstr "Primary Location"
 
 #: footer.php:54
 msgid "Theme: %1$s by %2$s."
-msgstr "Тема: %1$s от %2$s."
-
-#: footer.php:52
-msgid "http://wordpress.org/"
-msgstr "http://bg.wordpress.org/"
+msgstr "Theme: %1$s by %2$s."
 
 #: footer.php:52
 msgid "Proudly powered by %s"
-msgstr "Създаден с %s"
+msgstr "Proudly powered by %s"
+
+#: footer.php:52
+msgid "http://wordpress.org/"
+msgstr "https://wordpress.org/"
 
 #: content.php:20
 msgid "Sticky post"
-msgstr "Публикации, залепени на началната страница"
+msgstr "Sticky post"
 
 #: content-page.php:35
 #: inc/template-tags.php:142
 msgid "Edit"
-msgstr "Редактиране"
+msgstr "Edit"
 
 #: content-page.php:28
 #: content-single.php:29
 msgid "Page"
-msgstr "Страница"
+msgstr "Page"
 
 #: content-page.php:24
 #: content-single.php:25
 msgid "Pages:"
-msgstr "Страници:"
+msgstr "Pages:"
 
 #: content-none.php:28
 msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
-msgstr "Страницата не съществува. Пробвайте да потърсите каквото ви трябва."
+msgstr "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
 
 #: content-none.php:23
 msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
-msgstr "Няма резултати, отговарящи на вашето търсене. Опитайте отново с други ключови думи. "
+msgstr "Sorry, but nothing matched your search terms. Please try again with some different keywords."
 
 #: content-none.php:19
 msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
-msgstr "Време е за първата ви публикация. <a href=\"%1$s\">Започнете от тук</a>."
+msgstr "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
 
 #: content-none.php:13
 msgid "Nothing Found"
-msgstr "Нищо не е открито"
+msgstr "Nothing Found"
+
+#: content-link.php:8
+msgid "External link to %s"
+msgstr "External link to %s"
 
 #: comments.php:57
 msgid "Comments are closed."
-msgstr "Коментари са забранени."
+msgstr "Comments are closed."
 
 #: comments.php:47
 msgid "Newer Comments"
-msgstr "По-нови коментари"
+msgstr "Newer Comments"
 
 #: comments.php:46
 msgid "Older Comments"
-msgstr "По-стари коментари"
+msgstr "Older Comments"
 
 #: comments.php:45
 msgid "Comment navigation"
-msgstr "Навигация в коментарите"
+msgstr "Comment navigation"
 
 #: comments.php:28
 msgctxt "comments title"
 msgid "One thought on &ldquo;%2$s&rdquo;"
 msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] "Едно мнение за &ldquo;%2$s&rdquo;"
-msgstr[1] "%1$s мнения за &ldquo;%2$s&rdquo;"
+msgstr[0] "One thought on &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s thoughts on &ldquo;%2$s&rdquo;"
 
 #: author-bio.php:31
 msgid "View all posts by %s"
-msgstr "Всички публикации от %s"
+msgstr "View all posts by %s"
 
 #: author-bio.php:24
 msgid "Published by"
-msgstr "Публикувано от"
+msgstr "Published by"
 
 #: 404.php:20
 msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
-msgstr "Нищо не бе намерено на това място. Може би трябва да погледнете на друго място или да използвате търсачката."
+msgstr "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
 
 #: 404.php:16
 msgid "Oops! That page can&rsquo;t be found."
-msgstr "Страницата не е открита."
+msgstr "Oops! That page can&rsquo;t be found."

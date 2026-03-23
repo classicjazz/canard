@@ -2,7 +2,7 @@
 Theme Name: Canard
 Theme URI: https://github.com/classicjazz/canard
 Description: A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device.
-Version: 2.7.0
+Version: 3.0.0
 Author: Automattic, Michael Connelly
 Author URI: https://www.mikeconnelly.com
 License: GNU General Public License v2 or later
@@ -12,53 +12,51 @@ Requires at least: 6.9
 Tested up to: 6.9
 */
 
-
 /* ==========================================================================
-   Design tokens
-   Child themes: override these in your own :root block. Do NOT hard-code
-   the hex values below anywhere in a child stylesheet — reference the token
-   instead so future palette changes propagate automatically.
+   Design Tokens
+   Child themes: override these in your own :root block.
    ========================================================================== */
 
 :root {
-	/* ── Colors ────────────────────────────────────────────────────────────── */
-	--color-accent:  #d11415;   /* Canard red — primary interactive / brand color */
-	--color-text:    #222;      /* Body copy */
-	--color-muted:   #777;      /* Secondary / meta text */
-	--color-border:  #ddd;      /* Dividers, input outlines */
+	/* Colors */
+	--color-accent: #d11415; /* Primary interactive / brand color */
+	--color-text: #222; /* Body copy */
+	--color-muted: #777; /* Secondary / meta text */
+	--color-border: #ddd; /* Dividers, input outlines */
 
-	/* ── Typography ─────────────────────────────────────────────────────────── */
-	--font-body:     "PT Serif", serif;
-	--font-display:  "Playfair Display", serif;
-	--font-ui:       Lato, sans-serif;
-	--font-mono:     Inconsolata, Consolas, Monaco, "Courier New", monospace;
+	/* Typography */
+	--font-body: "PT Serif", serif;
+	--font-display: "Playfair Display", serif;
+	--font-ui: Lato, sans-serif;
+	--font-mono: Inconsolata, Consolas, Monaco, "Courier New", monospace;
 
-	/* ── Type scale (px → rem at 16px root) ─────────────────────────────────── */
-	--text-xs:    0.8125rem;   /* 13px */
-	--text-sm:    0.875rem;    /* 14px */
-	--text-base:  1rem;        /* 16px */
-	--text-lg:    1.25rem;     /* 20px */
-	--text-xl:    1.5625rem;   /* 25px */
-	--text-2xl:   1.9375rem;   /* 31px */
-	--text-3xl:   2.4375rem;   /* 39px */
-	--text-4xl:   3.0625rem;   /* 49px */
+	/* Type Scale (px → rem at 16px root) */
+	--text-xs: 0.8125rem; /* 13px */
+	--text-sm: 0.875rem; /* 14px */
+	--text-base: 1rem; /* 16px */
+	--text-lg: 1.25rem; /* 20px */
+	--text-xl: 1.5625rem; /* 25px */
+	--text-2xl: 1.9375rem; /* 31px */
+	--text-3xl: 2.4375rem; /* 39px */
+	--text-4xl: 3.0625rem; /* 49px */
 
-	/* ── Spacing ────────────────────────────────────────────────────────────── */
-	--space-base:   1.875rem;  /* 30px — primary rhythm unit */
+	/* Spacing */
+	--space-base: 1.875rem; /* 30px — primary rhythm unit */
 }
-
 
 /* ==========================================================================
    Normalization
    ========================================================================== */
 
+/* Prevent iOS font-size inflation on orientation change. */
 html {
 	font-family: sans-serif;
-	-webkit-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%; /* Vendor prefix required for older iOS/Safari. */
 }
 body {
 	margin: 0;
 }
+/* Ensure HTML5 sectioning elements render as block in older browsers. */
 article,
 aside,
 details,
@@ -73,6 +71,7 @@ section,
 summary {
 	display: block;
 }
+/* Correct inline-block / baseline rendering for media elements. */
 audio,
 canvas,
 progress,
@@ -80,6 +79,7 @@ video {
 	display: inline-block;
 	vertical-align: baseline;
 }
+/* Hide audio element when controls attribute is absent. */
 audio:not([controls]) {
 	display: none;
 	height: 0;
@@ -88,13 +88,16 @@ audio:not([controls]) {
 template {
 	display: none;
 }
+/* Remove the grey background on active links in IE 10. */
 a {
 	background-color: transparent;
 }
+/* Suppress the focus ring on links for pointer interaction (handled separately). */
 a:active,
 a:hover {
 	outline: 0;
 }
+/* Dotted underline for abbreviations that have a title tooltip. */
 abbr[title] {
 	text-decoration: underline dotted;
 }
@@ -105,9 +108,11 @@ strong {
 dfn {
 	font-style: italic;
 }
+/* Suppress default focus outline on non-interactive divs (e.g. programmatic focus). */
 div:focus {
 	outline: none;
 }
+/* Normalize h1 margin that varies across browsers. */
 h1 {
 	font-size: 2em;
 	margin: 0.67em 0;
@@ -119,10 +124,11 @@ mark {
 small {
 	font-size: 80%;
 }
+/* Prevent sub/sup from affecting line-height by collapsing their line-box contribution. */
 sub,
 sup {
 	font-size: 75%;
-	line-height: 0;
+	line-height: 0; /* Intentional unitless zero: collapses line-box contribution without adding a unit. */
 	position: relative;
 	vertical-align: baseline;
 }
@@ -132,12 +138,14 @@ sup {
 sub {
 	bottom: -0.25em;
 }
+/* Remove the border around images inside links in IE 10. */
 img {
 	border: 0;
 }
 figure {
 	margin: 0 0 30px;
 }
+/* Correct box-sizing and height in Firefox where hr inherits border. */
 hr {
 	box-sizing: content-box;
 	height: 0;
@@ -145,13 +153,16 @@ hr {
 pre {
 	overflow: auto;
 }
+/* Double monospace stack required to normalize font-size across browsers. */
 code,
 kbd,
 pre,
 samp {
-	font-family: monospace, monospace;
+	font-family:
+		monospace, monospace; /* Double declaration normalizes font-size in all browsers. */
 	font-size: 1em;
 }
+/* Normalize form controls: remove default border-radius, inherit color and font. */
 button,
 input,
 optgroup,
@@ -162,23 +173,28 @@ textarea {
 	font: inherit;
 	margin: 0;
 }
+/* Firefox adds extra padding to overflow buttons; normalize it. */
 button {
 	overflow: visible;
 }
+/* Remove inheritance of text-transform for button/select in Firefox. */
 button,
 select {
 	text-transform: none;
 }
+/* Restore pointer cursor on clickable inputs that was removed in some browsers. */
 button,
 html input[type="button"],
 input[type="reset"],
 input[type="submit"] {
 	cursor: pointer;
 }
+/* Disabled controls should show the default (not-allowed) cursor. */
 button[disabled],
 html input[disabled] {
 	cursor: default;
 }
+/* Normalize box-sizing and remove default padding on checkboxes and radios. */
 input[type="checkbox"],
 input[type="radio"] {
 	box-sizing: border-box;
@@ -189,16 +205,19 @@ fieldset {
 	margin: 0 2px;
 	padding: 0.35em 0.625em 0.75em;
 }
+/* Remove default border on legend in IE 10 and earlier. */
 legend {
 	border: 0;
 	padding: 0;
 }
+/* Allow vertical resizing only; suppress scrollbar added by IE. */
 textarea {
 	overflow: auto;
 }
 optgroup {
 	font-weight: bold;
 }
+/* Remove default table spacing; borders will be applied per-cell. */
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -208,6 +227,9 @@ th {
 	padding: 0;
 }
 
+/* ─── Base Typography ───────────────────────────────────────────────────── */
+
+/* Apply the brand body font and text color to all form controls. */
 body,
 button,
 input,
@@ -220,12 +242,14 @@ textarea {
 body {
 	line-height: 1.5;
 }
+/* Slightly looser line-height for form controls to aid readability. */
 button,
 input,
 select,
 textarea {
 	line-height: 1.875;
 }
+/* All headings use the display serif; clear floats to prevent overlap. */
 h1,
 h2,
 h3,
@@ -238,35 +262,36 @@ h6 {
 	margin-top: 0;
 }
 h1 {
-	font-size: var(--text-4xl);   /* 3.0625rem ≈ 49px at 16px root */
+	font-size: var(--text-4xl);
 	line-height: 1.225;
 	margin-bottom: 30px;
 }
 h2 {
-	font-size: var(--text-3xl);   /* 2.4375rem ≈ 39px */
+	font-size: var(--text-3xl);
 	line-height: 1.54;
 	margin-bottom: 30px;
 }
 h3 {
-	font-size: var(--text-2xl);   /* 1.9375rem ≈ 31px */
+	font-size: var(--text-2xl);
 	line-height: 1.452;
 	margin-bottom: 30px;
 }
 h4 {
-	font-size: var(--text-xl);    /* 1.5625rem ≈ 25px */
+	font-size: var(--text-xl);
 	line-height: 1.2;
 	margin-bottom: 30px;
 }
 h5 {
-	font-size: var(--text-lg);    /* 1.25rem ≈ 20px */
+	font-size: var(--text-lg);
 	line-height: 1.5;
 	margin-bottom: 30px;
 }
 h6 {
-	font-size: var(--text-base);  /* 1rem = 16px */
+	font-size: var(--text-base);
 	line-height: 1.5;
 	margin-bottom: 30px;
 }
+/* Links inside headings inherit heading font-weight rather than the bold default for links. */
 h1 a,
 h2 a,
 h3 a,
@@ -285,9 +310,11 @@ em,
 i {
 	font-style: italic;
 }
+/* Citations are additionally bolded to distinguish them from generic italic. */
 cite {
 	font-weight: bold;
 }
+/* Reset browser-default curly quote content on blockquote/q pseudo-elements. */
 blockquote:before,
 blockquote:after,
 q:before,
@@ -305,6 +332,7 @@ blockquote {
 	padding: 0;
 	position: relative;
 }
+/* Inline SVG opening-quotation-mark icon rendered via CSS background-image. */
 blockquote:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='30' height='30'%3E%3Cpath fill='%23dddddd' d='M11 7H7C5.9 7 5 7.9 5 9v4c0 1.1.9 2 2 2h2v2H5v2h4c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm8 0h-4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h2v2h-4v2h4c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
@@ -315,19 +343,23 @@ blockquote:before {
 	height: 30px;
 	width: 30px;
 }
+/* Collapse paragraph bottom margin inside blockquotes to prevent double-spacing. */
 blockquote * {
 	margin-bottom: 0;
 }
+/* Indent nested blockquotes. */
 blockquote blockquote {
 	margin-left: 30px;
 	margin-top: 30px;
 }
+/* Citations inside blockquotes are upright (not italic) to contrast with the quote text. */
 blockquote cite {
 	font-style: normal;
 }
 address {
 	margin: 0 0 30px;
 }
+/* Override the double-monospace normalization stack with the theme's preferred mono font. */
 code,
 kbd,
 pre,
@@ -335,18 +367,21 @@ tt,
 var {
 	font-family: Inconsolata, monospace;
 }
+/* Styled preformatted block: light background with an accent left border. */
 pre {
 	background: #eee;
-	border-inline-start: 2px solid var(--color-accent);
+	border-inline-start: 2px solid var(--color-accent); /* Logical property: left border in LTR, right in RTL. */
 	max-width: 100%;
 	overflow: auto;
 	padding: 30px;
 }
+/* Dotted underline with a help cursor to signal that a tooltip/definition is available. */
 abbr,
 acronym {
 	border-bottom: 1px dotted var(--color-text);
 	cursor: help;
 }
+/* Highlighted / inserted text uses the accent color as a background chip. */
 mark:not(.has-inline-color),
 ins {
 	background: var(--color-accent);
@@ -358,11 +393,11 @@ big {
 	font-size: 125%;
 }
 
-
 /* ==========================================================================
    Typography
    ========================================================================== */
 
+/* Apply border-box sizing globally via inheritance. */
 html {
 	box-sizing: border-box;
 }
@@ -374,6 +409,7 @@ html {
 body {
 	background: #fff;
 }
+/* Thin horizontal rule using the border token; border is removed so height controls thickness. */
 hr {
 	background-color: var(--color-border);
 	border: 0;
@@ -385,12 +421,14 @@ ol {
 	margin: 0 0 30px 0;
 	padding: 0;
 }
+/* Square bullets placed inside the content flow. */
 ul {
 	list-style: square inside;
 }
 ol {
 	list-style: decimal inside;
 }
+/* Nested lists reduce bottom margin and indent to align with parent text. */
 li > ul,
 li > ol {
 	margin-bottom: 0;
@@ -405,16 +443,19 @@ dt {
 dd {
 	margin: 0 0 30px;
 }
+/* Responsive images: auto height preserves aspect ratio; max-width prevents overflow. */
 img {
 	height: auto;
 	max-width: 100%;
 }
+/* Full-width table with top border; bottom borders are added per-cell. */
 table {
 	border-top: 1px solid var(--color-border);
 	margin: 0 0 30px;
 	text-align: left;
 	width: 100%;
 }
+/* Table captions and headers use the UI sans-serif and uppercase treatment. */
 caption,
 th {
 	font-family: Lato, sans-serif;
@@ -429,10 +470,14 @@ td {
 	border-bottom: 1px solid var(--color-border);
 	padding: 5px;
 }
+/* Zebra-stripe effect: thead row has a light grey background. */
 thead {
 	background: #eee;
 }
 
+/* ─── Buttons and Form Controls ─────────────────────────────────────────── */
+
+/* Primary call-to-action button style: accent fill with uppercase label. */
 button,
 input[type="button"],
 input[type="reset"],
@@ -442,9 +487,10 @@ input[type="submit"] {
 	color: #fff;
 	font-family: Lato, sans-serif;
 	font-weight: bold;
-	padding: 5.5px 13px;
+	padding: 5.5px 13px; /* Fractional pixels maintain vertical rhythm at 1.875 line-height. */
 	text-transform: uppercase;
 }
+/* Invert the button on hover/active: white background, accent text. */
 button:active,
 input[type="button"]:active,
 input[type="reset"]:active,
@@ -456,12 +502,14 @@ input[type="submit"]:hover {
 	background: #fff;
 	color: var(--color-accent);
 }
+/* Suppress the default focus ring for pointer users; :focus-visible handles keyboard users. */
 button:focus:not(:focus-visible),
 input[type="button"]:focus:not(:focus-visible),
 input[type="reset"]:focus:not(:focus-visible),
 input[type="submit"]:focus:not(:focus-visible) {
 	outline: none;
 }
+/* Apply the same hover inversion on keyboard focus. */
 button:focus,
 input[type="button"]:focus,
 input[type="reset"]:focus,
@@ -469,6 +517,7 @@ input[type="submit"]:focus {
 	background: #fff;
 	color: var(--color-accent);
 }
+/* Text-style inputs: full-width, border-box, no border-radius for a sharp look. */
 input[type="text"],
 input[type="email"],
 input[type="url"],
@@ -479,24 +528,25 @@ textarea {
 	border: 1px solid var(--color-border);
 	border-radius: 0;
 	box-sizing: border-box;
-	padding: 6.5px;
+	padding: 6.5px; /* Fractional value aligns with the overall 30px spacing rhythm. */
 	width: 100%;
 }
+/* Subtle inset shadow on focused text inputs to indicate active state. */
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="url"]:focus,
 input[type="password"]:focus,
 input[type="search"]:focus,
 textarea:focus {
-	box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.075); /* Light inset shadow; low opacity avoids harsh contrast. */
 	outline: none;
 }
 
+/* Normalize placeholder color to muted token; opacity:1 overrides Firefox's default lower opacity. */
 ::placeholder {
 	color: var(--color-muted);
-	opacity: 1;
+	opacity: 1; /* Firefox reduces placeholder opacity by default; reset to 1 for consistent rendering. */
 }
-
 
 /* ==========================================================================
    Forms and Search
@@ -506,6 +556,7 @@ textarea:focus {
 	margin-bottom: 30px;
 	position: relative;
 }
+/* Inline search icon rendered as a CSS pseudo-element using an SVG data URI. */
 .search-form:before {
 	background-color: #fff;
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='%23d11415' d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
@@ -517,22 +568,25 @@ textarea:focus {
 	height: 28px;
 	line-height: 28px;
 	position: absolute;
-	right: 8.5px;
+	right: 8.5px; /* Fractional offset centers the icon inside the 30px submit button. */
 	top: 8.5px;
 	text-align: center;
 	width: 28px;
 }
+/* Light grey tint on the search icon background when the form has a hover class (JS-toggled). */
 .search-form.hover:before {
 	background: #eee;
 }
+/* Right padding reserves space so search text does not underlap the icon button. */
 .search-form .search-field {
-	padding-right: 45px;
+	padding-right: 45px; /* 30px button + 7.5px gap × 2 = space for the absolute-positioned submit. */
 }
+/* Invisible submit button overlaid on the icon; interaction is handled by the visible icon pseudo-element. */
 .search-form .search-submit {
 	background: transparent;
 	border: 1px solid var(--color-border);
 	border-radius: 50%;
-	color: transparent;
+	color: transparent; /* Text hidden; the overlaid :before icon provides the visual affordance. */
 	display: block;
 	height: 30px;
 	overflow: hidden;
@@ -541,8 +595,9 @@ textarea:focus {
 	right: 7.5px;
 	top: 7.5px;
 	width: 30px;
-	z-index: 2;
+	z-index: 2; /* Sit above the decorative :before icon so pointer events register on the button. */
 }
+/* Keep the submit button visually neutral on interaction (icon provides feedback). */
 .search-form .search-submit:active,
 .search-form .search-submit:focus,
 .search-form .search-submit:hover {
@@ -551,10 +606,10 @@ textarea:focus {
 	color: transparent;
 }
 
+/* Add vertical rhythm above the password-protected post submit button. */
 .post-password-form input[type="submit"] {
 	margin-top: 30px;
 }
-
 
 /* ==========================================================================
    Links
@@ -565,34 +620,44 @@ a {
 	font-weight: bold;
 	text-decoration: none;
 }
+/* Revert to inherited color on hover/active to let context determine the hover state. */
 a:active,
 a:hover {
 	color: inherit;
 }
+/* Visible focus ring for keyboard users using the border token color. */
 a:focus {
 	color: inherit;
 	outline: 2px solid var(--color-border);
 }
+/* Suppress focus ring for pointer users; :focus-visible handles keyboard navigation. */
 a:focus:not(:focus-visible) {
 	outline: none;
 }
+/* Visited links drop to normal weight to distinguish from unvisited bold links. */
 a:visited {
 	font-weight: normal;
 }
 
+/* ─── Menu Toggle ───────────────────────────────────────────────────────── */
+
+/* Hamburger menu button: absolutely positioned at the right edge, vertically centered. */
 .menu-toggle {
+	align-items: center;
 	background: #fff;
 	border: 1px solid var(--color-border);
 	border-radius: 50%;
 	color: var(--color-text);
+	display: flex;
 	height: 45px;
-	margin-top: -22.5px;
+	justify-content: center;
+	margin-top: -22.5px; /* Half the height: pulls the button up to visually center on top:50%. */
 	padding: 0;
 	position: absolute;
 	right: 0;
 	top: 50%;
 	width: 45px;
-	z-index: 3;
+	z-index: 3; /* Above site-title (z-index:4 not applicable here) and search toggle (z-index:2). */
 }
 .menu-toggle:active,
 .menu-toggle:focus,
@@ -601,6 +666,7 @@ a:visited {
 	border-color: var(--color-border);
 	color: var(--color-accent);
 }
+/* Hamburger icon via inline SVG data URI; sized smaller than the button for visual padding. */
 .menu-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23222222' d='M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z'/%3E%3C/svg%3E");
 	background-position: center;
@@ -608,9 +674,11 @@ a:visited {
 	background-size: 12px 12px;
 	content: "";
 	display: block;
-	height: 43px;
+	flex-shrink: 0;
+	height: 43px; /* 2px less than button height to inset the icon slightly for visual balance. */
 	width: 43px;
 }
+/* When the menu is open (.toggled), invert the button to a dark filled state. */
 .toggled .menu-toggle {
 	background: var(--color-text);
 	border-color: var(--color-text);
@@ -622,23 +690,27 @@ a:visited {
 	background: #444;
 	border-color: #444;
 }
+/* Switch to close (×) icon when the menu is open. */
 .toggled .menu-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
 }
 
+/* ─── Dropdown Toggle ───────────────────────────────────────────────────── */
+
+/* Small circular chevron button that opens/closes sub-menus in mobile nav. */
 .dropdown-toggle {
 	background: #fff;
 	border: 1px solid var(--color-border);
 	border-radius: 50%;
 	color: var(--color-accent);
 	height: 30px;
-	margin-top: -15px;
+	margin-top: -15px; /* Half height to vertically center against top:50%. */
 	padding: 0;
 	position: absolute;
 	right: 0;
 	top: 50%;
 	width: 30px;
-	z-index: 1;
+	z-index: 1; /* Below the menu-toggle (z-index:3) but above static content. */
 }
 .dropdown-toggle:active,
 .dropdown-toggle:focus,
@@ -647,6 +719,7 @@ a:visited {
 	border-color: var(--color-border);
 	color: var(--color-accent);
 }
+/* Down-chevron icon for collapsed state. */
 .dropdown-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23d11415' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
 	background-position: center;
@@ -657,24 +730,27 @@ a:visited {
 	height: 28px;
 	width: 28px;
 }
+/* Up-chevron icon when the sub-menu is expanded. */
 .dropdown-toggle.toggled:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23d11415' d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
 }
-
 
 /* ==========================================================================
    Navigation
    ========================================================================== */
 
+/* Main navigation is hidden by default on mobile; toggled open by .menu-toggle. */
 .main-navigation {
 	font-size: 16px;
 	line-height: 1.875;
 	margin: 0;
-	z-index: 5;
+	z-index: 5; /* Above header content but below search overlay (z-index:10). */
 }
+/* Hide the nav list wrapper until the menu is toggled open. */
 .main-navigation > div {
 	display: none;
 }
+/* Floating dropdown panel that appears below the menu toggle on mobile. */
 .main-navigation.toggled > div {
 	background: var(--color-text);
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.075);
@@ -682,27 +758,30 @@ a:visited {
 	position: absolute;
 	top: 100%;
 	margin-top: 8px;
-	padding: 7.5px;
+	padding: 3px;
 	width: 100%;
 	left: 0;
-	z-index: 9998;
+	z-index: 9998; /* Below infinite-footer (z-index:99999) but above most page content. */
 }
+/* CSS arrow/caret pointing back up to the toggle button. */
 .main-navigation.toggled > div:before {
 	border-bottom: 6px solid var(--color-text);
 	border-left: 6px solid transparent;
 	border-right: 6px solid transparent;
-	top: -6px;
+	top: -6px; /* Positions the triangle flush with the top edge of the dropdown panel. */
 	content: "";
-	display: block;
+	display: none;
 	right: 16.5px;
 	position: absolute;
 }
+/* Inner list receives a white background with a border to frame the menu items. */
 .main-navigation > div > ul {
 	background: #fff;
 	border: 1px solid var(--color-border);
 	padding: 30px;
 	position: relative;
 }
+/* Bottom border on the last top-level item to close the list visually. */
 .main-navigation > div > ul > li:last-child {
 	border-bottom: 1px solid #eee;
 }
@@ -712,22 +791,26 @@ a:visited {
 	margin: 0;
 	padding-left: 0;
 }
+/* Each list item has a top border acting as a divider. */
 .main-navigation li {
 	border-top: 1px solid #eee;
 	padding-bottom: 7.5px;
 	padding-top: 7.5px;
 	position: relative;
 }
+/* Sub-menus are hidden until their parent is toggled. */
 .main-navigation ul ul {
 	display: none;
 }
+/* Open sub-menu: remove double-border, indent, and adjust margins. */
 .main-navigation ul.toggled {
 	border-bottom: 0;
 	display: block;
-	margin-bottom: -7.5px;
+	margin-bottom: -7.5px; /* Negative margin cancels the parent li's bottom padding so sub-items align flush. */
 	margin-top: 7.5px;
 	padding-left: 30px;
 }
+/* Nav links are full-width blocks; text-decoration and default link color are overridden. */
 .main-navigation a {
 	color: var(--color-text);
 	display: block;
@@ -738,18 +821,22 @@ a:visited {
 .main-navigation a:hover {
 	color: var(--color-accent);
 }
+/* Items with children need right padding to avoid text overlapping the dropdown toggle. */
 .main-navigation .page_item_has_children > a,
 .main-navigation .menu-item-has-children > a {
-	padding-right: 45px;
+	padding-right: 45px; /* Reserves space for the 30px .dropdown-toggle plus 15px clearance. */
 	position: relative;
 }
+/* Highlight the currently active page/ancestor in the nav. */
 .main-navigation .current_page_item > a,
 .main-navigation .current-menu-item > a,
 .main-navigation .current_page_ancestor > a {
 	color: var(--color-accent);
 }
 
+/* ─── Secondary Navigation ───────────────────────────────────────────────── */
 
+/* Compact horizontal navigation shown inside the dark site-top bar. */
 .secondary-navigation {
 	font-size: 13px;
 	line-height: 1.845;
@@ -761,6 +848,7 @@ a:visited {
 	margin: 0;
 	padding: 3px 0;
 }
+/* Float list items left to form a horizontal inline list. */
 .secondary-navigation li {
 	display: block;
 	float: left;
@@ -773,23 +861,28 @@ a:visited {
 .secondary-navigation li:last-child {
 	padding-right: 0;
 }
+/* Vertical pipe separator between secondary nav items. */
 .secondary-navigation li + li {
-	border-left: 1px solid #444;
+	border-left: 1px solid #444; /* Dark separator to contrast with the dark site-top background. */
 }
 .secondary-navigation a {
 	display: block;
 	position: relative;
-	color: #ccc;
+	color: #ccc; /* Muted on dark background; brightens on hover. */
 }
 .secondary-navigation a:active,
 .secondary-navigation a:focus,
 .secondary-navigation a:hover {
 	color: #fff;
 }
+/* Darker outline color for focus ring on the dark background context. */
 .secondary-navigation a:focus {
 	outline-color: #555;
 }
 
+/* ─── Footer Navigation ──────────────────────────────────────────────────── */
+
+/* Horizontal footer nav bar with top border and centered links. */
 .footer-navigation {
 	border-top: 1px solid var(--color-border);
 	display: block;
@@ -823,9 +916,12 @@ a:visited {
 	color: var(--color-accent);
 }
 
+/* ─── Bottom Navigation ──────────────────────────────────────────────────── */
+
+/* Dark mobile-only bottom navigation bar (hidden at 960px+). */
 .bottom-navigation {
 	background: var(--color-text);
-	border-bottom: 1px solid #444;
+	border-bottom: 1px solid #444; /* Subtle dark separator at the very bottom of the bar. */
 	display: block;
 	font-size: 13px;
 	line-height: 1.845;
@@ -844,24 +940,27 @@ a:visited {
 	display: block;
 	padding: 3px 0;
 	position: relative;
-	color: #ccc;
+	color: #ccc; /* Muted grey on dark background. */
 }
 .bottom-navigation a:active,
 .bottom-navigation a:focus,
 .bottom-navigation a:hover {
 	color: #fff;
 }
+/* Darker outline for keyboard focus ring on dark background. */
 .bottom-navigation a:focus {
 	outline-color: #555;
 }
 
+/* The .comment-navigation selector below intentionally begins a multi-selector
+   rule that continues past the Post Navigation section divider comment.
+   This is original code structure; the comment is placed here for clarity. */
 .comment-navigation,
-
 /* ==========================================================================
    Post Navigation
    ========================================================================== */
 
-.post-navigation,
+	.post-navigation,
 .posts-navigation {
 	clear: both;
 	font-family: Lato, sans-serif;
@@ -869,18 +968,22 @@ a:visited {
 	display: flex;
 	flex-wrap: wrap;
 }
+/* Posts navigation has a top border to separate it from the post list above. */
 .posts-navigation {
 	border-top: 1px solid #eee;
 	padding: 30px 0 0;
 }
+/* Hide the text "Older posts" / "Newer posts" labels in comment navigation. */
 .comment-navigation .meta-nav {
 	display: none;
 }
+/* Inline reply form that follows comment navigation gets a top border separator. */
 .comment-navigation + .comment-respond {
 	border-top: 1px solid var(--color-border);
 	padding-top: 30px;
 	position: relative;
 }
+/* Comment and posts navigation links styled as bordered buttons. */
 .comment-navigation a,
 .posts-navigation a {
 	background: #fff;
@@ -892,6 +995,7 @@ a:visited {
 	padding: 5.5px 13px;
 	text-transform: uppercase;
 }
+/* Single-post prev/next links are full-width blocks with generous padding. */
 .post-navigation a {
 	border: 1px solid #eee;
 	color: var(--color-text);
@@ -903,9 +1007,11 @@ a:visited {
 .post-navigation a:hover {
 	background-color: #eee;
 }
+/* Remove the double border between stacked nav-previous and nav-next. */
 .post-navigation .nav-previous + .nav-next a {
 	border-top: 0;
 }
+/* Nav prev/next use the post's featured image as a background. */
 .post-navigation .nav-next,
 .post-navigation .nav-previous {
 	background-position: 50% 50%;
@@ -913,6 +1019,7 @@ a:visited {
 	background-size: cover;
 	position: relative;
 }
+/* "Previous post" / "Next post" label above the post title. */
 .post-navigation .meta-nav {
 	color: var(--color-muted);
 	display: block;
@@ -920,6 +1027,7 @@ a:visited {
 	line-height: 1.54;
 	text-transform: uppercase;
 }
+/* Post title in navigation uses the display serif at 25px. */
 .post-navigation .post-title {
 	font-family: "Playfair Display", serif;
 	font-size: 25px;
@@ -931,6 +1039,7 @@ a:visited {
 .post-navigation a:hover .post-title {
 	color: var(--color-accent);
 }
+/* Invert comment/posts nav buttons on interaction. */
 .comment-navigation a:active,
 .comment-navigation a:focus,
 .comment-navigation a:hover,
@@ -941,9 +1050,10 @@ a:visited {
 	border-color: var(--color-accent);
 	color: #fff;
 }
+/* Each nav direction takes exactly half the available width. */
 .comment-navigation .nav-previous,
 .posts-navigation .nav-previous {
-	flex: 0 0 50%;
+	flex: 0 0 50%; /* Fixed 50% flex basis; does not grow or shrink. */
 }
 .comment-navigation .nav-next,
 .posts-navigation .nav-next {
@@ -951,19 +1061,25 @@ a:visited {
 	text-align: end;
 }
 
+/* ─── Accessibility Utilities ───────────────────────────────────────────── */
+
+/* Visually hidden but accessible to screen readers; positioned out of view. */
 .screen-reader-text {
-	clip-path: inset(50%);
+	clip-path: inset(
+		50%
+	); /* Clips the element to a zero-area rectangle, hiding it visually. */
 	white-space: nowrap;
-	position: absolute !important;
+	position: absolute !important; /* Must override any inherited position to remove from normal flow. */
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
 }
+/* "Skip to content" link becomes visible when focused by keyboard. */
 .screen-reader-text:focus {
 	background-color: #fff;
 	border-radius: 0;
 	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.7);
-	clip-path: none;
+	clip-path: none; /* Reverts the clip so the element becomes visible. */
 	white-space: normal;
 	color: #21759b;
 	display: block;
@@ -977,9 +1093,12 @@ a:visited {
 	text-decoration: none;
 	top: 5px;
 	width: auto;
-	z-index: 100000;
+	z-index: 100000; /* Must be the topmost element on the page when focused. */
 }
 
+/* ─── Alignment Helpers ──────────────────────────────────────────────────── */
+
+/* WordPress core image alignment classes. */
 .alignleft {
 	display: inline;
 	float: left;
@@ -997,6 +1116,8 @@ a:visited {
 	margin-inline-end: auto;
 }
 
+/* The .author-info:before / .clear:before selectors below start a large
+   multi-selector clearfix group that continues past the Layout section divider. */
 .author-info:before,
 .author-info:after,
 .clear:before,
@@ -1005,12 +1126,13 @@ a:visited {
 .comment-content:after,
 .comment-meta:before,
 .comment-meta:after,
-
 /* ==========================================================================
    Layout
    ========================================================================== */
 
-.entry-content:before,
+	/* Clearfix via :before/:after — display:table creates an anonymous table-cell
+   that acts as a top/bottom margin guard for floated children. */
+	.entry-content:before,
 .entry-content:after,
 .entry-meta:before,
 .entry-meta:after,
@@ -1039,8 +1161,9 @@ a:visited {
 .secondary-navigation > div:before,
 .secondary-navigation > div:after {
 	content: "";
-	display: table;
+	display: table; /* Creates a block formatting context that contains floated descendants. */
 }
+/* The :after pseudo-element clears floats; :before just establishes the context. */
 .author-info:after,
 .clear:after,
 .comment-content:after,
@@ -1062,14 +1185,27 @@ a:visited {
 	clear: both;
 }
 
-/* Compatibility shim: .clearfix has no effect inside flex containers.
-   Retained for one version cycle for child theme markup back-compat. */
+/* Retained for child theme back-compat; no effect inside flex containers. */
 .clearfix::after {
 	content: "";
 	display: block;
 	clear: both;
 }
 
+/* ─── Inner-Width Containers ─────────────────────────────────────────────── */
+
+/* Default fluid width for all major inner-container elements on small screens. */
+.bottom-navigation > div,
+.entry-header-inner,
+.featured-content-inner,
+.footer-navigation > div,
+.footer-widget-inner,
+.search-navigation-inner,
+.site-branding,
+.site-content-inner,
+.site-top-inner {
+	width: 90%; /* Percentage width provides fluid layout on small viewports. */
+}
 
 /* ==========================================================================
    Widgets
@@ -1092,17 +1228,21 @@ a:visited {
 	margin-bottom: 30px;
 	max-width: 100%;
 }
+/* Thin horizontal line drawn above the widget area using an absolutely-positioned :before. */
 .widget-area:before {
 	background: var(--color-border);
 	content: "";
 	display: block;
 	height: 1px;
 	left: 0;
-	margin-top: -30px;
+	margin-top: -30px; /* Negative margin pulls the line up by one spacing unit to overlap the gap. */
 	position: absolute;
 	width: 100%;
 }
 
+/* ─── Sidebar Toggle ─────────────────────────────────────────────────────── */
+
+/* Circular button that shows/hides the widget sidebar on mobile. */
 .sidebar-toggle {
 	background: #fff;
 	border: 1px solid var(--color-border);
@@ -1110,7 +1250,7 @@ a:visited {
 	color: var(--color-text);
 	height: 45px;
 	margin-bottom: 30px;
-	margin-left: -22.5px;
+	margin-left: -22.5px; /* Half width: offsets from left:50% to visually center the button. */
 	padding: 0;
 	position: relative;
 	left: 50%;
@@ -1124,6 +1264,7 @@ a:visited {
 	border-color: var(--color-border);
 	color: var(--color-accent);
 }
+/* Dark filled state when the sidebar is open. */
 .sidebar-toggle.toggled {
 	background: var(--color-text);
 	border-color: var(--color-text);
@@ -1135,6 +1276,7 @@ a:visited {
 	background: #444;
 	border-color: #444;
 }
+/* Three-dot (ellipsis) icon for closed state. */
 .sidebar-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle fill='%23222222' cx='5' cy='12' r='2'/%3E%3Ccircle fill='%23222222' cx='12' cy='12' r='2'/%3E%3Ccircle fill='%23222222' cx='19' cy='12' r='2'/%3E%3C/svg%3E");
 	background-position: center;
@@ -1145,15 +1287,19 @@ a:visited {
 	height: 43px;
 	width: 43px;
 }
+/* Switch to close (×) icon when the sidebar is open. */
 .toggled.sidebar-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
 }
+/* Widget area is hidden on mobile and shown by JS toggling the class. */
 .widget-area {
 	display: none;
 }
 .toggled.widget-area {
 	display: block;
 }
+
+/* ─── Footer Widgets ──────────────────────────────────────────────────────── */
 
 .footer-widget {
 	border-top: 1px solid var(--color-border);
@@ -1163,27 +1309,35 @@ a:visited {
 	border-bottom: 1px solid var(--color-border);
 	margin-bottom: 30px;
 }
+/* Last widget in the footer row removes its bottom border and margin. */
 .footer-widget-inner .widget:last-of-type {
 	border-bottom: 0;
 	margin-bottom: 0;
 }
-.footer-widget-inner .widget:nth-of-type(4n+1) {
+/* Reset left margin on every 1st widget in a group of 4 (multi-column grid). */
+.footer-widget-inner .widget:nth-of-type(4n + 1) {
 	clear: left;
 	margin-left: 0;
 }
-.footer-widget-inner .widget:nth-of-type(4n+4) {
+/* Reset right margin on every 4th widget in a group of 4 (multi-column grid). */
+.footer-widget-inner .widget:nth-of-type(4n + 4) {
 	clear: right;
 	margin-right: 0;
 }
 
+/* ─── Specific Widget Styles ─────────────────────────────────────────────── */
+
+/* Center the calendar table cells. */
 .widget_calendar table {
 	text-align: center;
 }
+/* Calendar footer (prev/next month links) uses the UI sans-serif. */
 .widget_calendar tfoot {
 	font-family: Lato, sans-serif;
 	text-transform: uppercase;
 }
 
+/* Parent items in a nav menu widget need right padding for the dropdown toggle button. */
 .widget_nav_menu .page_item_has_children > a,
 .widget_nav_menu .menu-item-has-children > a {
 	display: block;
@@ -1197,6 +1351,7 @@ a:visited {
 	display: block;
 }
 
+/* Shared list styles for multiple list-based widgets. */
 .widget_archive ul,
 .widget_categories ul,
 .widget_links ul,
@@ -1210,6 +1365,7 @@ a:visited {
 	list-style: none;
 	margin-left: 0;
 }
+/* Each widget list item has a top border divider and uniform padding. */
 .widget_archive li,
 .widget_categories li,
 .widget_links li,
@@ -1223,15 +1379,17 @@ a:visited {
 	padding-bottom: 7.5px;
 	padding-top: 7.5px;
 }
+/* Nested sub-lists are indented and have their double borders removed. */
 .widget_categories .children,
 .widget_nav_menu .sub-menu,
 .widget_pages .children {
 	border-bottom: 0;
-	margin-bottom: -7.5px;
+	margin-bottom: -7.5px; /* Negative margin collapses the gap between parent and child lists. */
 	margin-top: 7.5px;
 	padding-left: 30px;
 }
 
+/* Post date in the Recent Posts widget uses the UI sans-serif meta style. */
 .widget_recent_entries .post-date {
 	color: var(--color-muted);
 	display: block;
@@ -1243,6 +1401,7 @@ a:visited {
 	text-transform: uppercase;
 }
 
+/* RSS widget citation and date share the same meta typography as post dates. */
 .widget_rss cite,
 .widget_rss .rss-date {
 	color: var(--color-muted);
@@ -1259,39 +1418,20 @@ a:visited {
 .widget_tag_cloud > div {
 	padding-bottom: 30px;
 }
+/* Override WordPress's inline font-size scaling on tag cloud links so they match the widget. */
 .widget_tag_cloud a {
-	font-size: inherit !important;
+	font-size: inherit !important; /* WordPress injects a font-size attribute; !important overrides it. Required to enforce consistent sizing. */
 	line-height: 1.5;
 	text-decoration: none;
 }
+/* Prepend a '#' character before each tag using a Unicode hash sign. */
 .widget_tag_cloud a:before {
 	color: var(--color-text);
-	content: "\0023";
+	content: "\0023"; /* Unicode code point for '#'. */
 	margin-right: 0.125em;
 }
 
-.bottom-navigation > div,
-.entry-header-inner,
-.featured-content-inner,
-.footer-navigation > div,
-.footer-widget-inner,
-.search-navigation-inner,
-.site-branding,
-.site-content-inner,
-.site-top-inner {
-	width: 90%;
-}
-
-
-/* ==========================================================================
-   Author Info
-   ========================================================================== */
-
-.author-info {
-	border: 1px solid var(--color-border);
-	margin: 0 0 30px;
-	padding: 30px 30px 0;
-}
+/* Center all inner container elements horizontally via auto side margins. */
 .bottom-navigation > div,
 .entry-header-inner,
 .featured-content-inner,
@@ -1304,11 +1444,22 @@ a:visited {
 .site-top-inner {
 	margin: 0 auto;
 }
+/* Main content and sidebar share the same top padding unit. */
 .site-main,
 .widget-area {
 	padding-top: 30px;
 }
 
+/* ==========================================================================
+   Author Info
+   ========================================================================== */
+
+/* Author bio box with a uniform border. */
+.author-info {
+	border: 1px solid var(--color-border);
+	margin: 0 0 30px;
+	padding: 30px 30px 0;
+}
 
 /* ==========================================================================
    Site Header
@@ -1321,15 +1472,17 @@ a:visited {
 	width: 100%;
 }
 
+/* Dark top bar containing secondary navigation; hidden on mobile by default. */
 .site-top {
 	background: var(--color-text);
 	color: #ccc;
 	display: none;
 	margin-bottom: 30px;
-	margin-top: -30px;
+	margin-top: -30px; /* Pulls the bar flush with the top of the header. */
 	padding: 7.5px 0;
 }
 
+/* Search navigation bar is absolutely positioned at the top of the header. */
 .search-navigation {
 	position: absolute;
 	top: 30px;
@@ -1339,19 +1492,24 @@ a:visited {
 .search-navigation-inner {
 	position: relative;
 }
+/* Minimum width ensures the search icon button is always fully visible. */
 .search-header {
 	min-width: 30px;
 }
+/* Circular search toggle button; higher z-index keeps it above the form. */
 .search-toggle {
+	align-items: center;
 	background: transparent;
 	border: 1px solid var(--color-border);
 	border-radius: 50%;
 	color: var(--color-text);
+	display: flex;
 	height: 45px;
+	justify-content: center;
 	padding: 0;
 	position: relative;
 	width: 45px;
-	z-index: 2;
+	z-index: 2; /* Above the form overlay (z-index:10 on the open panel) but below the menu toggle. */
 }
 .search-toggle:active,
 .search-toggle:focus,
@@ -1360,6 +1518,7 @@ a:visited {
 	border-color: var(--color-border);
 	color: var(--color-accent);
 }
+/* Magnifying-glass icon for closed state. */
 .search-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23222222' d='M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
 	background-position: center;
@@ -1367,9 +1526,11 @@ a:visited {
 	background-size: 16px 16px;
 	content: "";
 	display: block;
+	flex-shrink: 0;
 	height: 43px;
 	width: 43px;
 }
+/* Dark filled state when the search form is open. */
 .toggled .search-toggle {
 	background: var(--color-text);
 	border-color: var(--color-text);
@@ -1381,45 +1542,43 @@ a:visited {
 	background: #444;
 	border-color: #444;
 }
+/* Switch to close (×) icon when search is open. */
 .toggled .search-toggle:before {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
 }
+/* The search form panel is hidden by default inside the search header. */
 .search-header .search-form {
 	display: none;
 	position: absolute;
 	right: 0;
-	z-index: 10;
+	z-index: 10; /* Above the search toggle (z-index:2) and most header elements. */
 }
+/* Show the search form panel when the header is toggled open. */
 .search-header.toggled .search-form {
 	display: block;
 }
+/* Dark dropdown panel wrapping the expanded search form. */
 .search-header .search-form {
 	background: var(--color-text);
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.075);
 	margin-top: 8px;
-	padding: 7.5px;
+	padding: 3px;
 	width: 100%;
 }
-.search-header.toggled .search-toggle:after {
-	border-bottom: 6px solid var(--color-text);
-	border-left: 6px solid transparent;
-	border-right: 6px solid transparent;
-	bottom: -9px;
-	content: "";
-	display: block;
-	left: 50%;
-	margin-left: -6px;
-	position: absolute;
-}
+
+/* Adjust the search icon and submit button positions inside the dark header search panel. */
 .search-header .search-form:before {
-	right: 16px;
-	top: 16px;
+	right: 11.5px;
+	top: 11.5px;
 }
 .search-header .search-form .search-submit {
-	right: 15px;
-	top: 15px;
+	right: 10.5px;
+	top: 10.5px;
 }
 
+/* ─── Site Branding ───────────────────────────────────────────────────────── */
+
+/* Centered column layout for site title, description, and logo. */
 .site-branding {
 	align-items: center;
 	display: flex;
@@ -1430,14 +1589,15 @@ a:visited {
 	text-align: center;
 	word-break: break-word;
 }
+/* Site title sits above the navigation; z-index keeps it above overlapping elements. */
 .site-title {
 	color: var(--color-accent);
 	font-size: 25px;
 	line-height: 1.2;
-	margin: 0 60px;
+	margin: 0 60px; /* Horizontal margin reserves space for the search and menu toggle buttons. */
 	padding: 0;
 	position: relative;
-	z-index: 4;
+	z-index: 4; /* Above the menu toggle (z-index:3) to ensure the title is not obscured. */
 }
 .site-title a {
 	color: inherit;
@@ -1447,6 +1607,7 @@ a:visited {
 .site-title a:hover {
 	color: var(--color-text);
 }
+/* Site description is hidden on mobile and revealed at larger breakpoints. */
 .site-description {
 	color: var(--color-muted);
 	display: none;
@@ -1460,9 +1621,11 @@ a:visited {
 	z-index: 4;
 }
 
+/* ─── Header Image ────────────────────────────────────────────────────────── */
 
+/* Header image sits below the branding; negative bottom margin overlaps the border. */
 .header-image {
-	margin: 30px 0 -31px;
+	margin: 30px 0 -31px; /* -31px pulls the content below slightly into the border for a flush look. */
 }
 .header-image a,
 .header-image img {
@@ -1475,7 +1638,6 @@ a:visited {
 	opacity: 0.7;
 }
 
-
 /* ==========================================================================
    Featured Content
    ========================================================================== */
@@ -1484,8 +1646,9 @@ a:visited {
 	border-bottom: 1px solid var(--color-border);
 	padding: 30px 0 0;
 }
+/* Featured post card: dark fallback background with cover image and white text. */
 .featured-content .hentry {
-	background-color: #1f1f1f;
+	background-color: #1f1f1f; /* Dark background shown while image loads or when no image exists. */
 	background-position: 50% 50%;
 	background-size: cover;
 	color: #fff;
@@ -1493,6 +1656,7 @@ a:visited {
 	overflow: hidden;
 	position: relative;
 }
+/* Blog featured posts are stacked full-width with a fixed height on mobile. */
 .blog .featured-content .hentry {
 	border-bottom: 0;
 	border-top: 0;
@@ -1503,42 +1667,53 @@ a:visited {
 .blog .featured-content .hentry:first-child {
 	margin-top: 0;
 }
+/* Posts with a thumbnail get a text-shadow to keep text legible over the photo. */
 .featured-content .has-post-thumbnail {
-	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7); /* Subtle spread shadow improves legibility over bright images. */
 }
 .featured-content a {
 	color: #fff;
 }
+/* Semi-transparent focus ring on white backgrounds would be invisible; use rgba instead. */
 .featured-content a:focus {
 	outline-color: rgba(255, 255, 255, 0.7);
 }
+/* Thumbnail fills the card absolutely, acting as the background image layer. */
 .featured-content .post-thumbnail {
 	background-size: cover;
+	bottom: 0;
+	left: 0;
 	margin: 0;
-	opacity: 0.7;
+	opacity: 0.7; /* Partial opacity lets the dark card background show through. */
 	position: absolute;
+	right: 0;
 	top: 0;
 }
 .featured-content .sticky .post-thumbnail {
 	position: absolute;
 }
+/* Cards without thumbnails have no background image; hide the placeholder. */
 .featured-content .hentry:not(.has-post-thumbnail) .post-thumbnail {
 	opacity: 0;
 }
+/* Image element is transparent; the image is applied via background-image on the container. */
 .featured-content .post-thumbnail img {
 	opacity: 0;
 	visibility: hidden;
 }
+/* Hover: darken the overlay for a subtle highlight effect on image posts. */
 .featured-content .hentry:hover .post-thumbnail,
 .featured-content .hentry .post-thumbnail:focus {
 	background-color: #000;
-	opacity: 0.3;
+	opacity: 0.3; /* Increased darkness on hover to provide a clear interactive affordance. */
 }
+/* No-thumbnail hover: fill with accent color instead of darkening. */
 .featured-content .hentry:not(.has-post-thumbnail):hover .post-thumbnail,
 .featured-content .hentry:not(.has-post-thumbnail) .post-thumbnail:focus {
 	background: var(--color-accent);
 	opacity: 1;
 }
+/* Entry header is pinned to the bottom of the card. */
 .featured-content .entry-header {
 	bottom: 0;
 	position: absolute;
@@ -1548,28 +1723,39 @@ a:visited {
 	line-height: 1.2;
 	padding: 0 30px 30px;
 }
-.featured-content .entry-meta {
-	padding-left: 30px;
-	padding-right: 30px;
-	width: 100%;
+/* Featured-content cards have no .entry-meta wrapper; .cat-links sits directly
+   inside .entry-header and must carry the UI type styles explicitly. */
+.featured-content .entry-header .cat-links {
+	display: block;
+	font-family: Lato, sans-serif;
+	font-size: 13px;
+	line-height: 1.54;
+	padding: 5px 30px;
+	text-transform: uppercase;
 }
+
+/* ─── Sticky Posts ─────────────────────────────────────────────────────────── */
 
 .sticky {
 	display: block;
 }
+/* Sticky post thumbnail uses position:relative so it stays in the document flow. */
 .sticky .post-thumbnail {
 	position: relative;
 }
+/* Hide the posted-on date on sticky posts in list views. */
 .archive .sticky .posted-on,
 .blog .sticky .posted-on,
 .search .sticky .posted-on {
 	display: none;
 }
+/* Hide the separator pseudo-element before the byline on sticky posts. */
 .archive .sticky .byline:before,
 .blog .sticky .byline:before,
 .search .sticky .byline:before {
 	display: none;
 }
+/* Accent-colored push-pin badge in the top-right corner of sticky post cards. */
 .sticky-post {
 	background: var(--color-accent);
 	color: #fff;
@@ -1581,12 +1767,12 @@ a:visited {
 	top: 0;
 	width: 30px;
 }
+/* SVG pin icon inside the sticky badge. */
 .sticky-post svg {
 	height: 16px;
 	vertical-align: middle;
 	width: 16px;
 }
-
 
 /* ==========================================================================
    Posts and Entries
@@ -1595,39 +1781,73 @@ a:visited {
 .hentry {
 	margin: 0 0 30px;
 }
+/* Archive/blog/search list items have a top border acting as a divider. */
 .archive .hentry,
 .blog .hentry,
 .search .hentry {
 	border-top: 1px solid #eee;
 	padding-top: 30px;
 }
+/* First item removes its top border and compensates for the extra top padding with negative margin. */
 .archive .hentry:first-of-type,
 .blog .hentry:first-of-type,
 .search .hentry:first-of-type {
 	border-top: 0;
-	margin-top: -30px;
+	margin-top: -30px; /* Cancels the padding-top added by the :first-of-type rule. */
 }
+/* Byline and updated-date-not-matching-published are hidden by default. */
 .byline,
 .updated:not(.published) {
 	display: none;
 }
+/* Show the byline on multi-author blogs or specific post classes added by Jetpack. */
 .group-blog .byline,
 .wpnbha .byline,
 .wpnbpc .byline {
 	display: inline;
 }
+/* Circular avatar floated left before the author name. */
 .byline img {
 	border-radius: 50%;
 	float: left;
 	margin-right: 5px;
 }
+
+/* Entry meta separators — legacy selector for templates where .entry-meta
+   follows .entry-summary in the DOM. */
 .entry-summary + .entry-meta > span:not(:first-of-type):before {
-	content: "\002F";
-	font-weight: bold;
+	content: "\007C"; /* Unicode pipe character used as a visual separator between meta items. */
+	font-weight: normal;
 	margin: 0 5px;
 }
+/* On single-author sites hide the separator before the second meta span (byline absent). */
 body:not(.group-blog) .entry-summary + .entry-meta > span:nth-of-type(2):before,
-body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3):before {
+/* On sticky posts .posted-on is hidden, so suppress the separator before the third span. */
+	body:not(.group-blog) .sticky
+	.entry-summary
+	+ .entry-meta
+	> span:nth-of-type(3):before {
+	display: none;
+}
+
+/* Entry meta separators — current selector for templates where .entry-meta
+   precedes .entry-summary in the DOM, scoped to .content-area. */
+.content-area .entry-meta > span:not(:first-of-type):before {
+	content: "\007C"; /* Unicode pipe character used as a visual separator between meta items. */
+	font-weight: normal;
+	margin: 0 5px;
+}
+/* .byline is display:none on single-author sites, making .posted-on the
+   first visible span; suppress the separator before it. */
+body:not(.group-blog) .content-area .entry-meta > span:nth-of-type(2):before {
+	display: none;
+}
+/* On sticky posts .posted-on is also hidden, making .comments-link the
+   second visible span; suppress its separator as well. */
+body:not(.group-blog) .content-area
+	.sticky
+	.entry-meta
+	> span:nth-of-type(3):before {
 	display: none;
 }
 .entry-summary {
@@ -1641,6 +1861,13 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 .entry-summary p {
 	margin-bottom: 0;
 }
+/* Restore bottom spacing on no-thumbnail cards where margin-bottom is suppressed. */
+.archive .hentry:not(.has-post-thumbnail) .entry-summary,
+.blog .hentry:not(.has-post-thumbnail) .entry-summary,
+.search .hentry:not(.has-post-thumbnail) .entry-summary {
+	padding-bottom: 30px;
+}
+/* Hide images embedded directly inside entry summaries (they are displayed via .post-thumbnail). */
 .entry-summary img {
 	display: none;
 }
@@ -1648,10 +1875,12 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 .page-content {
 	margin: 0;
 }
+/* Prevent the "Continue reading" link from wrapping mid-word. */
 .more-link {
 	white-space: nowrap;
 }
 
+/* Archive/search page header with a bottom border and title sizing. */
 .page-header {
 	border-bottom: 1px solid #eee;
 	margin-bottom: 30px;
@@ -1662,6 +1891,7 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	line-height: 1.54;
 }
 
+/* List view entry title: smaller than single-post title. */
 .archive .hentry .entry-title,
 .blog .hentry .entry-title,
 .search .hentry .entry-title {
@@ -1669,59 +1899,79 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	line-height: 1.2;
 	margin: 0;
 }
+/* Page type in list view keeps the same compact title sizing. */
 .archive .hentry.type-page .entry-title,
 .blog .hentry.type-page .entry-title,
 .search .hentry.type-page .entry-title {
 	margin: 0;
 }
+/* Single/page view entry titles are full-sized. */
 .page .entry-title,
 .single .entry-title {
 	font-size: 39px;
 	line-height: 1.54;
 	margin: 0;
 }
-.page .hentry:not(.has-post-thumbnail) .entry-header,
+/* Standard single posts without a thumbnail get a bottom margin on the header. */
 .single .hentry:not(.has-post-thumbnail) .entry-header,
 .single .hentry.format-quote .entry-header,
 .single .hentry.format-video .entry-header {
 	margin-bottom: 30px;
 }
+/* Aside-format posts have tighter spacing between the (empty) header and content. */
 .single .hentry.format-aside .entry-header {
 	margin-bottom: 0;
 }
-.page .hentry.has-post-thumbnail .entry-header,
+/* Hide the standard entry header for pages and thumbnail posts (header is inside .entry-hero). */
+.page .hentry .entry-header,
 .single .hentry.has-post-thumbnail .entry-header {
 	display: none;
 }
 
+/* ─── Entry Hero ──────────────────────────────────────────────────────────── */
+
+/* Hero container wraps the thumbnail and the overlay header. */
 .entry-hero {
 	position: relative;
 }
+/* Linear gradient overlay at the bottom of the hero image to improve text legibility. */
 .entry-header-wrapper {
-	background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+	background-image: linear-gradient(
+		to bottom,
+		transparent,
+		rgba(0, 0, 0, 0.7)
+	); /* Gradient fades from transparent to dark to create a legible text area. */
 	bottom: 0;
 	left: 0;
 	padding: 30px 15px 20px;
 	position: absolute;
 	width: 100%;
 }
+/* Black background behind the hero image prevents flash of blank during image load. */
 .entry-hero .post-thumbnail {
 	background: #000;
-	height: auto; 
-}
-.entry-hero .post-thumbnail img {
-	aspect-ratio: 1920 / 768; 
 	height: auto;
-	object-fit: cover; 
+}
+/* Hero image is cropped to a 1920×768 aspect ratio with cover-fit. */
+.entry-hero .post-thumbnail img {
+	aspect-ratio: 1920 / 768; /* Fixed widescreen aspect ratio for all hero images. */
+	height: auto;
+	object-fit: cover;
 	width: 100%;
 }
+/* Hero title/page title: white text with shadow, fluid size using clamp(). */
 .entry-hero .entry-title,
 .entry-hero .page-title {
 	color: #fff;
-	font-size: clamp(1.1rem, 4vw, 2.44rem);
+	font-size: clamp(
+		1.1rem,
+		4vw,
+		2.44rem
+	); /* Fluid type: min 1.1rem, scales with viewport, max ~39px. */
 	line-height: 1.3;
 	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
 }
+/* Meta text and links on the hero are white with a drop shadow for legibility. */
 .entry-hero .entry-meta,
 .entry-hero .entry-meta a {
 	color: #fff;
@@ -1731,13 +1981,17 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 .entry-hero .entry-meta a:focus,
 .entry-hero .entry-meta a:hover {
 	color: #fff;
-	opacity: 0.7;
+	opacity: 0.7; /* Opacity-based hover avoids changing the color value on a white-text context. */
 }
-.page .hentry.has-post-thumbnail .entry-hero,
+/* Display the hero section for pages and thumbnail single posts. */
+.page .hentry .entry-hero,
 .single .hentry.has-post-thumbnail .entry-hero {
 	display: block;
 }
 
+/* ─── Entry Meta ──────────────────────────────────────────────────────────── */
+
+/* Meta row (categories, date, author) uses the UI sans-serif at small caps size. */
 .entry-meta {
 	font-family: Lato, sans-serif;
 	font-size: 13px;
@@ -1745,6 +1999,7 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	padding: 5px 0;
 	text-transform: uppercase;
 }
+/* In the content area, meta text and links use the muted color. */
 .content-area .entry-meta,
 .content-area .entry-meta a {
 	color: var(--color-muted);
@@ -1754,12 +2009,79 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 .content-area .entry-meta a:hover {
 	color: var(--color-text);
 }
-
+/* Explicitly pin .cat-links anchor color to match byline and date. */
+.content-area .entry-meta .cat-links a {
+	color: var(--color-muted);
+}
+.content-area .entry-meta .cat-links a:active,
+.content-area .entry-meta .cat-links a:focus,
+.content-area .entry-meta .cat-links a:hover {
+	color: var(--color-text);
+}
+/*
+ * .cat-links inside the hero is a bare <span> with no .entry-meta parent
+ * (canard_entry_categories() emits no wrapper div as of 2.8.0). Apply the
+ * typography, display, and colour that .entry-meta would otherwise provide,
+ * and override the .content-area .entry-meta .cat-links a colour above.
+ * Must appear after that rule to win at equal specificity.
+ */
+.entry-hero .cat-links {
+	color: #fff;
+	display: block;
+	font-family: var(--font-ui);
+	font-size: var(--text-xs);
+	line-height: 1.54;
+	margin-bottom: 4px;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+	text-transform: uppercase;
+}
+.entry-hero .cat-links a {
+	color: #fff;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+}
+.entry-hero .cat-links a:active,
+.entry-hero .cat-links a:focus,
+.entry-hero .cat-links a:hover {
+	color: #fff;
+	opacity: 0.7;
+}
+/* On standard archive cards, display category links on their own line. */
+.archive .content-area .format-standard .entry-meta .cat-links,
+.blog .content-area .format-standard .entry-meta .cat-links,
+.search .content-area .format-standard .entry-meta .cat-links {
+	display: block;
+}
+/* Suppress the generated separator before the block-level .cat-links span. */
+.archive .content-area .format-standard .entry-meta .cat-links:before,
+.blog .content-area .format-standard .entry-meta .cat-links:before,
+.search .content-area .format-standard .entry-meta .cat-links:before {
+	display: none;
+}
+/* On image/gallery archive cards, display category links on their own line
+   (matching the format-standard stacked layout). */
+.archive .content-area .format-image .entry-meta .cat-links,
+.archive .content-area .format-gallery .entry-meta .cat-links,
+.blog .content-area .format-image .entry-meta .cat-links,
+.blog .content-area .format-gallery .entry-meta .cat-links,
+.search .content-area .format-image .entry-meta .cat-links,
+.search .content-area .format-gallery .entry-meta .cat-links {
+	display: block;
+}
+/* Suppress the pipe separator before the block-level .cat-links span. */
+.archive .content-area .format-image .entry-meta .cat-links:before,
+.archive .content-area .format-gallery .entry-meta .cat-links:before,
+.blog .content-area .format-image .entry-meta .cat-links:before,
+.blog .content-area .format-gallery .entry-meta .cat-links:before,
+.search .content-area .format-image .entry-meta .cat-links:before,
+.search .content-area .format-gallery .entry-meta .cat-links:before {
+	display: none;
+}
 
 /* ==========================================================================
    Entry Footer
    ========================================================================== */
 
+/* Entry footer contains tags, categories, comments count, and edit link. */
 .entry-footer {
 	color: var(--color-muted);
 	display: block;
@@ -1772,6 +2094,7 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	text-transform: uppercase;
 	width: 100%;
 }
+/* On pages the footer is not floated and has no bottom margin (different layout context). */
 .page .entry-footer {
 	float: none;
 	margin-bottom: 0;
@@ -1785,6 +2108,7 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 .entry-footer a:hover {
 	color: var(--color-text);
 }
+/* Each footer meta item is a block with a top border separator. */
 .entry-footer .byline,
 .entry-footer .cat-links,
 .entry-footer .comments-link,
@@ -1795,23 +2119,26 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	display: block;
 	padding: 5px 0;
 }
+/* Last item in the footer also gets a bottom border to close the rule group. */
 .entry-footer > span:last-of-type {
 	border-bottom: 1px solid #eee;
 }
+/* Category and comments link do not float in the footer layout. */
 .entry-footer .cat-links,
 .entry-footer .comments-link {
 	float: none;
 }
+/* Prepend a '#' character before each tag link. */
 .tags-links a:before {
-	content: "\0023";
+	content: "\0023"; /* Unicode code point for '#'. */
 	margin-right: 0.125em;
 }
-
 
 /* ==========================================================================
    Post Thumbnail
    ========================================================================== */
 
+/* Full-size thumbnail container: black background shows during image load. */
 .post-thumbnail {
 	background: #000;
 	display: block;
@@ -1825,6 +2152,7 @@ body:not(.group-blog) .sticky .entry-summary + .entry-meta > span:nth-of-type(3)
 	width: 100%;
 }
 
+/* Darken the thumbnail on hover/focus for a clear interactive state. */
 a.post-thumbnail:active,
 a.post-thumbnail:focus,
 a.post-thumbnail:hover {
@@ -1833,11 +2161,13 @@ a.post-thumbnail:hover {
 a.post-thumbnail:focus:not(:focus-visible) {
 	outline: none;
 }
+/* Reduce image opacity on hover to let the black background show through. */
 a.post-thumbnail:active img,
 a.post-thumbnail:focus img,
 a.post-thumbnail:hover img {
 	opacity: 0.7;
 }
+/* Standard format thumbnail in content area: fixed height with z-index for overlap. */
 .content-area .format-standard a.post-thumbnail {
 	height: 180px;
 	margin-bottom: 15px;
@@ -1845,17 +2175,24 @@ a.post-thumbnail:hover img {
 	position: relative;
 	z-index: 1;
 }
+/* Center-crop the image vertically within the fixed-height container. */
 .content-area .format-standard a.post-thumbnail img {
 	position: absolute;
 	top: 50%;
-	transform: translateY(-50%);
+	transform: translateY(
+		-50%
+	); /* Shifts the image up by half its height to vertically center it. */
 }
 
+/* Jetpack's block-alignment wrapper resets the thumbnail background and height. */
 .wpnbha .post-thumbnail {
 	background: none;
 	height: unset;
 }
 
+/* ─── Page Links (Multi-Page Posts) ──────────────────────────────────────── */
+
+/* Pagination for multi-page posts uses a compact icon-grid layout. */
 .page-links {
 	border-top: 1px solid #eee;
 	clear: both;
@@ -1863,12 +2200,13 @@ a.post-thumbnail:hover img {
 	font-family: Lato, sans-serif;
 	font-size: 13px;
 	font-weight: bold;
-	line-height: 2.3077;
+	line-height: 2.3077; /* Derived value: 30px target ÷ 13px font-size = 2.3077. */
 	margin-bottom: 25px;
 	padding: 30px 0 0;
 	text-transform: uppercase;
 	width: 100%;
 }
+/* Page number buttons: square, equal height/width. */
 .page-links a,
 .page-links > span {
 	background: #eee;
@@ -1880,9 +2218,11 @@ a.post-thumbnail:hover img {
 	line-height: 30px;
 	text-align: center;
 }
+/* Current page indicator uses accent color. */
 .page-links > span {
 	color: var(--color-accent);
 }
+/* Non-active page links use white background. */
 .page-links a {
 	background: #fff;
 	color: var(--color-text);
@@ -1897,6 +2237,7 @@ a.post-thumbnail:hover img {
 .page-links a:focus:not(:focus-visible) {
 	outline: none;
 }
+/* The "Pages:" title label inside .page-links is unstyled and auto-width. */
 .page-links > .page-links-title {
 	background: transparent;
 	border: 0;
@@ -1909,6 +2250,9 @@ a.post-thumbnail:hover img {
 	width: auto;
 }
 
+/* ─── Author Info Box ─────────────────────────────────────────────────────── */
+
+/* "Author" label above the author name. */
 .author-info .author-title {
 	clear: none;
 	color: var(--color-muted);
@@ -1926,6 +2270,7 @@ a.post-thumbnail:hover img {
 	line-height: 1.2;
 	margin-bottom: 30px;
 }
+/* Avatar is hidden on mobile; shown at the 1080px+ breakpoint. */
 .author-info .author-avatar {
 	display: none;
 }
@@ -1941,14 +2286,23 @@ a.post-thumbnail:hover img {
 	display: block;
 }
 
+/* ─── Format: Gallery / Image ────────────────────────────────────────────── */
+
+/* Gallery and image format posts on non-single views use a dark full-bleed layout. */
 body:not(.single) .content-area .format-gallery.has-post-thumbnail,
 body:not(.single) .content-area .format-image.has-post-thumbnail {
+	background-color: #1a1a1a; /* Near-black card background for media-format posts. */
+	border-top: 0;
 	color: #fff;
-	padding: 60px 0 30px;
+	margin-top: 1px; /* 1px prevents margin-collapse with the adjacent border. */
+	padding: 30px 0;
 	position: relative;
 	overflow: hidden;
 }
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-header,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-header,
 body:not(.single) .content-area .format-image.has-post-thumbnail .entry-header {
 	position: relative;
 }
@@ -1957,39 +2311,116 @@ body:not(.single) .content-area .format-image.has-post-thumbnail a:focus {
 	color: #fff;
 	outline-color: rgba(255, 255, 255, 0.7);
 }
+/* White text with shadow for all text content on dark gallery/image cards. */
 body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-meta,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-meta a,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-summary,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-title a,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-meta
+	a,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-summary,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-title
+	a,
 body:not(.single) .content-area .format-image.has-post-thumbnail .entry-meta,
 body:not(.single) .content-area .format-image.has-post-thumbnail .entry-meta a,
 body:not(.single) .content-area .format-image.has-post-thumbnail .entry-summary,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-summary a,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-title a {
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-summary
+	a,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-title
+	a {
 	color: #fff;
 	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
 }
+/* Avatar shadow for legibility on the dark background. */
 body:not(.single) .content-area .format-gallery.has-post-thumbnail .author img,
 body:not(.single) .content-area .format-image.has-post-thumbnail .author img {
 	box-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
 }
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-meta a:active,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-meta a:focus,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-meta a:hover,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-title a:active,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-title a:hover,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-meta a:active,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-meta a:focus,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-meta a:hover,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-summary a:active,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-summary a:focus,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-summary a:hover,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-title a:active,
-body:not(.single) .content-area .format-image.has-post-thumbnail .entry-title a:hover {
+/* Opacity reduction on hover for interactive elements within dark cards. */
+body:not(.single) .content-area
+	.format-gallery.has-post-thumbnail
+	.entry-meta
+	a:active,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-meta
+	a:focus,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-meta
+	a:hover,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-title
+	a:active,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-title
+	a:hover,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-meta
+	a:active,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-meta
+	a:focus,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-meta
+	a:hover,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-summary
+	a:active,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-summary
+	a:focus,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-summary
+	a:hover,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-title
+	a:active,
+body:not(.single)
+	.content-area
+	.format-image.has-post-thumbnail
+	.entry-title
+	a:hover {
 	opacity: 0.7;
 }
+/* Text elements are stacked above the absolute-positioned background thumbnail (z-index:2). */
 body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-meta,
-body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-summary,
+body:not(.single)
+	.content-area
+	.format-gallery.has-post-thumbnail
+	.entry-summary,
 body:not(.single) .content-area .format-gallery.has-post-thumbnail .entry-title,
 body:not(.single) .content-area .format-image.has-post-thumbnail .entry-meta,
 body:not(.single) .content-area .format-image.has-post-thumbnail .entry-summary,
@@ -1997,8 +2428,9 @@ body:not(.single) .content-area .format-image.has-post-thumbnail .entry-title {
 	padding-left: 30px;
 	padding-right: 30px;
 	position: relative;
-	z-index: 2;  
+	z-index: 2; /* Stacks text above the absolute-positioned background thumbnail. */
 }
+/* Full-bleed thumbnail fills the card absolutely; actual image is hidden, background is used. */
 body:not(.single) .content-area .format-gallery .post-thumbnail,
 body:not(.single) .content-area .format-image .post-thumbnail {
 	background-position: 50% 50%;
@@ -2009,25 +2441,36 @@ body:not(.single) .content-area .format-image .post-thumbnail {
 	margin: 0;
 	overflow: hidden;
 	position: absolute;
+	top: 0;
 	bottom: 0;
 	width: 100%;
 }
+/* Hide the img element; the background-image on the container is the visual. */
 body:not(.single) .content-area .format-gallery .post-thumbnail img,
 body:not(.single) .content-area .format-image .post-thumbnail img {
 	opacity: 0;
 }
+/* Semi-transparent dark scrim overlaid on the thumbnail to aid text legibility. */
 body:not(.single) .content-area .format-gallery .post-thumbnail:before,
 body:not(.single) .content-area .format-image .post-thumbnail:before {
-	background: rgba( 0, 0, 0, 0.3 );
+	background: rgba(
+		0,
+		0,
+		0,
+		0.3
+	); /* 30% black overlay ensures text contrast on bright images. */
 	content: "";
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 1;
+	z-index: 1; /* Above the background image but below text elements (z-index:2). */
 }
 
+/* ─── Format: Link ────────────────────────────────────────────────────────── */
+
+/* Accent-colored square tile used as a visual thumbnail for link-format posts. */
 .post-link {
 	background: var(--color-accent);
 	display: block;
@@ -2035,13 +2478,14 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 	margin-bottom: 15px;
 	position: relative;
 }
+/* Circular external-link icon centered within the tile. */
 .post-link svg {
 	background: #fff;
 	border-radius: 50%;
 	height: 60px;
 	left: 50%;
-	margin-left: -30px;
-	margin-top: -30px;
+	margin-left: -30px; /* Half of 60px width: offsets from left:50% to center horizontally. */
+	margin-top: -30px; /* Half of 60px height: offsets from top:50% to center vertically. */
 	padding: 18px;
 	position: absolute;
 	top: 50%;
@@ -2056,7 +2500,6 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .post-link:focus:not(:focus-visible) {
 	outline: none;
 }
-
 
 /* ==========================================================================
    Comments
@@ -2088,12 +2531,14 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-content {
 	word-wrap: break-word;
 }
+/* Quote icon inside comment content is smaller than in the main content area. */
 .comment-content blockquote:before {
 	font-size: 16px;
 	height: 24px;
 	line-height: 1.5;
 	width: 24px;
 }
+/* Comment list has a bottom border and is positioned relatively for decorative lines. */
 .comment-list {
 	border-bottom: 1px solid var(--color-border);
 	list-style: none;
@@ -2104,15 +2549,18 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-list .children {
 	list-style: none;
 }
+/* Divider between comments (not the last one). */
 .comment-list .comment:not(:last-of-type),
 .comment-list .depth-1:not(:last-of-type) {
 	border-bottom: 1px solid #eee;
 	margin-bottom: 30px;
 }
+/* First nested reply gets a top border to separate it from its parent comment. */
 .comment-list .comment .comment:first-of-type {
 	border-top: 1px solid #eee;
 	padding-top: 30px;
 }
+/* Inline reply form indented and bordered within its parent comment. */
 .comment-list .comment-respond {
 	border-top: 1px solid #eee;
 	margin-left: 30px;
@@ -2121,9 +2569,11 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-list .comment-form {
 	padding-bottom: 0;
 }
+/* Trackback/pingback entries get bottom padding instead of border-bottom. */
 .pingback .comment-body {
 	padding-bottom: 30px;
 }
+/* Comment author name uses the display serif for editorial feel. */
 .comment-author {
 	font-family: "Playfair Display", serif;
 	font-size: 16px;
@@ -2134,6 +2584,7 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-author b {
 	font-weight: bold;
 }
+/* Circular avatar for comment authors. */
 .comment-author img {
 	border-radius: 50%;
 	vertical-align: middle;
@@ -2141,18 +2592,22 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-meta {
 	margin-bottom: 30px;
 }
+/* Float the avatar to the left so the author name flows alongside it. */
 .comment-author .avatar {
 	float: left;
 	margin-right: 15px;
 }
+/* The "says" label after the author name is visually redundant; hide it. */
 .comment-author .says {
 	display: none;
 }
+/* Insert a bold slash before the edit link in comment metadata. */
 .comment-metadata .edit-link:before {
-	content: "\002F";
+	content: "\002F"; /* Unicode forward slash separator before the edit link. */
 	font-weight: bold;
 	margin-right: 0.2em;
 }
+/* Comment reply link and metadata share the same UI sans-serif meta style. */
 .comment-list .comment-reply-title small,
 .comment-metadata,
 .comment-reply-link {
@@ -2164,6 +2619,7 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 	padding: 5px 0;
 	text-transform: uppercase;
 }
+/* Float the "cancel reply" link to the far right of the reply title. */
 .comment-list .comment-reply-title small {
 	float: right;
 }
@@ -2171,6 +2627,7 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-list .comment-reply-title small a {
 	color: var(--color-muted);
 }
+/* Hover/focus states darken the muted links to the main text color. */
 .comment-list .comment-reply-title small a:active,
 .comment-list .comment-reply-title small a:focus,
 .comment-list .comment-reply-title small a:hover,
@@ -2182,6 +2639,7 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 .comment-reply-link:hover {
 	color: var(--color-text);
 }
+/* Outline post-author comments to distinguish them from other commenters. */
 .bypostauthor .fn {
 	outline: 2px solid var(--color-border);
 	padding: 0 0.2em;
@@ -2190,14 +2648,19 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 	display: inline-block;
 	margin-bottom: 30px;
 }
+/* Required field indicator uses the accent color. */
 .required {
 	color: var(--color-accent);
 	font-weight: bold;
 }
+/* "Your comment is awaiting moderation" message has no extra bottom margin. */
 .comment-awaiting-moderation {
 	margin-bottom: 0;
 }
 
+/* ─── Media Embeds and Captions ──────────────────────────────────────────── */
+
+/* Suppress default margins on inline WordPress smiley images. */
 .page-content .wp-smiley,
 .entry-content .wp-smiley,
 .comment-content .wp-smiley {
@@ -2206,6 +2669,7 @@ body:not(.single) .content-area .format-image .post-thumbnail:before {
 	margin-top: 0;
 	padding: 0;
 }
+/* Media embeds get bottom margin and are constrained to their container width. */
 embed,
 iframe,
 object,
@@ -2217,6 +2681,9 @@ video,
 	max-width: 100%;
 }
 
+/* ─── WordPress Caption ──────────────────────────────────────────────────── */
+
+/* Caption block below images: muted, smaller type. */
 .wp-caption {
 	color: var(--color-muted);
 	font-family: Lato, sans-serif;
@@ -2225,6 +2692,7 @@ video,
 	margin-bottom: 25px;
 	max-width: 100%;
 }
+/* Center caption images within their container. */
 .wp-caption img[class*="wp-image-"] {
 	display: block;
 	margin: 0 auto;
@@ -2237,11 +2705,15 @@ video,
 	padding: 5px 0;
 }
 
+/* ─── Gallery Shortcode ──────────────────────────────────────────────────── */
+
+/* Gallery wrapper with a light border and fractional padding for tight item gutter. */
 .gallery {
 	border: 1px solid #eee;
 	margin: 0 0 30px;
-	padding: 3.75px;
+	padding: 3.75px; /* Fractional gutter: half of 7.5px (which is a quarter of 30px). */
 }
+/* Gallery items are inline-block, full-width by default, narrowed by column modifiers. */
 .gallery-item {
 	display: inline-block;
 	margin-bottom: 0;
@@ -2251,6 +2723,7 @@ video,
 	vertical-align: top;
 	width: 100%;
 }
+/* Column width modifiers: each divides 100% by the column count. */
 .gallery-columns-2 .gallery-item {
 	max-width: 50%;
 }
@@ -2283,23 +2756,30 @@ video,
 	line-height: 1.25;
 	max-width: 100%;
 	margin: 0;
-	min-width: 100%;
+	min-width: 100%; /* Stretches the caption to match the full width of the gallery item. */
 	padding: 5px 0;
 }
+/* Center gallery images within their item containers. */
 .gallery-icon img {
 	display: block;
 	margin: 0 auto;
 }
 
+/* ─── Google Maps Embed ──────────────────────────────────────────────────── */
+
 .googlemaps {
 	margin-bottom: 30px;
 }
+/* Hide the <br> tags Google Maps inserts into its embed markup. */
 .googlemaps br {
 	display: none;
 }
+/* Remove the double margin from the iframe inside the maps container. */
 .googlemaps iframe {
 	margin-bottom: 0;
 }
+
+/* ─── Jetpack Contact Form ───────────────────────────────────────────────── */
 
 .site-content .contact-form > div {
 	margin-bottom: 30px;
@@ -2307,6 +2787,7 @@ video,
 .site-content .contact-form label {
 	margin-bottom: 0;
 }
+/* Full-width inputs and textarea inside the contact form. */
 .site-content .contact-form input[type="text"],
 .site-content .contact-form input[type="email"],
 .site-content .contact-form input[type="url"],
@@ -2315,15 +2796,18 @@ video,
 	width: 100%;
 	max-width: 100%;
 }
+/* Required-field indicator asterisk inside labels. */
 .site-content .contact-form label span {
 	color: var(--color-accent);
 }
+/* Align radio and checkbox inputs with their label text. */
 .site-content .contact-form input[type="radio"],
 .site-content .contact-form input[type="checkbox"] {
 	margin-bottom: 6px;
-	margin-right: .3em;
+	margin-right: 0.3em;
 	vertical-align: middle;
 }
+/* Normalize font-weight for checkbox/radio labels. */
 .site-content .contact-form label.checkbox,
 .site-content .contact-form label.checkbox-multiple,
 .site-content .contact-form label.radio {
@@ -2334,14 +2818,18 @@ video,
 .site-content .contact-form > div {
 	margin-bottom: 15px;
 }
+/* Tighter bottom margin for text-style inputs within the contact form. */
 .site-content .contact-form textarea,
-.site-content .contact-form input[type='text'],
-.site-content .contact-form input[type='email'],
-.site-content .contact-form input[type='url'],
+.site-content .contact-form input[type="text"],
+.site-content .contact-form input[type="email"],
+.site-content .contact-form input[type="url"],
 .site-content .contact-form select {
 	margin-bottom: 7px;
 }
 
+/* ─── Jetpack Slideshow / Tiled Gallery ──────────────────────────────────── */
+
+/* Remove border-radius and z-index from the Jetpack slideshow. */
 .site .slideshow-window {
 	border-radius: 0;
 	border-width: 15px;
@@ -2351,6 +2839,7 @@ video,
 	margin-bottom: 30px;
 }
 
+/* Hide standard pagination when Jetpack Infinite Scroll is active. */
 .infinite-scroll .posts-navigation,
 .infinite-scroll .navigation.pagination {
 	display: none;
@@ -2360,6 +2849,7 @@ video,
    Jetpack Infinite Scroll
    ========================================================================== */
 
+/* "Load More" button area: top border with centered content. */
 #infinite-handle {
 	border-top: 1px solid #eee;
 	clear: both;
@@ -2370,12 +2860,14 @@ video,
 	padding: 30px 0 0;
 	text-align: center;
 }
+/* Override Jetpack's default button container styles. */
 #infinite-handle span {
 	background: transparent;
 	border-radius: 0;
 	display: inline-block;
 	padding: 0;
 }
+/* Reset Jetpack button appearance to match theme button style. */
 #infinite-handle span button,
 #infinite-handle span button:active,
 #infinite-handle span button:focus,
@@ -2388,9 +2880,11 @@ video,
 	padding: 5.5px 13px;
 	text-transform: uppercase;
 }
+/* Default state: accent text on white background. */
 #infinite-handle span button {
 	color: var(--color-accent);
 }
+/* Hover/focus: invert to accent background with white text. */
 #infinite-handle span button:active,
 #infinite-handle span button:focus,
 #infinite-handle span button:hover {
@@ -2398,26 +2892,30 @@ video,
 	border-color: var(--color-accent);
 	color: #fff;
 }
+/* Spinner area while loading more posts. */
 .infinite-loader {
 	border-top: 1px solid #eee;
 	clear: both;
 	margin: 0 0 30px;
 	overflow: hidden;
-	padding: 75px 0 0;
+	padding: 75px 0 0; /* Large top padding creates visual space for the absolute-positioned spinner. */
 	position: relative;
 	text-align: center;
 }
+/* Center the Jetpack spinner absolutely within the loader area. */
 .infinite-loader .spinner {
 	position: absolute;
-	top: -22.5px !important;
-	left: 50% !important;
+	top: -22.5px !important; /* Offsets spinner above the loader top edge; !important overrides Jetpack inline styles. */
+	left: 50% !important; /* Overrides Jetpack's inline left value to center the spinner. */
 }
+/* Posts loaded via Infinite Scroll restore the standard top border. */
 .archive .infinite-wrap .hentry:first-of-type,
 .blog .infinite-wrap .hentry:first-of-type,
 .search .infinite-wrap .hentry:first-of-type {
 	border-top: 1px solid #eee;
 	padding-top: 30px;
 }
+/* Dark persistent footer bar added by Jetpack Infinite Scroll at the bottom of the page. */
 #infinite-footer {
 	background: var(--color-text);
 	border-top: 0;
@@ -2425,18 +2923,19 @@ video,
 	font-size: 13px;
 	line-height: 1.54;
 	padding: 12.5px 0;
-	z-index: 99999;
+	z-index: 99999; /* Must remain above all page content while sticky at the bottom. */
 }
 #infinite-footer a:active,
 #infinite-footer a:focus,
 #infinite-footer a:hover {
 	text-decoration: none;
 }
+/* Override Jetpack's default container styles for the infinite footer. */
 #infinite-footer .container {
 	background: transparent;
 	border: 0;
 	padding: 0;
-	width: 90% !important;
+	width: 90% !important; /* Matches the theme's base fluid container width; !important overrides Jetpack inline width. */
 }
 #infinite-footer .blog-info a {
 	color: #ccc;
@@ -2445,6 +2944,7 @@ video,
 #infinite-footer .blog-credits a {
 	color: inherit;
 }
+/* Lighten footer links on hover. */
 #infinite-footer .blog-credits a:active,
 #infinite-footer .blog-credits a:focus,
 #infinite-footer .blog-credits a:hover,
@@ -2454,10 +2954,12 @@ video,
 	color: #fff;
 	text-decoration: none;
 }
+/* Semi-transparent focus ring for keyboard navigation on the dark footer. */
 #infinite-footer .blog-credits a:focus,
 #infinite-footer .blog-info a:focus {
 	outline-color: rgba(255, 255, 255, 0.7);
 }
+/* Reset Jetpack's default color/font overrides on the blog info and credits. */
 #infinite-footer .blog-credits,
 #infinite-footer .blog-info {
 	color: inherit;
@@ -2465,17 +2967,24 @@ video,
 	line-height: inherit;
 }
 
+/* ─── PollDaddy / Crowdsignal ─────────────────────────────────────────────── */
+
+/* Ensure the poll widget has standard bottom spacing. */
 .PDS_Poll {
 	margin-bottom: 24px;
 }
+
+/* ─── Jetpack Recipe ──────────────────────────────────────────────────────── */
 
 .site-content .jetpack-recipe {
 	margin: 0 0 30px;
 	padding: 30px 30px 0;
 }
+/* Remove extra indentation from blockquotes inside recipe blocks. */
 .site-content .jetpack-recipe blockquote {
 	margin-left: 0;
 }
+/* Align recipe list bullets inside the content flow. */
 .site-content .jetpack-recipe ol,
 .site-content .jetpack-recipe ul {
 	list-style-position: inside;
@@ -2485,15 +2994,18 @@ video,
 	margin: 0 auto 30px;
 	border-bottom: 0;
 }
+/* Suppress spurious line breaks Jetpack injects around recipe content. */
 .site-content .jetpack-recipe-content br {
 	display: none;
 }
+/* Reset Jetpack's default meta styles to inherit from the theme. */
 .site-content .jetpack-recipe .jetpack-recipe-meta {
 	color: var(--color-muted);
 	font-size: inherit;
 	line-height: inherit;
 	overflow: inherit;
 }
+/* Clearfix on recipe meta to contain any floated elements. */
 .site-content .jetpack-recipe-meta:before,
 .site-content .jetpack-recipe-meta:after {
 	content: "";
@@ -2503,19 +3015,27 @@ video,
 	clear: both;
 }
 
+/* ─── Jetpack Video Wrapper ───────────────────────────────────────────────── */
+
 .jetpack-video-wrapper {
 	margin: 0 0 30px;
 }
+/* Prevent an empty video wrapper from taking up layout space. */
 .jetpack-video-wrapper:empty {
 	display: none;
 }
 
+/* ─── Jetpack Post Flair / Sharing / Likes / Ratings ─────────────────────── */
+
+/* Reset padding on the post flair container. */
 .hentry #jp-post-flair {
 	padding: 0;
 }
+/* Hide the Sharedaddy sharing bar on excerpts/summaries in list views. */
 .entry-summary .sharedaddy {
-	display: none !important;
+	display: none !important; /* Overrides Jetpack's own display rule which shows sharing buttons in all contexts. */
 }
+/* Add a bottom border to inline-displayed Jetpack widgets. */
 .sd-like.jetpack-likes-widget-wrapper,
 .sd-rating,
 .sd-sharing-enabled:not(#jp-post-flair) {
@@ -2523,9 +3043,11 @@ video,
 	margin: 0;
 	padding: 7.5px 0;
 }
+/* Remove the iframe's extra bottom margin inside the likes widget. */
 .sd-like.jetpack-likes-widget-wrapper iframe {
 	margin-bottom: 0;
 }
+/* Override Jetpack's default h3 heading style inside rating and sharing blocks. */
 .hentry div.sd-rating h3.sd-title,
 .hentry div.sharedaddy h3.sd-title {
 	font-family: Lato, sans-serif;
@@ -2534,9 +3056,14 @@ video,
 	line-height: 1.2;
 	margin: 0 0 7.5px;
 }
+/* Remove bottom margin from the sharing buttons list so it doesn't double-space. */
 .hentry div.sharedaddy .sd-content ul {
-	margin-bottom: 0 !important;
+	margin-bottom: 0 !important; /* Overrides Jetpack's inline margin-bottom on the sharing list. */
 }
+
+/* ─── Jetpack Related Posts ───────────────────────────────────────────────── */
+
+/* Related posts container with a top border and relative positioning for the ::before line. */
 div#jp-relatedposts {
 	border-top: 1px solid var(--color-border);
 	margin: 0;
@@ -2544,10 +3071,12 @@ div#jp-relatedposts {
 	position: relative;
 	width: 100%;
 }
+/* Focus ring for links inside the related posts block. */
 div#jp-relatedposts a:focus {
 	background: transparent;
 	outline: 2px solid var(--color-border);
 }
+/* Related posts headline uses the display serif to match section headings. */
 .hentry div#jp-relatedposts h3.jp-relatedposts-headline {
 	font-family: "Playfair Display", serif;
 	font-size: 25px;
@@ -2555,22 +3084,26 @@ div#jp-relatedposts a:focus {
 	line-height: 1.2;
 	margin-bottom: 30px;
 }
+/* Strip the italic from the Jetpack headline <em> tag. */
 .hentry div#jp-relatedposts h3.jp-relatedposts-headline em {
 	font-weight: inherit;
 }
+/* Force Jetpack's line-height to 1 so it does not override the theme's rhythm. */
 .comment .pd-rating,
 .hentry .pd-rating,
 .hentry .sd-sharing .share-count {
-	line-height: 1 !important;
+	line-height: 1 !important; /* Overrides Jetpack's hardcoded line-height value. */
 }
 .comment .pd-rating {
 	margin-bottom: 30px;
 }
+/* Fix Jetpack's position:sticky behavior on post likes widget. */
 .hentry .post-likes-widget {
 	margin-bottom: 30px;
-	position: inherit !important;
-	top: auto !important;
+	position: inherit !important; /* Resets Jetpack's sticky positioning that could overlap content. */
+	top: auto !important; /* Cancels any inline top value set by Jetpack. */
 }
+/* Hide decorative elements Jetpack inserts that the theme doesn't need. */
 .hentry .pd-rating + br,
 .hentry div.sharedaddy h3.sd-title:before,
 .hentry div#jp-relatedposts h3.jp-relatedposts-headline em:before {
@@ -2583,24 +3116,38 @@ div#jp-relatedposts a:focus {
 	font-size: 16px;
 	line-height: 1.5;
 }
+/* Override Jetpack's default opacity on related post items. */
 .hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post,
-.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-context {
-	opacity: 1;
+.hentry
+	div#jp-relatedposts
+	div.jp-relatedposts-items
+	.jp-relatedposts-post-context {
+	opacity: 1; /* Jetpack fades these items by default; reset to fully opaque. */
 }
+/* Full-width related post items on mobile. */
 .hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post {
 	padding: 0;
 	margin-bottom: 30px;
 	width: 100%;
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post:last-of-type {
+.hentry
+	div#jp-relatedposts
+	div.jp-relatedposts-items
+	.jp-relatedposts-post:last-of-type {
 	margin-bottom: 0;
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-items.jp-relatedposts-items-minimal .jp-relatedposts-post {
+.hentry
+	div#jp-relatedposts
+	div.jp-relatedposts-items.jp-relatedposts-items-minimal
+	.jp-relatedposts-post {
 	margin: 0 0 30px;
 	padding: 0;
 	width: 100%;
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-context {
+/* Related post context (category label) uses the standard meta typography. */
+.hentry div#jp-relatedposts
+	div.jp-relatedposts-items
+	.jp-relatedposts-post-context {
 	color: var(--color-muted);
 	font-family: Lato, sans-serif;
 	font-size: 13px;
@@ -2609,23 +3156,36 @@ div#jp-relatedposts a:focus {
 	padding: 5px 0;
 	text-transform: uppercase;
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-title {
+/* Related post title: body serif, normal size. */
+.hentry div#jp-relatedposts
+	div.jp-relatedposts-items
+	.jp-relatedposts-post-title {
 	font-family: "PT Serif", serif;
 	font-size: 16px;
 	font-weight: bold;
 	letter-spacing: 0;
 	line-height: 1.5;
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-title a {
+/* Remove Jetpack's default border-bottom and text-decoration on post title links. */
+.hentry div#jp-relatedposts
+	div.jp-relatedposts-items
+	.jp-relatedposts-post-title
+	a {
 	border-bottom: 0;
 	font-weight: inherit;
-	text-decoration: none !important;
+	text-decoration: none !important; /* Jetpack adds text-decoration; !important required to override the inline style. */
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-items span.jp-relatedposts-post-title {
+/* Span variant of the post title inherits font metrics from its context. */
+.hentry div#jp-relatedposts
+	div.jp-relatedposts-items
+	span.jp-relatedposts-post-title {
 	font-size: inherit;
 	line-height: inherit;
 }
-.hentry div#jp-relatedposts div.jp-relatedposts-post-thumbs .jp-relatedposts-post-title {
+/* Top padding on thumbnail-style related post titles. */
+.hentry div#jp-relatedposts
+	div.jp-relatedposts-post-thumbs
+	.jp-relatedposts-post-title {
 	padding: 15px 0 0;
 }
 .hentry div#jp-relatedposts .jp-relatedposts-post-a {
@@ -2634,20 +3194,27 @@ div#jp-relatedposts a:focus {
 .hentry .pd-rating {
 	line-height: 1;
 }
+/* Hide the Jetpack rating message text. */
 .hentry .rating-msg {
 	display: none;
 }
 
+/* ─── Jetpack Site Logo ───────────────────────────────────────────────────── */
+
+/* Centered logo link with constrained max dimensions. */
 .site-logo-link {
 	align-items: center;
 	display: flex;
 	justify-content: center;
 	margin: 0 auto;
 	max-height: 90px;
-	max-width: 70%;
-	max-width: calc(100% - 120px);
+	max-width: 70%; /* Fallback for browsers that do not support calc(). */
+	max-width: calc(
+		100% -
+		120px
+	); /* Reserves 60px on each side for the search and menu toggle buttons. */
 	position: relative;
-	z-index: 4;
+	z-index: 4; /* Same level as .site-title to keep both above header toggle buttons. */
 }
 .site-logo-link:active,
 .site-logo-link:focus,
@@ -2664,12 +3231,16 @@ div#jp-relatedposts a:focus {
 	max-width: 100%;
 }
 
+/* ─── Jetpack Contact Info Widget ────────────────────────────────────────── */
+
 .widget_contact_info .contact-map {
 	margin-bottom: 15px;
 }
 .widget_contact_info > div:last-of-type {
 	margin-bottom: 30px;
 }
+
+/* ─── Jetpack Display Posts Widget ──────────────────────────────────────── */
 
 .widget_jetpack_display_posts_widget .jetpack-display-remote-posts {
 	margin: 0;
@@ -2683,18 +3254,23 @@ div#jp-relatedposts a:focus {
 .widget_jetpack_display_posts_widget .jetpack-display-remote-posts img {
 	margin-bottom: 30px;
 }
+/* Override Jetpack's inline !important line-height and margin on paragraph text. */
 .widget_jetpack_display_posts_widget .jetpack-display-remote-posts p {
 	font-size: 16px;
-	line-height: 1.5 !important;
-	margin: 0 0 30px !important;
+	line-height: 1.5 !important; /* Overrides Jetpack's inline line-height value. */
+	margin: 0 0 30px !important; /* Overrides Jetpack's inline margin value. */
 }
+/* Reduce top gap when an image directly precedes a paragraph. */
 .widget_jetpack_display_posts_widget .jetpack-display-remote-posts h4 + p {
-	margin-top: -30px !important;
+	margin-top: -30px !important; /* Negative margin pulls the paragraph up to close the gap after the h4. */
 }
+
+/* ─── Goodreads Widget ────────────────────────────────────────────────────── */
 
 .widget_goodreads .gr_custom_widget {
 	margin-bottom: 30px;
 }
+/* Suppress Goodreads' default <br> spacers and <center> elements. */
 .widget_goodreads br,
 .widget_goodreads center {
 	display: none;
@@ -2712,6 +3288,7 @@ div#jp-relatedposts a:focus {
 .widget_goodreads div[class^="gr_custom_title"] a:hover {
 	color: var(--color-text);
 }
+/* Reset Goodreads' default container padding, border, background, and color. */
 .widget_goodreads div[class^="gr_custom_container"] {
 	padding: 0;
 	background: transparent;
@@ -2719,18 +3296,21 @@ div#jp-relatedposts a:focus {
 	color: inherit;
 	border-radius: 0;
 }
+/* Each book entry has a top border and vertical padding. */
 .widget_goodreads div[class^="gr_custom_each_container"] {
 	padding: 15px 0;
 	margin: 0;
 	border-top: 1px solid #eee;
 	border-bottom: 0;
 }
+/* Last book entry gets a bottom border to close the list. */
 .widget_goodreads div[class^="gr_custom_each_container"]:last-of-type {
 	border-bottom: 1px solid #eee;
 }
 .widget_goodreads div[class^="gr_custom_title"] {
 	font-weight: bold;
 }
+/* Author metadata line uses the standard UI meta typography. */
 .widget_goodreads div[class^="gr_custom_author"] {
 	color: var(--color-muted);
 	font-family: Lato, sans-serif;
@@ -2740,51 +3320,74 @@ div#jp-relatedposts a:focus {
 	padding: 5px 0;
 	text-transform: uppercase;
 }
-.widget_goodreads div[class^="gr_custom_container"] div[class^="gr_custom_author"] a {
+.widget_goodreads
+	div[class^="gr_custom_container"]
+	div[class^="gr_custom_author"]
+	a {
 	border-bottom: 0;
 	color: inherit;
 }
-.widget_goodreads div[class^="gr_custom_container"] div[class^="gr_custom_author"] a:active,
-.widget_goodreads div[class^="gr_custom_container"] div[class^="gr_custom_author"] a:focus,
-.widget_goodreads div[class^="gr_custom_container"] div[class^="gr_custom_author"] a:hover {
+.widget_goodreads
+	div[class^="gr_custom_container"]
+	div[class^="gr_custom_author"]
+	a:active,
+.widget_goodreads
+	div[class^="gr_custom_container"]
+	div[class^="gr_custom_author"]
+	a:focus,
+.widget_goodreads
+	div[class^="gr_custom_container"]
+	div[class^="gr_custom_author"]
+	a:hover {
 	color: var(--color-text);
 }
 .widget_goodreads center a {
 	border-bottom: 0;
 }
 
+/* ─── Gravatar Profile Widget ─────────────────────────────────────────────── */
+
+/* Float the thumbnail to the right, overlapping the heading below it. */
 .widget-grofile .grofile-thumbnail {
 	border-radius: 50%;
 	float: right;
-	margin-bottom: -60px;
+	margin-bottom: -60px; /* Negative margin pulls the following heading up beneath the avatar. */
 	max-width: 60px;
 }
+/* Limit the heading width so it does not wrap under the floated avatar. */
 .widget-grofile h4 {
 	font-size: 20px;
 	line-height: 1.5;
-	margin: 0 0 45px !important;
+	margin: 0 0 45px !important; /* Overrides Jetpack's own margin; 45px creates space below for the floated avatar. */
 	max-width: 180px;
 }
 .widget-grofile .grofile-meta {
 	clear: both;
 }
+/* Pull the meta paragraph up to reduce gap caused by the avatar negative margin. */
 .widget-grofile .grofile-meta + p {
 	clear: both;
-	margin-top: -30px;
+	margin-top: -30px; /* Compensates for the gap created by the 60px avatar overflow into the heading area. */
 }
 .widget-grofile .grofile-full-link {
 	display: inline-block;
 }
 
+/* ─── Jetpack Image Widget ────────────────────────────────────────────────── */
+
 .widget_image .jetpack-image-container {
 	margin-bottom: 30px;
 }
+/* Vertically align the image in the middle of its line box. */
 .widget_image .jetpack-image-container img {
 	vertical-align: middle;
 }
+/* Remove caption's default bottom margin inside image widget. */
 .widget_image .jetpack-image-container .wp-caption {
 	margin-bottom: 0;
 }
+
+/* ─── RSS Links Widget ────────────────────────────────────────────────────── */
 
 .widget_rss_links ul {
 	border-bottom: 1px solid #eee;
@@ -2804,11 +3407,13 @@ div#jp-relatedposts a:focus {
 	margin-bottom: 15px;
 	padding-top: 15px;
 }
+/* Last paragraph in the links list gets a bottom border and padding. */
 .widget_rss_links p:last-of-type {
 	border-bottom: 1px solid #eee;
 	margin-bottom: 30px;
 	padding-bottom: 15px;
 }
+/* Space between the RSS icon link and the subscribe label link. */
 .widget_rss_links p a + a {
 	margin-left: 11px;
 }
@@ -2816,18 +3421,22 @@ div#jp-relatedposts a:focus {
 	vertical-align: middle;
 }
 
+/* ─── Eventbrite Widget ───────────────────────────────────────────────────── */
+
+/* Space between event header metadata spans. */
 .eventbrite-event .entry-header span {
 	padding-right: 12px;
 }
+/* Last span needs no trailing padding. */
 .eventbrite-event .entry-header span:last-of-type {
 	padding-right: 0;
 }
-
 
 /* ==========================================================================
    SVG Icon Replacements
    ========================================================================== */
 
+/* Apply a smooth transition to interactive elements for button, thumbnail, and icon state changes. */
 button,
 input,
 textarea,
@@ -2842,48 +3451,55 @@ textarea,
 .search-form:before,
 .site,
 .sticky-post {
-	transition: all 350ms ease-in-out;
+	transition: all 350ms ease-in-out; /* Global smooth transition for hover/focus state changes. */
 }
+/* Links transition color properties independently for finer control. */
 a {
-	transition: color 350ms ease-in-out, background-color 350ms ease-in-out;
+	transition:
+		color 350ms ease-in-out,
+		background-color 350ms ease-in-out;
 }
 
-@media ( prefers-reduced-motion: reduce ) {
+/* Respect user's reduced-motion preference by collapsing all animations/transitions. */
+@media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
 	*::after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		scroll-behavior: auto !important;
+		animation-duration: 0.01ms !important; /* Near-zero duration effectively disables animations while keeping JS-dependent code working. */
+		animation-iteration-count: 1 !important; /* Prevents looping animations from running more than once. */
+		transition-duration: 0.01ms !important; /* Near-zero duration effectively disables CSS transitions. */
+		scroll-behavior: auto !important; /* Disables smooth scrolling for users who prefer reduced motion. */
 	}
 }
-
 
 /* ==========================================================================
    Responsive — 600px+
    ========================================================================== */
 
 @media screen and (min-width: 600px) {
+	/* Wider max-width for the site logo at tablet+ widths. */
 	.site-logo-link {
 		max-width: 580px;
 	}
 
+	/* Larger circular toggle buttons at tablet widths. */
 	.menu-toggle {
 		height: 60px;
-		margin-top: -30px;
+		margin-top: -30px; /* Half of 60px to vertically center against top:50%. */
 		width: 60px;
 	}
 	.menu-toggle:before {
 		font-size: 16px;
 		height: 58px;
 		line-height: 58px;
-		width: 58%;
+		width: 58%; /* Note: intentional percentage — icon scales proportionally inside the larger button. */
 	}
+	/* Adjust dropdown arrow position to stay aligned with the larger menu toggle. */
 	.main-navigation.toggled > div:before {
 		right: 24px;
 	}
 
+	/* Increase navigation bottom spacing at 600px+. */
 	.comment-navigation,
 	.post-navigation,
 	.posts-navigation {
@@ -2893,6 +3509,7 @@ a {
 	.posts-navigation {
 		padding-top: 60px;
 	}
+	/* Inline SVG arrow icons for next/previous navigation buttons at 600px+. */
 	.comment-navigation .nav-next a:after,
 	.comment-navigation .nav-previous a:before,
 	.posts-navigation .nav-next a:after,
@@ -2907,15 +3524,17 @@ a {
 		width: 20px;
 		height: 20px;
 	}
+	/* Left-pointing chevron for "previous" navigation. */
 	.comment-navigation .nav-previous a:before,
 	.posts-navigation .nav-previous a:before {
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M14 7l-5 5 5 5V7z'/%3E%3C/svg%3E");
 	}
 
+	/* Larger sidebar toggle at 600px+. */
 	.sidebar-toggle {
 		height: 60px;
 		margin-bottom: 60px;
-		margin-left: -30px;
+		margin-left: -30px; /* Half of 60px to center against left:50%. */
 		width: 60px;
 	}
 	.sidebar-toggle:before {
@@ -2923,12 +3542,14 @@ a {
 		line-height: 58px;
 		width: 58px;
 	}
+	/* Add bottom padding to widgets at 600px+. */
 	.widget {
 		padding-bottom: 30px;
 	}
 	.footer-widget {
 		padding-top: 60px;
 	}
+	/* Remove border and margin separators from footer widgets at 600px+ (columns instead). */
 	.footer-widget-inner .widget {
 		border-bottom: 0;
 		margin-bottom: 0;
@@ -2937,10 +3558,12 @@ a {
 	.author-info {
 		margin: 30px 0 60px;
 	}
+	/* Increase top padding on main content and sidebar at 600px+. */
 	.site-main,
 	.widget-area {
 		padding-top: 60px;
 	}
+	/* Move the widget area horizontal rule up to compensate for the larger padding. */
 	.widget-area:before {
 		margin-top: -60px;
 	}
@@ -2948,6 +3571,7 @@ a {
 	.site-branding {
 		min-height: 60px;
 	}
+	/* Wider horizontal margins for site title/description to accommodate larger toggle buttons. */
 	.site-description,
 	.site-title {
 		margin: 0 90px;
@@ -2956,6 +3580,7 @@ a {
 		font-size: 31px;
 		line-height: 1.452;
 	}
+	/* Both toggle buttons become 60×60px at 600px+. */
 	.menu-toggle,
 	.search-toggle {
 		height: 60px;
@@ -2970,21 +3595,25 @@ a {
 		font-size: 24px;
 		line-height: 58px;
 	}
+	/* Restore smaller close icon size on the toggled search button. */
 	.toggled .search-toggle:before {
 		font-size: 16px;
 	}
 
+	/* More generous spacing between list view post entries at 600px+. */
 	.archive .hentry,
 	.blog .hentry,
 	.search .hentry {
 		margin-bottom: 60px;
 		padding-top: 60px;
 	}
+	/* Compensate for the larger padding on the first entry. */
 	.archive .hentry:first-of-type,
 	.blog .hentry:first-of-type,
 	.search .hentry:first-of-type {
 		margin-top: -60px;
 	}
+	/* Page entry footer gets vertical margins at 600px+. */
 	.page .entry-footer {
 		margin-bottom: 30px;
 		margin-top: 30px;
@@ -2993,6 +3622,7 @@ a {
 		margin-bottom: 60px;
 		padding-bottom: 30px;
 	}
+	/* Single/page entry headers without thumbnails get 30px bottom margin at 600px+. */
 	.page .hentry:not(.has-post-thumbnail) .entry-header,
 	.single .hentry:not(.has-post-thumbnail) .entry-header,
 	.single .hentry.format-quote .entry-header,
@@ -3002,13 +3632,15 @@ a {
 	.page-content {
 		padding-bottom: 30px;
 	}
+	/* Taller standard thumbnail at 600px+. */
 	.content-area .format-standard a.post-thumbnail {
 		height: 240px;
 	}
 
+	/* Restore top padding on gallery/image format posts at 600px+. */
 	body:not(.single) .content-area .format-gallery.has-post-thumbnail,
 	body:not(.single) .content-area .format-image.has-post-thumbnail {
-		padding-top: 90px;
+		padding-top: 30px;
 	}
 	.post-link {
 		height: 240px;
@@ -3028,13 +3660,14 @@ a {
 		padding-bottom: 30px;
 	}
 
+	/* Infinite Scroll: increase spacing at 600px+. */
 	#infinite-handle {
 		margin-bottom: 60px;
 		padding-top: 60px;
 	}
 	.infinite-loader {
 		margin-bottom: 60px;
-		padding-top: 105px;
+		padding-top: 105px; /* 105px = 75px base + 30px added at 600px+ for the spinner visual space. */
 	}
 	.archive .infinite-wrap .hentry:first-of-type,
 	.blog .infinite-wrap .hentry:first-of-type,
@@ -3042,11 +3675,15 @@ a {
 		padding-top: 60px;
 	}
 
+	/* Related posts: additional top margin and padding at 600px+. */
 	div#jp-relatedposts {
 		margin-top: 30px;
-		padding-top: 61px;
+		padding-top: 61px; /* 1px more than 60px to account for the ::before decorative border overlap. */
 	}
-	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post:last-of-type {
+	.hentry
+		div#jp-relatedposts
+		div.jp-relatedposts-items
+		.jp-relatedposts-post:last-of-type {
 		margin-bottom: 30px;
 	}
 
@@ -3055,16 +3692,34 @@ a {
 	}
 }
 
+/* ==========================================================================
+   Responsive — 600px–959px
+   ========================================================================== */
+
+@media screen and (min-width: 600px) and (max-width: 959px) {
+	/* Vertically center the menu toggle relative to the branding container height. */
+	.menu-toggle {
+		top: 50%;
+		margin-top: -30px; /* Half the 60px toggle height to align with top:50%. */
+	}
+	/* Mirror the vertical centering for the search navigation area. */
+	.search-navigation {
+		top: 50%;
+		margin-top: -30px;
+	}
+}
 
 /* ==========================================================================
    Responsive — 768px+
    ========================================================================== */
 
 @media screen and (min-width: 768px) {
+	/* Increase base font size to 20px on wider screens. */
 	body {
 		font-size: 20px;
 	}
 
+	/* Fixed-width inner containers at 768px breakpoint. */
 	.bottom-navigation > div,
 	.entry-header-inner,
 	.featured-content-inner,
@@ -3082,6 +3737,7 @@ a {
 	.author-info .author-heading {
 		max-width: 496px;
 	}
+	/* Float footer widgets left to form a two-column grid. */
 	.footer-widget-inner .widget {
 		float: left;
 	}
@@ -3089,33 +3745,40 @@ a {
 		margin-left: 30px;
 		margin-right: 30px;
 	}
+	/* Even-numbered widgets clear right to start a new row from the right. */
 	.footer-widget-inner .widget:nth-of-type(even) {
 		clear: right;
 		margin-right: 0;
 	}
+	/* Odd-numbered widgets clear left to start from the left column. */
 	.footer-widget-inner .widget:nth-of-type(odd) {
 		clear: left;
 		margin-left: 0;
 	}
 
+	/* Full 49px display heading for site title at 768px+. */
 	.site-title {
 		font-size: 49px;
 		line-height: 1.225;
 	}
 
+	/* Featured content grid: fixed-height cards at 768px. */
 	.blog .featured-content .hentry {
 		height: 350px;
 		width: 309px;
 	}
+	/* Primary featured post spans the full width at 768px. */
 	.blog .featured-content .hentry:first-of-type {
 		height: 300px;
 		width: 100%;
 	}
+	/* 2nd and 4th cards get a right margin for the gutter. */
 	.blog .featured-content .hentry:nth-of-type(2),
 	.blog .featured-content .hentry:nth-of-type(4) {
 		margin-right: 30px;
 	}
 
+	/* Floated standard-format thumbnail alongside entry text at 768px. */
 	.content-area .format-standard a.post-thumbnail {
 		float: left;
 		height: 100%;
@@ -3124,6 +3787,7 @@ a {
 		overflow: visible;
 		width: 196px;
 	}
+	/* Reset the vertical center-crop transform used on small screens. */
 	.content-area .format-standard a.post-thumbnail img {
 		position: inherit;
 		top: auto;
@@ -3133,20 +3797,21 @@ a {
 		float: right;
 		width: 422px;
 	}
+	/* Float .entry-meta and .entry-summary alongside the left-floated thumbnail. */
 	.content-area .format-standard.has-post-thumbnail > .entry-meta,
 	.content-area .format-standard.has-post-thumbnail .entry-summary {
-		clear: right;
+		clear: none;
+		float: right;
+		width: 422px;
 	}
-	/* Prevent excerpt text from wrapping around the left-floated post thumbnail */
-	.content-area .format-standard.has-post-thumbnail .entry-summary {
-		overflow: hidden;
-	}
+	/* Show the author avatar floated right at 768px. */
 	.author-info .author-avatar {
 		display: block;
 		float: right;
 		width: 60px;
 	}
 
+	/* Link-format post link tile floated left at 768px. */
 	.post-link {
 		float: left;
 		height: 174px;
@@ -3154,12 +3819,14 @@ a {
 		margin-right: 30px;
 		width: 196px;
 	}
+	/* Entry header for link-format posts floated right. */
 	.archive .format-link .entry-header,
 	.blog .format-link .entry-header,
 	.search .format-link .entry-header {
 		float: right;
 		width: 422px;
 	}
+	/* Entry meta and summary clear right to stack below the floated header. */
 	.archive .format-link > .entry-meta,
 	.blog .format-link > .entry-meta,
 	.search .format-link > .entry-meta,
@@ -3169,12 +3836,16 @@ a {
 		clear: right;
 	}
 
+	/* Override infinite footer container width at this breakpoint. */
 	#infinite-footer .container {
-		width: 648px !important;
+		width: 648px !important; /* Matches the inner container width at 768px; !important overrides Jetpack inline style. */
 	}
 }
 
+/* ─── Responsive — 840px+ ────────────────────────────────────────────────── */
+
 @media screen and (min-width: 840px) {
+	/* Wider inner containers at 840px. */
 	.bottom-navigation > div,
 	.entry-header-inner,
 	.featured-content-inner,
@@ -3201,7 +3872,9 @@ a {
 	.content-area .format-standard a.post-thumbnail {
 		width: 220px;
 	}
-	.content-area .format-standard.has-post-thumbnail .entry-header {
+	.content-area .format-standard.has-post-thumbnail .entry-header,
+	.content-area .format-standard.has-post-thumbnail > .entry-meta,
+	.content-area .format-standard.has-post-thumbnail .entry-summary {
 		width: 470px;
 	}
 
@@ -3216,24 +3889,7 @@ a {
 	}
 
 	#infinite-footer .container {
-		width: 720px !important;
-	}
-}
-
-
-/* ==========================================================================
-   Responsive — 600px–959px 
-   ========================================================================== */
-
-@media screen and (min-width: 600px) and (max-width: 959px) {
-
-	.menu-toggle {
-		top: 50%;
-		margin-top: -30px;
-	}
-	.search-navigation {
-		top: 50%;
-		margin-top: -30px;
+		width: 720px !important; /* Matches the 840px inner container width; !important overrides Jetpack inline style. */
 	}
 }
 
@@ -3242,18 +3898,22 @@ a {
    ========================================================================== */
 
 @media screen and (min-width: 960px) {
+	/* Hide the mobile hamburger menu toggle at desktop widths. */
 	.menu-toggle {
 		display: none;
 	}
+	/* Main navigation becomes a horizontal bar floated left. */
 	.main-navigation {
 		float: left;
-		z-index: 99;
+		z-index: 99; /* Below infinite footer but above most page content. */
 	}
+	/* Nav list is always visible at desktop. */
 	.main-navigation > div {
 		display: block;
 		margin: 0 auto;
 		width: auto;
 	}
+	/* Reset the mobile dropdown panel styles for desktop layout. */
 	.main-navigation.toggled > div {
 		background: #fff;
 		border: 0;
@@ -3266,15 +3926,17 @@ a {
 		padding: 0;
 		z-index: 9998;
 	}
+	/* Thin white vertical line used to cover the left edge of the absolute sub-menu. */
 	.main-navigation > div:before {
 		background: #fff;
 		content: "";
 		display: block;
 		height: 100%;
 		position: absolute;
-		width: 1px;
+		width: 1px; /* 1px cover strip masks the sub-menu border under the parent nav item. */
 		z-index: 1;
 	}
+	/* Remove border and padding from the top-level nav list at desktop. */
 	.main-navigation > div > ul {
 		border: 0;
 		padding: 0;
@@ -3285,6 +3947,7 @@ a {
 	.main-navigation ul {
 		border-bottom: 0;
 	}
+	/* Collapsed sub-menus at desktop: hide via display:none (shown on hover/focus). */
 	.main-navigation ul.toggled {
 		border-bottom: 0;
 		display: none;
@@ -3292,23 +3955,28 @@ a {
 		margin-top: 0;
 		padding-left: 0;
 	}
+	/* Desktop nav items are horizontal; remove the mobile top border dividers. */
 	.main-navigation li {
 		border-top: 0;
 		float: left;
 		padding: 0 15px;
 	}
+	/* Vertical separator between top-level nav items. */
 	.main-navigation .nav-menu > li + li {
 		border-left: 1px solid #eee;
 	}
+	/* Items with children need extra right padding for the inline chevron. */
 	.main-navigation .menu-item-has-children {
-		padding-right: 38.5px;
+		padding-right: 38.5px; /* 16px icon + 15px padding + 7.5px clearance from the nav item edge. */
 		position: relative;
 	}
+	/* Override mobile right-padding; chevron is an :after pseudo-element at desktop. */
 	.main-navigation .page_item_has_children > a,
 	.main-navigation .menu-item-has-children > a {
 		padding-right: 0;
 		position: static;
 	}
+	/* Down-chevron pseudo-element for parent items at desktop widths. */
 	.main-navigation .menu-item-has-children > a:after {
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23d11415' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
 		background-position: center;
@@ -3317,15 +3985,17 @@ a {
 		content: "";
 		display: inline-block;
 		height: 16px;
-		margin-top: -8px;
+		margin-top: -8px; /* Half the icon height: vertically centers the icon on top:50%. */
 		position: absolute;
 		top: 50%;
 		right: 15px;
 		width: 16px;
 	}
+	/* Rotate the chevron 90° for nested sub-menus (pointing right). */
 	.main-navigation ul ul .menu-item-has-children > a:after {
 		transform: rotate(-90deg);
 	}
+	/* Desktop dropdown sub-menu panel: positioned absolutely below the parent. */
 	.main-navigation ul ul {
 		background: #fff;
 		border: 1px solid var(--color-border);
@@ -3333,41 +4003,48 @@ a {
 		float: left;
 		padding: 15px 0;
 		position: absolute;
-		top: 1.875em;
-		left: -999em;
-		z-index: 99999;
+		top: 1.875em; /* 1.875em matches the nav line-height so the panel starts below the text. */
+		left: -999em; /* Off-screen until hover/focus triggers display. */
+		z-index: 99999; /* Must be the topmost element when open. */
 	}
+	/* Third-level sub-menus also start off-screen. */
 	.main-navigation ul ul ul {
 		left: -999em;
-		top: -16px;
+		top: -16px; /* Negative top aligns the sub-sub-menu with the first item of its parent. */
 	}
+	/* Fixed width for sub-menu link items. */
 	.main-navigation ul ul a {
 		width: 208px;
 	}
+	/* White background on each sub-menu list item for the dropdown. */
 	.main-navigation ul ul li {
 		background: #fff;
 	}
+	/* Show sub-menu on hover or focus (keyboard). */
 	.main-navigation ul li:hover > ul,
 	.main-navigation ul .focus > ul {
 		display: block;
 		left: auto;
-		margin-left: -16px;
+		margin-left: -16px; /* Slight negative left shift aligns the dropdown under the parent label. */
 	}
+	/* Third-level sub-menus fly out to the right. */
 	.main-navigation ul ul li:hover > ul,
 	.main-navigation ul ul .focus > ul {
 		left: 100%;
 	}
 
-
+	/* Show secondary navigation (hidden on mobile) as a float at desktop. */
 	.secondary-navigation {
 		display: block;
 		float: left;
 	}
 
+	/* Hide the dark bottom navigation bar on desktop (secondary nav takes its role). */
 	.bottom-navigation {
 		display: none;
 	}
 
+	/* Footer nav items become horizontal at 960px+. */
 	.footer-navigation ul {
 		padding: 3px 0;
 	}
@@ -3382,25 +4059,31 @@ a {
 	.footer-navigation li:last-child {
 		padding-right: 0;
 	}
+	/* Vertical separator between footer nav items. */
 	.footer-navigation li + li {
 		border-left: 1px solid #eee;
 	}
+	/* Remove vertical padding from footer links at desktop. */
 	.footer-navigation a {
 		padding: 0;
 	}
 
+	/* Hide the mobile sidebar toggle button at desktop. */
 	.sidebar-toggle {
 		display: none;
 	}
+	/* Always show the widget area at desktop. */
 	.widget-area {
 		display: block;
 	}
+	/* Remove extra calendar cell padding at desktop. */
 	.widget_calendar td,
 	.widget_calendar tr {
 		padding-left: 0;
 		padding-right: 0;
 	}
 
+	/* Fixed inner container widths at 960px breakpoint. */
 	.entry-header-inner,
 	.featured-content-inner,
 	.footer-navigation > div,
@@ -3412,9 +4095,11 @@ a {
 	.site-top-inner {
 		width: 840px;
 	}
+	/* Main content column width at 960px. */
 	.site-main {
 		width: 615px;
 	}
+	/* Sidebar column width at 960px. */
 	.widget-area {
 		width: 226px;
 	}
@@ -3424,42 +4109,51 @@ a {
 	.footer-widget-inner .widget {
 		width: 165px;
 	}
+	/* Flex layout for the content area enables the main + sidebar two-column layout. */
 	.site-content-inner {
 		display: flex;
 		align-items: flex-start;
 	}
+	/* Negative right margin + equal right padding extends the comment area to the full width without overflow. */
 	.comments-area {
 		margin-right: -60px;
 		padding-right: 60px;
 	}
+	/* Right border acts as the visual divider between main content and sidebar. */
 	.site-main {
 		border-inline-end: 1px solid var(--color-border);
 		padding-inline-end: 60px;
 	}
+	/* Left border on the sidebar mirrors the divider from the main column's right border. */
 	.widget-area {
 		border-inline-start: 1px solid var(--color-border);
-		margin-inline-start: -1px;
+		margin-inline-start: -1px; /* -1px collapses the 1px gap between the main column's right border and sidebar's left border. */
 		padding-inline-start: 60px;
 		padding-top: 60px;
 	}
+	/* Remove the horizontal rule pseudo-element used on mobile. */
 	.widget-area:before {
 		display: none;
 	}
+	/* Four-column footer widget layout at 960px: reset even/odd margins from 768px. */
 	.footer-widget-inner .widget:nth-of-type(even),
 	.footer-widget-inner .widget:nth-of-type(odd) {
 		clear: none;
 		margin-left: 30px;
 		margin-right: 30px;
 	}
-	.footer-widget-inner .widget:nth-of-type(4n+1) {
+	/* Every 4th+1 widget starts a new row on the left. */
+	.footer-widget-inner .widget:nth-of-type(4n + 1) {
 		clear: left;
 		margin-left: 0;
 	}
-	.footer-widget-inner .widget:nth-of-type(4n+4) {
+	/* Every 4th widget ends a row on the right. */
+	.footer-widget-inner .widget:nth-of-type(4n + 4) {
 		clear: right;
 		margin-right: 0;
 	}
 
+	/* When there is no branding, remove top padding from the site header. */
 	.no-site-branding .site-header {
 		padding-top: 0;
 	}
@@ -3472,14 +4166,16 @@ a {
 	.site-branding {
 		min-height: 0;
 	}
+	/* Remove horizontal padding from site title/description at desktop. */
 	.site-description,
 	.site-title {
 		padding-left: 0;
 		padding-right: 0;
 	}
+	/* Move search navigation from absolute inside header to a positioned bar below branding. */
 	.search-navigation {
 		border-top: 1px solid var(--color-border);
-		margin-bottom: -15px;
+		margin-bottom: -15px; /* Negative margin causes the next sibling to overlap, removing the double border gap. */
 		margin-top: 30px;
 		padding-top: 15px;
 		position: relative;
@@ -3488,15 +4184,17 @@ a {
 	.no-site-branding .site-branding + .search-navigation {
 		margin-top: 0;
 	}
+	/* Center the search bar contents horizontally. */
 	.search-navigation-inner {
 		align-items: center;
 		display: flex;
 		justify-content: center;
 	}
+	/* Smaller search toggle at desktop widths. */
 	.search-toggle {
 		height: 30px;
 		width: 30px;
-		z-index: 0;
+		z-index: 0; /* Below the open search form (z-index:10) in the desktop layout. */
 	}
 	.search-toggle:before {
 		font-size: 16px;
@@ -3504,9 +4202,12 @@ a {
 		line-height: 28px;
 		width: 28px;
 	}
+	/* Reduce close icon size when search is open at desktop. */
 	.search-header.toggled .search-toggle:before {
 		font-size: 12px;
 	}
+
+	/* Header image spacing at 960px+. */
 	.header-image {
 		border-top: 1px solid var(--color-border);
 		margin: 30px 0 -15px;
@@ -3516,6 +4217,7 @@ a {
 		margin-top: 0;
 	}
 
+	/* Featured content grid at 960px: fixed-width cards. */
 	.blog .featured-content .hentry {
 		height: 350px;
 		width: 345px;
@@ -3538,36 +4240,44 @@ a {
 		margin-right: 30px;
 	}
 
+	/* Entry hero header: full-bleed padding, no horizontal padding. */
 	.entry-header-wrapper {
 		padding-bottom: 60px;
 		padding-left: 0;
 		padding-right: 0;
 	}
+	/* Constrain hero meta and title width for readability on wide screens. */
 	.entry-hero .entry-meta,
 	.entry-hero .entry-title,
 	.entry-hero .page-title {
 		max-width: 930px;
 	}
+	/* Semi-transparent white focus ring for hero links on dark overlay. */
 	.entry-hero .entry-meta a:focus {
 		outline-color: rgba(255, 255, 255, 0.7);
 	}
+	/* Narrower thumbnail width at 960px to allow two-column card layout. */
 	.content-area .format-standard a.post-thumbnail {
 		width: 165px;
 	}
-	.content-area .format-standard.has-post-thumbnail .entry-header {
+	.content-area .format-standard.has-post-thumbnail .entry-header,
+	.content-area .format-standard.has-post-thumbnail > .entry-meta,
+	.content-area .format-standard.has-post-thumbnail .entry-summary {
 		width: 359px;
 	}
+	/* Author info box expands to full content column width. */
 	.author-info {
 		border-left: 0;
 		border-right: 0;
 		border-top: 0;
 		margin: 0;
 		margin-bottom: 60px;
-		margin-left: -60px;
+		margin-left: -60px; /* Negative left margin bleeds the box to the left edge of the content column. */
 		padding: 0;
 		padding-bottom: 30px;
 		padding-left: 60px;
 	}
+	/* Hide avatar in the author box at 960px (shown again at 1080px). */
 	.author-info .author-avatar {
 		display: none;
 	}
@@ -3576,6 +4286,7 @@ a {
 		max-width: 100%;
 	}
 
+	/* Link-format tile dimensions at 960px. */
 	.post-link {
 		height: 147px;
 		width: 165px;
@@ -3586,6 +4297,7 @@ a {
 		width: 359px;
 	}
 
+	/* Full-bleed horizontal rules for comment sections at 960px, extending to the sidebar. */
 	.comment-list:before,
 	.comment-navigation + .comment-respond:before {
 		background: var(--color-border);
@@ -3593,48 +4305,59 @@ a {
 		display: block;
 		height: 1px;
 		position: absolute;
-		right: -60px;
+		right: -60px; /* Extends the line 60px to the right, into the sidebar gutter. */
 		width: 100%;
 	}
+	/* Comment list rule is positioned at the bottom. */
 	.comment-list:before {
 		bottom: -1px;
 	}
+	/* Comment respond rule is positioned at the top. */
 	.comment-navigation + .comment-respond:before {
 		top: -1px;
 	}
 
+	/* Fixed-width infinite footer container at 960px. */
 	#infinite-footer .container {
-		width: 840px !important;
+		width: 840px !important; /* Matches inner container width at 960px; !important overrides Jetpack inline style. */
 	}
 
+	/* Full-bleed horizontal rule above Jetpack related posts, extending into the sidebar. */
 	div#jp-relatedposts:before {
 		background: var(--color-border);
 		content: "";
 		display: block;
 		height: 1px;
 		position: absolute;
-		right: -60px;
+		right: -60px; /* Extends the line 60px into the sidebar gutter. */
 		top: -1px;
 		width: 100%;
 	}
+	/* Three-column related posts layout at 960px. */
 	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post {
 		margin: 0 15px;
-		width: 164.6666667px;
+		width: 164.6666667px; /* (840px content width − 2 × 15px margins) ÷ 3 columns. */
 	}
-	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post:first-of-type {
+	.hentry
+		div#jp-relatedposts
+		div.jp-relatedposts-items
+		.jp-relatedposts-post:first-of-type {
 		margin-left: 0;
 	}
-	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post:last-of-type {
+	.hentry
+		div#jp-relatedposts
+		div.jp-relatedposts-items
+		.jp-relatedposts-post:last-of-type {
 		margin-right: 0;
 	}
 }
-
 
 /* ==========================================================================
    Responsive — 1080px+
    ========================================================================== */
 
 @media screen and (min-width: 1080px) {
+	/* Wider inner containers at 1080px. */
 	.entry-header-inner,
 	.featured-content-inner,
 	.footer-navigation > div,
@@ -3646,6 +4369,7 @@ a {
 	.site-top-inner {
 		width: 960px;
 	}
+	/* Wider main content column at 1080px. */
 	.site-main {
 		width: 705px;
 	}
@@ -3659,11 +4383,13 @@ a {
 		width: 195px;
 	}
 
+	/* Featured content: primary card is taller and fills more of the row. */
 	.blog .featured-content .hentry:first-of-type {
 		height: 430px;
 		margin-right: 0;
 		width: 630px;
 	}
+	/* Second and third cards stack in a right column. */
 	.blog .featured-content .hentry:nth-of-type(2),
 	.blog .featured-content .hentry:nth-of-type(3) {
 		height: 370px;
@@ -3671,26 +4397,31 @@ a {
 		margin-right: 0;
 		width: 300px;
 	}
+	/* Fourth and fifth cards are shorter and overlap with negative margin-top. */
 	.blog .featured-content .hentry:nth-of-type(4),
 	.blog .featured-content .hentry:nth-of-type(5) {
 		height: 310px;
 		margin-right: 0;
-		margin-top: -340px;
+		margin-top: -340px; /* Negative margin pulls cards 4 and 5 up to overlap with the primary card's bottom area. */
 		width: 300px;
 	}
 	.blog .featured-content .hentry:nth-of-type(5) {
-		margin-left: 330px;
+		margin-left: 330px; /* Offset pushes the 5th card to the second column of the right stack. */
 	}
 
 	.content-area .format-standard a.post-thumbnail {
 		width: 195px;
 	}
-	.content-area .format-standard.has-post-thumbnail .entry-header {
+	.content-area .format-standard.has-post-thumbnail .entry-header,
+	.content-area .format-standard.has-post-thumbnail > .entry-meta,
+	.content-area .format-standard.has-post-thumbnail .entry-summary {
 		width: 419px;
 	}
+	/* Re-show the author avatar at 1080px+. */
 	.author-info .author-avatar {
 		display: block;
 	}
+	/* Float the author heading left to sit alongside the avatar. */
 	.author-info .author-heading {
 		float: left;
 		max-width: 120px;
@@ -3706,21 +4437,23 @@ a {
 		width: 419px;
 	}
 
+	/* Fixed-width infinite footer container at 1080px. */
 	#infinite-footer .container {
-		width: 960px !important;
+		width: 960px !important; /* Matches inner container width at 1080px; !important overrides Jetpack inline style. */
 	}
 
+	/* Related post item width at 1080px. */
 	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post {
-		width: 194.6666667px;
+		width: 194.6666667px; /* (960px content − 2 × 15px margins) ÷ 3 columns. */
 	}
 }
-
 
 /* ==========================================================================
    Responsive — 1380px+
    ========================================================================== */
 
 @media screen and (min-width: 1380px) {
+	/* Maximum inner container width at the widest breakpoint. */
 	.entry-header-inner,
 	.featured-content-inner,
 	.footer-navigation > div,
@@ -3732,6 +4465,7 @@ a {
 	.site-top-inner {
 		width: 1260px;
 	}
+	/* Wider main content column on pages and standard posts at 1380px. */
 	.page .comments-area,
 	.site-main {
 		width: 930px;
@@ -3739,6 +4473,7 @@ a {
 	.comments-area {
 		width: 600px;
 	}
+	/* Constrain the entry content and related posts to a narrower reading column. */
 	div#jp-relatedposts,
 	.single .entry-content {
 		width: 540px;
@@ -3753,12 +4488,14 @@ a {
 	.footer-widget-inner .widget {
 		width: 270px;
 	}
+	/* Float the reading column and related posts to the right at 1380px. */
 	div#jp-relatedposts,
 	.comments-area,
 	.single .entry-content {
 		float: right;
 	}
 
+	/* Largest featured content layout at 1380px. */
 	.blog .featured-content .hentry:first-of-type {
 		height: 500px;
 		width: 830px;
@@ -3772,17 +4509,19 @@ a {
 	.blog .featured-content .hentry:nth-of-type(4),
 	.blog .featured-content .hentry:nth-of-type(5) {
 		height: 250px;
-		margin-top: -280px;
+		margin-top: -280px; /* Overlaps 4th/5th cards into the bottom of the primary card's area. */
 		width: 400px;
 	}
 	.blog .featured-content .hentry:nth-of-type(5) {
-		margin-left: 430px;
+		margin-left: 430px; /* Offset to second column of the right stack at 1380px. */
 	}
 
 	.content-area .format-standard a.post-thumbnail {
 		width: 270px;
 	}
-	.content-area .format-standard.has-post-thumbnail .entry-header {
+	.content-area .format-standard.has-post-thumbnail .entry-header,
+	.content-area .format-standard.has-post-thumbnail > .entry-meta,
+	.content-area .format-standard.has-post-thumbnail .entry-summary {
 		width: 569px;
 	}
 	.author-info .author-heading {
@@ -3799,25 +4538,29 @@ a {
 		width: 569px;
 	}
 
+	/* Fixed-width infinite footer container at 1380px. */
 	#infinite-footer .container {
-		width: 1260px !important;
+		width: 1260px !important; /* Matches inner container width at 1380px; !important overrides Jetpack inline style. */
 	}
 
+	/* Related post items at 1380px: narrower to fit three in the constrained reading column. */
 	.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post {
 		width: 160px;
 	}
 }
 
 /* ==========================================================================
-   Category header
+   Category Header
    ========================================================================== */
 
+/* Full-width colored fallback block shown when no category header image is set. */
 .category-color-fallback {
 	display: block;
 	width: 100%;
-	aspect-ratio: 1920 / 768;
+	aspect-ratio: 1920 / 768; /* Matches the hero image aspect ratio for visual consistency. */
 	height: auto;
 }
+/* Category header image: full-width, same aspect ratio as the entry hero. */
 .entry-hero .post-thumbnail .category-header {
 	display: block;
 	width: 100%;
@@ -3827,7 +4570,30 @@ a {
 	object-position: center;
 }
 
+/* White page title with drop shadow for legibility over the category header image. */
 .entry-hero .page-title {
 	color: #fff;
 	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+}
+
+/* Bare .cat-links span in hero (no .entry-meta parent) */
+.entry-hero .cat-links {
+	color: #fff;
+	display: block;
+	font-family: var(--font-ui);
+	font-size: var(--text-xs);
+	line-height: 1.54;
+	margin-bottom: 4px;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+	text-transform: uppercase;
+}
+.entry-hero .cat-links a {
+	color: #fff;
+	text-shadow: 0 0 0.125em rgba(0, 0, 0, 0.7);
+}
+.entry-hero .cat-links a:active,
+.entry-hero .cat-links a:focus,
+.entry-hero .cat-links a:hover {
+	color: #fff;
+	opacity: 0.7;
 }

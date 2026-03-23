@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2021-02-04T00:57:38+00:00\n"
-"PO-Revision-Date: 2018-11-07 00:33:13+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
 
 #: functions.php:99
 msgid "Red"
@@ -57,24 +57,20 @@ msgid "Continue reading %s"
 msgstr "続きを読む %s"
 
 #. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
 #: wp-content/themes/pub/canard/style.css
-msgid "https://wordpress.com/themes/"
-msgstr "https://wordpress.com/themes/"
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
 #. Author of the plugin/theme
 #: wp-content/themes/pub/canard/style.css
-msgid "Automattic"
-msgstr "Automattic"
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
 
 #. Description of the plugin/theme
 #: wp-content/themes/pub/canard/style.css
 msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 msgstr "雑誌、ニュースサイトやブログに最適な柔軟で汎用性の高いテーマ。どんなデバイス上でも問題ないレイアウトの中で、ホームページ上で特定の記事を強調することや、写真を効果的に使って読みやすさのバランスを取ることができます。"
-
-#. Theme URI of the plugin/theme
-#: wp-content/themes/pub/canard/style.css
-msgid "https://wordpress.com/themes/canard/"
-msgstr "https://wordpress.com/themes/canard/"
 
 #. Theme Name of the plugin/theme
 #: wp-content/themes/pub/canard/style.css

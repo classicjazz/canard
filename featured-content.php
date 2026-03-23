@@ -1,6 +1,11 @@
 <?php
 /**
- * The template for displaying featured content
+ * Template for displaying the featured content hero area.
+ *
+ * Retrieves featured posts via canard_get_featured_posts() and renders each
+ * one using the content-featured-post template part. Returns early without
+ * output when no featured posts are configured. Called from index.php only
+ * when is_home() is true.
  *
  * @package Canard
  */
@@ -20,8 +25,6 @@ if ( empty( $featured_posts ) ) {
 		<?php
 			foreach ( $featured_posts as $post ) {
 				setup_postdata( $post );
-
-				 // Include the featured content template.
 				get_template_part( 'content', 'featured-post' );
 			}
 

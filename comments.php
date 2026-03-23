@@ -1,9 +1,16 @@
 <?php
 /**
- * The template for displaying comments.
+ * Template for displaying the comments section.
  *
- * The area of the page that contains both current comments
- * and the comment form.
+ * Outputs the existing comment list with optional paginated navigation,
+ * a "comments are closed" notice when appropriate, and the comment submission
+ * form. Returns early without any output when the post is password-protected
+ * and the visitor has not yet authenticated, preventing content leakage.
+ *
+ * Comment form field hardening (URL field removal, email input type, and
+ * autocomplete hints) is registered via add_filter( 'comment_form_default_fields' )
+ * in inc/extras.php rather than here, so it fires exactly once per request
+ * regardless of how many times comments_template() is called.
  *
  * @package Canard
  */
@@ -49,12 +56,9 @@ if ( post_password_required() ) {
 
 		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : ?>
 		<nav id="comment-nav-below" class="comment-navigation" aria-label="<?php esc_attr_e( 'Comment Navigation', 'canard' ); ?>">
-			<!-- The aria-label on <nav> provides the accessible name for this landmark.
-			     A redundant heading inside the nav has been replaced with <span> to
-			     avoid creating a spurious heading in the document outline. -->
 			<span class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'canard' ); ?></span>
-			<div class="nav-previous"><?php previous_comments_link( __( 'Older Comments', 'canard' ) ); ?></div>
-			<div class="nav-next"><?php next_comments_link( __( 'Newer Comments', 'canard' ) ); ?></div>
+			<div class="nav-previous"><?php previous_comments_link( esc_html__( 'Older Comments', 'canard' ) ); ?></div>
+			<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments', 'canard' ) ); ?></div>
 		</nav><!-- #comment-nav-below -->
 		<?php endif; ?>
 
@@ -66,17 +70,6 @@ if ( post_password_required() ) {
 		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'canard' ); ?></p>
 	<?php endif; ?>
 
-	<?php
-	/*
-	 * Note: comment form field hardening (removing the URL field, setting
-	 * type="email", adding autocomplete hints) is registered via
-	 * add_filter( 'comment_form_default_fields', ... ) in inc/extras.php.
-	 * It was previously registered here inside the template, which caused
-	 * multiple filter registrations on pages that call comments_template()
-	 * in a custom loop. Moving it to inc/extras.php ensures it registers
-	 * exactly once per request.
-	 */
-	comment_form();
-	?>
+	<?php comment_form(); ?>
 
 </div><!-- #comments -->

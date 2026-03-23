@@ -11,6 +11,8 @@
 	 * Uses querySelectorAll so every .search-submit on the page (e.g. both a
 	 * header search and a widget-area search) receives handlers — querySelector
 	 * would only hook the first match, leaving subsequent forms inconsistent.
+	 *
+	 * @returns {void}
 	 */
 	window.addEventListener( 'load', function() {
 		const searchSubmits = document.querySelectorAll( '.search-submit' );
@@ -18,7 +20,12 @@
 			return;
 		}
 
-		/** @this {HTMLElement} */
+		/**
+		 * Adds the 'hover' class to the closest ancestor .search-form.
+		 *
+		 * @this {HTMLElement}
+		 * @returns {void}
+		 */
 		function searchAddClass() {
 			const form = this.closest( '.search-form' );
 			if ( form ) {
@@ -26,7 +33,12 @@
 			}
 		}
 
-		/** @this {HTMLElement} */
+		/**
+		 * Removes the 'hover' class from the closest ancestor .search-form.
+		 *
+		 * @this {HTMLElement}
+		 * @returns {void}
+		 */
 		function searchRemoveClass() {
 			const form = this.closest( '.search-form' );
 			if ( form ) {
@@ -34,6 +46,12 @@
 			}
 		}
 
+		/**
+		 * Attaches hover and focus event handlers to a single search submit button.
+		 *
+		 * @param {HTMLElement} searchSubmit - The search submit button element.
+		 * @returns {void}
+		 */
 		searchSubmits.forEach( function( searchSubmit ) {
 			searchSubmit.addEventListener( 'mouseenter', searchAddClass );
 			searchSubmit.addEventListener( 'mouseleave', searchRemoveClass );
@@ -49,6 +67,11 @@
 	/**
 	 * Toggles the header search form open/closed and keeps aria-expanded in sync
 	 * on both the button and the form.
+	 *
+	 * Dismisses the primary navigation panel before opening search so the two
+	 * drop-downs never overlap in portrait mode on iPhone / iPad.
+	 *
+	 * @returns {void}
 	 */
 
 	const container = document.getElementById( 'search-header' );
@@ -68,6 +91,14 @@
 	}
 	form.setAttribute( 'aria-expanded', 'false' );
 
+	/**
+	 * Toggles the header search form open or closed on button click.
+	 *
+	 * Dismisses the primary navigation panel first if it is open, then toggles
+	 * the search container and synchronizes aria-expanded on both the button and the form.
+	 *
+	 * @returns {void}
+	 */
 	button.addEventListener( 'click', function() {
 		// Dismiss the nav panel before toggling search so the two drop-downs
 		// never overlap in portrait mode on iPhone / iPad.

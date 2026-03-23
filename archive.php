@@ -1,6 +1,11 @@
 <?php
 /**
- * The template for displaying archive pages.
+ * Template for displaying archive pages.
+ *
+ * Used for date-based, author, and custom post-type archives. Renders the
+ * archive title and optional description, iterates over posts using the
+ * appropriate post-format template part, and outputs pagination links.
+ * Falls back to content-none.php when the query returns no posts.
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
@@ -23,10 +28,10 @@ get_header(); ?>
 						the_archive_title( '<h1 class="page-title">', '</h1>' );
 						/*
 						 * Security: the_archive_description() does not apply wp_kses_post()
-						 * to the taxonomy term description field. Users with manage_categories
-						 * capability can store arbitrary HTML in that field. Use
-						 * get_the_archive_description() + wp_kses_post() so that script tags
-						 * and other dangerous markup are stripped before output.
+						 * to the taxonomy term description field. Users with the
+						 * manage_categories capability can store arbitrary HTML in that field.
+						 * Use get_the_archive_description() + wp_kses_post() to strip script
+						 * tags and other dangerous markup before output.
 						 * See also: the get_the_archive_description filter in functions.php.
 						 */
 						$archive_desc = get_the_archive_description();
@@ -40,7 +45,7 @@ get_header(); ?>
 
 					<?php
 						/*
-						 * Include the post format-specific template part.
+						 * Include the post-format-specific template part.
 						 * To override in a child theme, create content-{format}.php.
 						 */
 						get_template_part( 'content', get_post_format() );
@@ -50,8 +55,9 @@ get_header(); ?>
 
 				<?php
 				/*
-				 * Security: use esc_html__() rather than __() so that pagination
-				 * link labels are treated as plain text.
+				 * Security: esc_html__() is used instead of __() so that pagination
+				 * link labels are treated as plain text and cannot carry markup from
+				 * a compromised translation file.
 				 */
 				the_posts_pagination( array(
 					'mid_size'  => 2,

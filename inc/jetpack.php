@@ -11,19 +11,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Registers Jetpack theme features.
+ * Registers Jetpack theme features during after_setup_theme.
+ *
+ * Declares support for Infinite Scroll (main container, page footer anchor,
+ * sidebar-2 footer widgets), Featured Content (up to 5 posts or pages via the
+ * canard_get_featured_posts filter), Responsive Videos, and Content Options.
+ *
+ * Content Options notes:
+ *   - 'blog-display' is set to 'content' because the loop uses the_content() on
+ *     singular views and the_excerpt() on archives.
+ *   - 'author-bio' is enabled; the template already calls jetpack_author_bio()
+ *     when available, so 'author-bio-default' is omitted (it defaults to true).
+ *   - 'featured-images' mirrors the three contexts where the theme renders
+ *     thumbnails: archive list, single post, and single page — all on by default.
  *
  * @return void
  */
 function canard_jetpack_setup() {
-	// Add theme support for Infinite Scroll.
 	add_theme_support( 'infinite-scroll', array(
 		'container'      => 'main',
 		'footer'         => 'page',
 		'footer_widgets' => array( 'sidebar-2' ),
 	) );
 
-	// Add theme support for Featured Content.
 	add_theme_support( 'featured-content', array(
 		'filter'      => 'canard_get_featured_posts',
 		'description' => __( 'The featured content section displays on the front page above the header.', 'canard' ),
@@ -31,17 +41,8 @@ function canard_jetpack_setup() {
 		'post_types'  => array( 'post', 'page' ),
 	) );
 
-	// Add theme support for Responsive Videos.
 	add_theme_support( 'jetpack-responsive-videos' );
 
-	// Add theme support for Content Options.
-	// 'blog-display' reflects Canard's default: the loop uses the_content() on
-	// singular views and the_excerpt() on archives, so we declare 'content' as
-	// the primary default and allow Jetpack to expose the toggle.
-	// 'author-bio' is enabled; the template already calls jetpack_author_bio()
-	// when available, so we omit 'author-bio-default' (it defaults to true).
-	// 'featured-images' mirrors the three contexts the theme renders thumbnails:
-	// archive list, single post, and single page. All three default to on.
 	add_theme_support( 'jetpack-content-options', array(
 		'blog-display'    => 'content',
 		'author-bio'      => true,
@@ -68,23 +69,23 @@ add_action( 'after_setup_theme', 'canard_jetpack_setup' );
  * Used to decide whether carousel navigation controls should be shown.
  * A single featured post does not warrant previous/next controls.
  *
- * @return bool
+ * @return bool True when the canard_get_featured_posts filter returns an array
+ *              with at least 2 elements, false otherwise.
  */
-function canard_has_multiple_featured_posts() {
+function canard_has_multiple_featured_posts(): bool {
 	$featured_posts = apply_filters( 'canard_get_featured_posts', array() );
-	if ( is_array( $featured_posts ) && 1 < count( $featured_posts ) ) {
-		return true;
-	}
-	return false;
+	return is_array( $featured_posts ) && count( $featured_posts ) > 1;
 }
 
 /**
- * Returns the featured posts array via filter.
+ * Returns the featured posts array populated by Jetpack's Featured Content module.
  *
- * Returns false when no featured posts are configured (Jetpack not active or
- * no posts are tagged). Callers should check for a non-empty array before iterating.
+ * Applies the canard_get_featured_posts filter and returns its value. Returns
+ * false when Jetpack is not active or no posts have been tagged as featured.
+ * Callers should verify the return value is a non-empty array before iterating.
  *
- * @return array|false
+ * @return array<int, WP_Post>|false Array of featured WP_Post objects, or false
+ *                                   when none are configured.
  */
 function canard_get_featured_posts() {
 	return apply_filters( 'canard_get_featured_posts', false );
@@ -116,13 +117,19 @@ function canard_the_site_logo() {
 }
 
 /**
- * Determines whether the featured image should be displayed, respecting
- * Jetpack Content Options settings when Jetpack is active.
+ * Determines whether the featured image should be displayed for the current post or page.
  *
- * Called before rendering any featured image to respect the admin toggle in
- * Jetpack -> Settings -> Writing -> Content Options.
+ * When Jetpack is active this function respects the admin toggle located at
+ * Jetpack → Settings → Writing → Content Options. When Jetpack is not active
+ * (jetpack_featured_images_remove_post_thumbnail() does not exist) the function
+ * always returns true so that the image is shown unconditionally.
  *
- * @return bool
+ * The per-context defaults (post-default, page-default) declared in the
+ * jetpack-content-options theme support array are used as fallbacks when the
+ * corresponding database option has not been explicitly saved.
+ *
+ * @return bool True when the featured image should be displayed, false when it
+ *              should be suppressed for the current context.
  */
 function canard_jetpack_featured_image_display() {
 	if ( ! function_exists( 'jetpack_featured_images_remove_post_thumbnail' ) ) {
@@ -154,24 +161,29 @@ function canard_jetpack_featured_image_display() {
 }
 
 /**
- * Removes Post Format classes from Jetpack Portfolio items so they don't
- * interfere with portfolio-specific styling.
+ * Removes post format classes from Jetpack Portfolio post type items.
  *
- * @param array $classes Current post classes.
- * @return array Modified post classes.
+ * Portfolio items do not use post formats, so the format-* class injected by
+ * WordPress core would conflict with portfolio-specific CSS rules. This filter
+ * strips the format class only when the current post type is
+ * 'jetpack-portfolio'; all other post types are unaffected.
+ *
+ * @param array<int, string> $classes Current post CSS classes.
+ * @return array<int, string> The classes array with the format-* entry removed
+ *                            for jetpack-portfolio posts.
  */
-function canard_jetpack_portfolio_classes( $classes ) {
-	$post_format = get_post_format();
-
-	if ( $post_format && ! is_wp_error( $post_format ) ) {
-		$class = 'format-' . sanitize_html_class( $post_format );
-	} else {
-		$class = 'format-standard';
+function canard_jetpack_portfolio_classes( array $classes ): array {
+	if ( 'jetpack-portfolio' !== get_post_type() ) {
+		return $classes;
 	}
 
-	$class_key = array_search( $class, $classes );
+	$post_format = get_post_format();
+	$class       = ( $post_format )
+		? 'format-' . sanitize_html_class( $post_format )
+		: 'format-standard';
 
-	if ( false !== $class_key && 'jetpack-portfolio' === get_post_type() ) {
+	$class_key = array_search( $class, $classes );
+	if ( false !== $class_key ) {
 		unset( $classes[ $class_key ] );
 	}
 
@@ -180,17 +192,24 @@ function canard_jetpack_portfolio_classes( $classes ) {
 add_filter( 'post_class', 'canard_jetpack_portfolio_classes' );
 
 /**
- * Applies Typekit / Adobe Fonts category rules for the Canard theme.
+ * Registers Typekit / Adobe Fonts category rules for the Canard theme.
  *
  * Maps CSS selectors to the 'body-text' and 'headings' font categories so the
  * Customizer live preview can substitute Typekit fonts correctly. Selector font
- * sizes and weights mirror style.css.
+ * sizes and weights mirror style.css declarations. Rules are grouped by
+ * functional area via section separator comments for readability.
  *
- * The filter is registered only when TypekitTheme is available (i.e. when the
- * Jetpack Adobe Fonts / Typekit module is active). This prevents a fatal error
- * on sites where Jetpack is not installed or the module is disabled.
+ * The filter is registered only when the TypekitTheme class is available (i.e.,
+ * when the Jetpack Adobe Fonts / Typekit module is active). This prevents a
+ * fatal error on sites where Jetpack is not installed or the module is disabled.
  */
 if ( class_exists( 'TypekitTheme' ) ) {
+	/**
+	 * Populates Typekit font category rules with Canard-specific selector mappings.
+	 *
+	 * @param array<string, mixed> $category_rules Existing rules array passed by the filter.
+	 * @return array<string, mixed> The rules array with all Canard selector mappings appended.
+	 */
 	add_filter( 'typekit_add_font_category_rules', function( $category_rules ) {
 
 		// -----------------------------------------------------------------------

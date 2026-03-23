@@ -17,6 +17,12 @@
 
 	sidebar.setAttribute( 'aria-expanded', 'false' );
 
+	/**
+	 * Toggles the sidebar open or closed on button click and synchronizes
+	 * aria-expanded on both the sidebar element and the toggle button.
+	 *
+	 * @returns {void}
+	 */
 	button.addEventListener( 'click', function() {
 		const toggled = sidebar.classList.contains( 'toggled' );
 		sidebar.classList.toggle( 'toggled' );

@@ -1,6 +1,10 @@
 <?php
 /**
- * The template for displaying Author Bio
+ * Template part for displaying an author biography block.
+ *
+ * Outputs the author's avatar, display name, biographical description, and
+ * a link to the author's post archive. Intended to be included via
+ * get_template_part() from single-post templates.
  *
  * @package Canard
  */
@@ -13,19 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="author-info">
 	<div class="author-avatar">
 		<?php
-		/**
-		 * Filter the author bio avatar size.
-		 *
-		 * @param int $size The avatar height and width size in pixels.
-		 */
-		$author_bio_avatar_size = apply_filters( 'canard_author_bio_avatar_size', 60 );
+		$author_bio_avatar_size = (int) apply_filters( 'canard_author_bio_avatar_size', 60 );
 
 		/*
 		 * Security: get_avatar() returns an <img> HTML string. Plugins or child
 		 * themes may hook get_avatar to inject extra attributes or markup. Pass
-		 * the output through wp_kses() with the same allowlist used in
-		 * canard_entry_meta() so that any filter-injected content is stripped
-		 * before it reaches the page.
+		 * the output through wp_kses() with an explicit allowlist so that any
+		 * filter-injected content is stripped before it reaches the page.
 		 */
 		$avatar_allowlist = array(
 			'img' => array(
@@ -39,7 +37,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 				'fetchpriority' => array(),
 			),
 		);
-		echo wp_kses( get_avatar( get_the_author_meta( 'user_email' ), $author_bio_avatar_size ), $avatar_allowlist );
+		$avatar_html = get_avatar( get_the_author_meta( 'user_email' ), $author_bio_avatar_size );
+		echo wp_kses( $avatar_html !== false ? $avatar_html : '', $avatar_allowlist );
 		?>
 	</div><!-- .author-avatar -->
 
@@ -50,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<p class="author-bio">
 		<?php echo esc_html( get_the_author_meta( 'description' ) ); ?>
-		<a class="author-link" href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ); ?>" rel="author">
+		<a class="author-link" href="<?php echo esc_url( get_author_posts_url( (int) get_the_author_meta( 'ID' ) ) ); ?>" rel="author">
 			<?php
 			printf(
 				/* translators: %s: Author display name. */

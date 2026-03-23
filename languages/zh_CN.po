@@ -8,10 +8,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2024-11-21T04:15:49+00:00\n"
-"PO-Revision-Date: 2024-06-14 06:59:52+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
 #: functions.php:99
 msgid "Red"
@@ -52,10 +58,20 @@ msgstr "对比度"
 msgid "Continue reading %s"
 msgstr "继续阅读%s"
 
-#. Author of the theme
-#: style.css
-msgid "Automattic"
-msgstr "Automattic"
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
+
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 
 #: single.php:29
 msgid "Next"

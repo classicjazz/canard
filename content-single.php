@@ -1,6 +1,11 @@
 <?php
 /**
- * The template part for displaying single post content.
+ * Template part for displaying single post content.
+ *
+ * Renders a full single post including a hero header with an optional featured
+ * image (shown only for standard, image, and gallery post formats), the post
+ * categories and title, structured data via the entry-script template part,
+ * paginated post content, and the entry footer (tags, edit link, etc.).
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
@@ -12,17 +17,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+	<header class="entry-header entry-hero">
 		<?php if ( has_post_thumbnail() && ( ! has_post_format() || has_post_format( 'image' ) || has_post_format( 'gallery' ) ) ) : ?>
 			<div class="post-thumbnail">
 				<?php the_post_thumbnail( 'canard-single-thumbnail', array( 'loading' => 'eager', 'fetchpriority' => 'high' ) ); ?>
 			</div>
 		<?php endif; ?>
 
-		<?php
-			canard_entry_categories();
-			the_title( '<h1 class="entry-title">', '</h1>' );
-		?>
+		<div class="entry-header-wrapper">
+			<div class="entry-header-inner">
+				<?php canard_entry_categories(); ?>
+				<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+			</div>
+		</div>
+
 	</header><!-- .entry-header -->
 
 	<?php get_template_part( 'entry', 'script' ); ?>

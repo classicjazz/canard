@@ -1,9 +1,12 @@
 <?php
 /**
- * The template for displaying all pages.
+ * Template for displaying all pages.
  *
- * This is the WordPress construct of pages — it is not to be confused with
- * the theme's page.php template which handles page post type output.
+ * Renders a single WordPress page inside the two-column layout
+ * (#primary + sidebar). Delegates the actual page markup to
+ * content-page.php via get_template_part(). The comments template
+ * is conditionally loaded when comments are open or at least one
+ * comment exists on the page.
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
@@ -24,10 +27,9 @@ get_header(); ?>
 					<?php get_template_part( 'content', 'page' ); ?>
 
 					<?php
-						// Load the comment template if comments are open or there is at least one comment.
-						if ( comments_open() || get_comments_number() ) :
-							comments_template();
-						endif;
+					if ( comments_open() || get_comments_number() ) :
+						comments_template();
+					endif;
 					?>
 
 				<?php endwhile; ?>

@@ -5,40 +5,54 @@
 ( function() {
 
 	/**
-	 * Returns a sanitized CSS url() string for use in style.backgroundImage.
+	 * Resolves canardUtils.safeCssUrl from the frozen utility namespace.
 	 *
-	 * Accepts absolute http/https URLs, protocol-relative URLs, and root-relative paths.
-	 * Rejects src values containing characters that could escape the url("…") wrapper.
-	 * Double-quotes are percent-encoded as a second layer of defence.
+	 * Prefers the frozen canardUtils.safeCssUrl when available. Falls back to
+	 * a no-op that always returns null rather than writing to window, which
+	 * would leave an unfrozen, attacker-writable object on the global scope
+	 * that a compromised third-party script could hijack.
 	 *
-	 * @param {string} src - Raw image src value.
-	 * @returns {string|null} Safe CSS url() value, or null if src is rejected.
+	 * @returns {Function} A safeCssUrl implementation, or a null-returning stub.
 	 */
-	function safeCssUrl( src ) {
-		if ( ! src ) {
-			return null;
+	function resolveSafeCssUrl() {
+		if (
+			window.canardUtils &&
+			typeof window.canardUtils.safeCssUrl === 'function'
+		) {
+			return window.canardUtils.safeCssUrl;
 		}
-		if ( ! /^(https?:)?\/\/[^\s"'()\\]|^\/[^/]/.test( src ) ) {
+
+		console.warn( 'Canard featured-content.js: canardUtils.safeCssUrl not available — background images disabled.' );
+
+		/**
+		 * Stub returned when canardUtils is unavailable.
+		 *
+		 * @returns {null} Always returns null to disable background application.
+		 */
+		return function stubSafeCssUrl() {
 			return null;
-		}
-		return 'url("' + src.replace( /"/g, '%22' ) + '")';
+		};
 	}
+
+	/** @type {Function} Sanitizes a raw src string into a safe CSS url() value. */
+	const safeCssUrl = resolveSafeCssUrl();
 
 	/**
 	 * Applies a featured image as a CSS background on a post's thumbnail container.
 	 *
-	 * Uses currentSrc for responsive images and falls back to getAttribute('src') rather
-	 * than the .src IDL property. Firefox returns an empty string for .src on cross-origin
-	 * images (e.g. Jetpack Photon CDN) until decoding completes; getAttribute always
-	 * returns the literal attribute value.
+	 * Uses currentSrc for responsive images and falls back to getAttribute('src')
+	 * rather than the .src IDL property. Firefox returns an empty string for .src
+	 * on cross-origin images (e.g. Jetpack Photon CDN) until decoding completes;
+	 * getAttribute always returns the literal attribute value.
 	 *
-	 * @param {HTMLElement} entryImage - Container element to receive the background-image style.
-	 * @param {HTMLImageElement} thumbnail - Image element whose src is used as the background.
-	 * @param {HTMLElement} article - Parent article element; receives the 'background-done' class.
+	 * @param {HTMLElement}      entryImage - Container element to receive the background-image style.
+	 * @param {HTMLImageElement} thumbnail  - Image element whose src is used as the background.
+	 * @param {HTMLElement}      article    - Parent article element; receives the 'background-done' class.
+	 * @returns {void}
 	 */
 	function applyBackground( entryImage, thumbnail, article ) {
-		var src = thumbnail.currentSrc || thumbnail.getAttribute( 'src' );
-		var cssUrl = safeCssUrl( src );
+		const src    = thumbnail.currentSrc || thumbnail.getAttribute( 'src' );
+		const cssUrl = safeCssUrl( src );
 		if ( cssUrl ) {
 			entryImage.style.backgroundImage = cssUrl;
 			article.classList.add( 'background-done' );
@@ -48,13 +62,15 @@
 	/**
 	 * Iterates over all featured content articles and applies background images.
 	 *
-	 * Skips already-processed articles ('background-done') or those without a post
-	 * thumbnail. Uses a per-image load listener rather than window 'load' because
-	 * Jetpack Infinite Scroll fires window 'load' synchronously during its own init,
-	 * before deferred scripts execute.
+	 * Skips already-processed articles ('background-done') or those without a
+	 * post thumbnail. Uses a per-image load listener rather than window 'load'
+	 * because Jetpack Infinite Scroll fires window 'load' synchronously during
+	 * its own init, before deferred scripts execute.
+	 *
+	 * @returns {void}
 	 */
 	function init() {
-		var featuredContent = document.getElementById( 'featured-content' );
+		const featuredContent = document.getElementById( 'featured-content' );
 		if ( ! featuredContent ) {
 			return;
 		}
@@ -65,8 +81,8 @@
 				return;
 			}
 
-			var entryImage = article.querySelector( '.post-thumbnail' );
-			var thumbnail  = article.querySelector( 'img' );
+			const entryImage = article.querySelector( '.post-thumbnail' );
+			const thumbnail  = article.querySelector( 'img' );
 
 			if ( ! entryImage || ! thumbnail ) {
 				return;

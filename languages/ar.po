@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2024-11-21T04:15:33+00:00\n"
-"PO-Revision-Date: 2022-10-22 11:07:42+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
 
 #: functions.php:99
 msgid "Red"
@@ -56,15 +56,26 @@ msgstr "التباين"
 msgid "Continue reading %s"
 msgstr "متابعة قراءة %s"
 
-#. Author of the theme
-#: style.css
-msgid "Automattic"
-msgstr "Automattic"
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
 
-#. Author URI of the theme
-#: style.css
-msgid "https://wordpress.com/themes/"
-msgstr "https://wordpress.com/themes/"
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
 #: single.php:29
 msgid "Next"
@@ -254,7 +265,7 @@ msgstr "أسفل الصفحة"
 #: functions.php:190
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "مفعل"
+msgstr "off"
 
 #: footer.php:55
 msgid "Theme: %1$s by %2$s."
@@ -328,12 +339,12 @@ msgstr "استعراض التعليق"
 msgctxt "comments title"
 msgid "One thought on &ldquo;%2$s&rdquo;"
 msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] "لا أفكار على &rdquo;%2$s&ldquo;"
-msgstr[1] "فكرة واحدة على &rdquo;%2$s&ldquo;"
-msgstr[2] "فكرتان اثنتان على &rdquo;%2$s&ldquo;"
-msgstr[3] "%1$s أفكار على &rdquo;%2$s&ldquo;"
-msgstr[4] "%1$s فكرة على &rdquo;%2$s&ldquo;"
-msgstr[5] "%1$s فكرة على &rdquo;%2$s&ldquo;"
+msgstr[0] "لا أفكار على &ldquo;%2$s&rdquo;"
+msgstr[1] "فكرة واحدة على &ldquo;%2$s&rdquo;"
+msgstr[2] "فكرتان اثنتان على &ldquo;%2$s&rdquo;"
+msgstr[3] "%1$s أفكار على &ldquo;%2$s&rdquo;"
+msgstr[4] "%1$s فكرة على &ldquo;%2$s&rdquo;"
+msgstr[5] "%1$s فكرة على &ldquo;%2$s&rdquo;"
 
 #: author-bio.php:32
 msgid "View all posts by %s"

@@ -9,39 +9,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/*
- * Security note for contributors: the Customizer API verifies its own nonces.
- * Any new AJAX endpoints added to this theme must call check_ajax_referer()
- * and output wp_nonce_field() — see https://developer.wordpress.org/apis/security/nonces/
- */
-
 /**
- * Adds postMessage support for site title and description for the Theme Customizer.
+ * Adds postMessage transport support and registers theme-specific Customizer settings.
  *
- * @param WP_Customize_Manager $wp_customize Theme Customizer object.
+ * Switches the blogname, blogdescription, and header_textcolor settings to the
+ * postMessage transport so the live preview can update them without a full page
+ * refresh. Also registers the "Theme Options" section with a single "Show author
+ * bio on single posts" checkbox setting.
+ *
+ * @param WP_Customize_Manager $wp_customize The active Customizer manager instance.
  * @return void
  */
-function canard_customize_register( $wp_customize ) {
+function canard_customize_register( WP_Customize_Manager $wp_customize ) {
 	$wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
 	$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
 	$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
 
-	/* Theme Options */
 	$wp_customize->add_section( 'canard_theme_options', array(
 		'title'    => __( 'Theme Options', 'canard' ),
 		'priority' => 130,
 	) );
 
-	/* Author Bio */
 	$wp_customize->add_setting( 'canard_author_bio', array(
-		'default'           => false,
+		'default'           => '',
 		'sanitize_callback' => 'wp_validate_boolean',
 	) );
 	$wp_customize->add_control( 'canard_author_bio', array(
-		'label'             => __( 'Show author bio on single posts.', 'canard' ),
-		'section'           => 'canard_theme_options',
-		'priority'          => 10,
-		'type'              => 'checkbox',
+		'label'   => __( 'Show author bio on single posts.', 'canard' ),
+		'section' => 'canard_theme_options',
+		'priority' => 10,
+		'type'    => 'checkbox',
 	) );
 }
 add_action( 'customize_register', 'canard_customize_register' );
@@ -49,7 +46,9 @@ add_action( 'customize_register', 'canard_customize_register' );
 /**
  * Enqueues the Customizer live-preview script.
  *
- * Loaded only inside the Customizer preview iframe via customize_preview_init.
+ * Loaded only inside the Customizer preview iframe via the customize_preview_init
+ * action. The script depends on the core customize-preview handle so it is
+ * deferred until after the preview frame is ready.
  *
  * @return void
  */

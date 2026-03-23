@@ -11,25 +11,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Theme version constant used for cache-busting enqueued assets.
+ *
+ * @var string CANARD_VERSION Semantic version string of the active theme build.
  */
-define( 'CANARD_VERSION', '2.7.0' );
+define( 'CANARD_VERSION', '3.0.0' );
 
 /**
- * Set the content width based on the theme's design and stylesheet.
+ * Maximum pixel width of the main content column.
+ *
+ * Set once at theme load. canard_content_width() widens it to 869 on page
+ * templates, which have no sidebar. Downstream consumers (e.g. oEmbed) read
+ * this global to constrain embedded media dimensions.
+ *
+ * @var int $content_width
  */
-if ( ! isset( $content_width ) ) {
-	$content_width = 720; /* pixels */
-}
+$content_width = isset( $content_width ) ? $content_width : 720; /* pixels */
 
 if ( ! function_exists( 'canard_content_width' ) ) {
 	/**
-	 * Adjusts $content_width for full-width page templates.
+	 * Widens $content_width for full-width page templates.
 	 *
-	 * The global is set to 720px at theme load. Pages use a wider content area
-	 * with no sidebar, so 869px better reflects the actual rendered width and
-	 * ensures media embeds are sized correctly on page templates.
+	 * The global defaults to 720 px at theme load. Page templates render
+	 * without a sidebar, so 869 px more accurately reflects the actual
+	 * container width and ensures media embeds are sized correctly.
+	 * Hooked to template_redirect so the conditional template tags
+	 * (is_page(), etc.) are reliable when this runs.
 	 *
-	 * @global int $content_width
+	 * @global int $content_width Maximum pixel width of the main content column.
 	 * @return void
 	 */
 	function canard_content_width() {
@@ -42,39 +50,36 @@ if ( ! function_exists( 'canard_content_width' ) ) {
 }
 add_action( 'template_redirect', 'canard_content_width' );
 
-if ( ! function_exists( 'canard_setup' ) ) :
+if ( ! function_exists( 'canard_setup' ) ) {
 	/**
 	 * Sets up theme defaults and registers support for various WordPress features.
 	 *
-	 * Note that this function is hooked into the after_setup_theme hook, which
-	 * runs before the init hook. The init hook is too late for some features, such
-	 * as indicating support for post thumbnails.
+	 * Hooked to after_setup_theme, which runs before init. This is intentional:
+	 * features such as post-thumbnails must be declared before init fires.
 	 *
 	 * @return void
 	 */
 	function canard_setup() {
 
 		/*
-		 * Make theme available for translation.
-		 * Translations can be filed in the /languages/ directory.
-		 * If you're building a theme based on Canard, use a find and replace
-		 * to change 'canard' to the name of your theme in all the template files.
+		 * Make the theme available for translation.
+		 * Translation files should be placed in the /languages/ directory.
+		 * When building a child theme, replace 'canard' with the child theme's
+		 * text domain in all template files.
 		 */
 		load_theme_textdomain( 'canard', get_template_directory() . '/languages' );
 
-		// Add default posts and comments RSS feed links to head.
 		add_theme_support( 'automatic-feed-links' );
 
 		/*
 		 * Let WordPress manage the document title.
-		 * By adding theme support, we declare that this theme does not use a
-		 * hard-coded <title> tag in the document head, and expect WordPress to
-		 * provide it for us.
+		 * Declaring this support signals that the theme does not hard-code a
+		 * <title> tag, and WordPress will provide the correct title element.
 		 */
 		add_theme_support( 'title-tag' );
 
 		/*
-		 * Enable support for Post Thumbnails on posts and pages.
+		 * Enable support for post thumbnails on posts and pages.
 		 *
 		 * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
 		 */
@@ -83,12 +88,11 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		add_image_size( 'canard-featured-content-thumbnail', 915, 500, true );
 		add_image_size( 'canard-single-thumbnail', 1920, 768, true );
 
-		// Add support for responsive embeds.
 		add_theme_support( 'responsive-embeds' );
 
 		/*
 		 * Enable wide and full-width block alignment.
-		 * Without this, wide/full-width blocks silently break in the editor.
+		 * Without this, wide/full-width blocks break silently in the editor.
 		 */
 		add_theme_support( 'align-wide' );
 
@@ -98,7 +102,6 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		 */
 		add_theme_support( 'wp-block-styles' );
 
-		// Add support for custom logo.
 		add_theme_support( 'custom-logo', array(
 			'width'       => 400,
 			'height'      => 90,
@@ -106,7 +109,6 @@ if ( ! function_exists( 'canard_setup' ) ) :
 			'flex-height' => true,
 		) );
 
-		// Register navigation menu locations.
 		register_nav_menus(
 			array(
 				'primary'   => __( 'Primary Location', 'canard' ),
@@ -117,8 +119,8 @@ if ( ! function_exists( 'canard_setup' ) ) :
 
 		/*
 		 * Switch default core markup for search form, comment form, and comments
-		 * to output valid HTML5. Including 'script' and 'style' tells WordPress to
-		 * omit type attributes on script and style tags.
+		 * to output valid HTML5. Including 'script' and 'style' instructs
+		 * WordPress to omit type attributes on those tags.
 		 */
 		add_theme_support(
 			'html5',
@@ -138,7 +140,7 @@ if ( ! function_exists( 'canard_setup' ) ) :
 		add_theme_support( 'customize-selective-refresh-widgets' );
 
 		/*
-		 * Enable support for Post Formats.
+		 * Enable support for post formats.
 		 *
 		 * @link https://developer.wordpress.org/themes/functionality/post-formats/
 		 */
@@ -151,117 +153,119 @@ if ( ! function_exists( 'canard_setup' ) ) :
 			)
 		);
 	}
-endif;
+}
 add_action( 'after_setup_theme', 'canard_setup' );
 
 /**
- * Disable block-based widgets editor to maintain classic widget interface.
+ * Disables the block-based widgets editor to maintain the classic widget interface.
  */
 add_filter( 'use_widgets_block_editor', '__return_false' );
 
-/**
- * Register widget areas.
- *
- * @link https://developer.wordpress.org/themes/functionality/sidebars/
- * @return void
- */
-function canard_widgets_init() {
-	register_sidebar(
-		array(
-			'name'          => __( 'Sidebar', 'canard' ),
-			'id'            => 'sidebar-1',
-			'description'   => '', // No description; label is sufficient in the Customizer widget panel.
+if ( ! function_exists( 'canard_widgets_init' ) ) {
+	/**
+	 * Registers the primary sidebar (sidebar-1) and the footer widget area (sidebar-2).
+	 *
+	 * Both sidebars use <aside> as the widget wrapper and <h2> for widget titles,
+	 * matching the semantic markup expected by the theme templates.
+	 *
+	 * @link https://developer.wordpress.org/themes/functionality/sidebars/
+	 * @return void
+	 */
+	function canard_widgets_init() {
+		$sidebar_defaults = array(
 			'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</aside>',
 			'before_title'  => '<h2 class="widget-title">',
 			'after_title'   => '</h2>',
-		)
-	);
+		);
 
-	register_sidebar(
-		array(
-			'name'          => __( 'Footer', 'canard' ),
-			'id'            => 'sidebar-2',
-			'description'   => '', // No description; label is sufficient in the Customizer widget panel.
-			'before_widget' => '<aside id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</aside>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
-		)
-	);
+		register_sidebar( array_merge( $sidebar_defaults, array(
+			'name' => __( 'Sidebar', 'canard' ),
+			'id'   => 'sidebar-1',
+		) ) );
+
+		register_sidebar( array_merge( $sidebar_defaults, array(
+			'name' => __( 'Footer', 'canard' ),
+			'id'   => 'sidebar-2',
+		) ) );
+	}
 }
 add_action( 'widgets_init', 'canard_widgets_init' );
 
-/**
- * Build a combined Google Fonts v2 URL for Lato, Inconsolata, PT Serif,
- * and Playfair Display. Using a single request reduces HTTP round trips.
- *
- * @return string Google Fonts stylesheet URL, or empty string if all fonts are disabled.
- */
-function canard_google_fonts_url(): string {
-	$cache_key   = 'canard_google_fonts_url';
-	$cache_group = 'canard_theme';
-	$cached      = wp_cache_get( $cache_key, $cache_group );
-	if ( false !== $cached ) {
-		return (string) $cached;
+if ( ! function_exists( 'canard_google_fonts_url' ) ) {
+	/**
+	 * Builds a combined Google Fonts v2 URL for Lato, Inconsolata, PT Serif,
+	 * and Playfair Display.
+	 *
+	 * Combines all enabled typefaces into a single stylesheet request to reduce
+	 * HTTP round trips. Results are stored in the object cache for one day to
+	 * avoid rebuilding the URL on every request.
+	 *
+	 * @return string Google Fonts stylesheet URL, or an empty string if all fonts are disabled.
+	 */
+	function canard_google_fonts_url(): string {
+		$cache_key   = 'canard_google_fonts_url';
+		$cache_group = 'canard_theme';
+		$cached      = wp_cache_get( $cache_key, $cache_group );
+		if ( false !== $cached ) {
+			return (string) $cached;
+		}
+
+		/**
+		 * Collected Google Fonts v2 family query strings.
+		 *
+		 * @var array<int, string> $families
+		 */
+		$families = array();
+
+		/* Translators: If characters in your language are not supported by Lato, translate this to 'off'. */
+		if ( 'off' !== _x( 'on', 'Lato font: on or off', 'canard' ) ) {
+			$families[] = 'family=Lato:ital,wght@0,400;0,700;1,400;1,700';
+		}
+
+		/* Translators: If characters in your language are not supported by Inconsolata, translate this to 'off'. */
+		if ( 'off' !== _x( 'on', 'Inconsolata font: on or off', 'canard' ) ) {
+			$families[] = 'family=Inconsolata:wght@400;700';
+		}
+
+		/* Translators: If characters in your language are not supported by PT Serif, translate this to 'off'. */
+		if ( 'off' !== _x( 'on', 'PT Serif font: on or off', 'canard' ) ) {
+			$families[] = 'family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700';
+		}
+
+		/* Translators: If characters in your language are not supported by Playfair Display, translate this to 'off'. */
+		if ( 'off' !== _x( 'on', 'Playfair Display font: on or off', 'canard' ) ) {
+			$families[] = 'family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700';
+		}
+
+		if ( empty( $families ) ) {
+			wp_cache_set( $cache_key, '', $cache_group, DAY_IN_SECONDS );
+			return '';
+		}
+
+		$url = 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
+
+		wp_cache_set( $cache_key, $url, $cache_group, DAY_IN_SECONDS );
+		return $url;
 	}
-
-	$families = array();
-
-	/* translators: If characters in your language are not supported by Lato, translate this to 'off'. */
-	if ( 'off' !== _x( 'on', 'Lato font: on or off', 'canard' ) ) {
-		$families[] = 'family=Lato:ital,wght@0,400;0,700;1,400;1,700';
-	}
-
-	/* translators: If characters in your language are not supported by Inconsolata, translate this to 'off'. */
-	if ( 'off' !== _x( 'on', 'Inconsolata font: on or off', 'canard' ) ) {
-		$families[] = 'family=Inconsolata:wght@400;700';
-	}
-
-	/* translators: If characters in your language are not supported by PT Serif, translate this to 'off'. */
-	if ( 'off' !== _x( 'on', 'PT Serif font: on or off', 'canard' ) ) {
-		$families[] = 'family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700';
-	}
-
-	/* translators: If characters in your language are not supported by Playfair Display, translate this to 'off'. */
-	if ( 'off' !== _x( 'on', 'Playfair Display font: on or off', 'canard' ) ) {
-		$families[] = 'family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700';
-	}
-
-	if ( empty( $families ) ) {
-		wp_cache_set( $cache_key, '', $cache_group, DAY_IN_SECONDS );
-		return '';
-	}
-
-	$url = 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
-	wp_cache_set( $cache_key, $url, $cache_group, DAY_IN_SECONDS );
-	return $url;
 }
 
 /**
- * Adds preconnect resource hints for Google Fonts via the proper WordPress
- * API so they are deduplicated, filterable, and output in the correct position
- * by wp_resource_hints() — not via a raw wp_head echo.
- * Only emitted when Google Fonts are actually in use.
+ * Adds preconnect hints for Google Fonts and a DNS-prefetch hint for Gravatar.
  *
- * @param array  $urls          URLs to print for resource hints.
- * @param string $relation_type The relation type the URLs are printed for.
- * @return array Filtered resource hint URLs.
+ * Uses wp_preconnect_resources (WP 6.7+) for preconnect hints and retains the
+ * wp_resource_hints filter for dns-prefetch, which has no dedicated replacement
+ * hook as of WP 6.9. The wp_resource_hints filter was soft-deprecated for
+ * 'preconnect' only in WP 6.7; 'dns-prefetch' continues to rely on it.
+ *
+ * @param string[] $urls          Existing resource-hint URLs for 'dns-prefetch'.
+ * @param string   $relation_type The hint relation type being processed.
+ * @return string[] Filtered URLs with theme additions appended.
  */
 function canard_resource_hints( array $urls, string $relation_type ): array {
-	if ( 'preconnect' === $relation_type && canard_google_fonts_url() ) {
-		$urls[] = array(
-			'href' => 'https://fonts.googleapis.com',
-		);
-		$urls[] = array(
-			'href'        => 'https://fonts.gstatic.com',
-			'crossorigin' => true,
-		);
-	}
-
-	// Prefetch Gravatar DNS early so avatar requests on archive pages don't
-	// stall on DNS resolution. Cheap hint; no privacy cost beyond what
-	// get_avatar() already incurs.
+	// Prefetch Gravatar DNS early so avatar requests on archive pages do not
+	// stall on DNS resolution. This carries no additional privacy cost beyond
+	// what get_avatar() already incurs.
 	if ( 'dns-prefetch' === $relation_type && ! is_admin() ) {
 		$urls[] = 'https://secure.gravatar.com';
 	}
@@ -271,14 +275,47 @@ function canard_resource_hints( array $urls, string $relation_type ): array {
 add_filter( 'wp_resource_hints', 'canard_resource_hints', 10, 2 );
 
 /**
- * Enqueue scripts and styles.
+ * Appends preconnect resource hints for Google Fonts origins.
+ *
+ * Hooked to wp_preconnect_resources (WP 6.7+), which passes the accumulated
+ * hints array and the relation type string — the same signature as the
+ * wp_resource_hints filter. Hints are only added when Google Fonts are active.
+ *
+ * fonts.googleapis.com serves the CSS stylesheet and requires a plain
+ * preconnect. fonts.gstatic.com serves the font binaries, which are
+ * cross-origin, so crossorigin="anonymous" (the $crossorigin = true flag)
+ * is required for the browser to reuse the connection.
+ *
+ * @param array<int, string|array<string, string>> $urls          Accumulated preconnect URLs.
+ * @param string                                   $relation_type The hint relation type being processed.
+ * @return array<int, string|array<string, string>> Filtered URLs with Google Fonts origins appended.
+ */
+function canard_preconnect_hints( array $urls, string $relation_type ): array {
+	if ( 'preconnect' !== $relation_type || ! canard_google_fonts_url() ) {
+		return $urls;
+	}
+
+	$urls[] = array( 'href' => 'https://fonts.googleapis.com' );
+	$urls[] = array( 'href' => 'https://fonts.gstatic.com', 'crossorigin' => 'anonymous' );
+
+	return $urls;
+}
+add_filter( 'wp_preconnect_resources', 'canard_preconnect_hints', 10, 2 );
+
+/**
+ * Enqueues all front-end CSS and JavaScript assets for the theme.
+ *
+ * Conditional loading ensures scripts and styles are only sent to pages where
+ * they are needed: featured-content only on the front page, sidebar.js only
+ * when sidebar-1 is active, single.js only on singular views, and so on.
+ * All scripts target WP 6.3+ deferred loading via the strategy API.
  *
  * @return void
  */
 function canard_scripts() {
 
-	// Gutenberg block styles — only needed on singular posts/pages and the
-	// front page (where the featured-content carousel may contain block markup).
+	// Block styles are only needed on singular posts/pages and the front page
+	// (where the featured-content carousel may contain block markup).
 	// Archives, search results, and other listing pages do not render block HTML.
 	if ( is_singular() || is_front_page() ) {
 		wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
@@ -293,11 +330,10 @@ function canard_scripts() {
 	// Main stylesheet.
 	wp_enqueue_style( 'canard-style', get_template_directory_uri() . '/style.css', array(), CANARD_VERSION );
 
-	// Note: comment styles are included in style.css.
-
+	// Comment styles are co-located in style.css to keep all layout concerns in a single stylesheet.
 	// Shared utility functions (debounce). No dependencies — plain JS.
 	// Uses the native WP 6.3+ strategy API (targeting WP 6.9+), which handles
-	// dependency ordering correctly and avoids string-manipulation on script tags.
+	// dependency ordering correctly and avoids string manipulation on script tags.
 	wp_enqueue_script(
 		'canard-utils',
 		get_template_directory_uri() . '/js/utils.js',
@@ -320,7 +356,7 @@ function canard_scripts() {
 		)
 	);
 
-	// Only enqueue featured-content script on the front page where it's relevant.
+	// Only enqueue the featured-content script on the front page where it is used.
 	if ( is_front_page() ) {
 		wp_enqueue_script(
 			'canard-featured-content',
@@ -357,9 +393,14 @@ function canard_scripts() {
 	);
 
 	if ( is_singular() ) {
-		// canard-single runs entry-hero DOM rearrangement synchronously to avoid
-		// a layout flash (FOUC). Do NOT add strategy:defer here.
-		wp_enqueue_script( 'canard-single', get_template_directory_uri() . '/js/single.js', array( 'canard-utils' ), CANARD_VERSION, true );
+		// No defer — must run synchronously to prevent entry-hero layout flash before first paint.
+		wp_enqueue_script(
+			'canard-single',
+			get_template_directory_uri() . '/js/single.js',
+			array( 'canard-utils' ),
+			CANARD_VERSION,
+			array( 'in_footer' => true )
+		);
 	}
 
 	if ( is_active_sidebar( 'sidebar-1' ) ) {
@@ -388,19 +429,18 @@ function canard_scripts() {
 		);
 	}
 
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+	if ( is_singular() && comments_open() && '1' === get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'canard_scripts' );
 
 /**
- * Register editor styles via the preferred add_editor_style() API.
- * This uses WP core's editor style scoping (.editor-styles-wrapper),
- * handles RTL correctly, and is the recommended path since WP 5.8.
+ * Registers editor styles using the preferred add_editor_style() API.
  *
- * Priority 11 ensures this runs after canard_setup() at priority 10,
- * so add_theme_support( 'editor-styles' ) is called after theme setup is complete.
+ * Runs at priority 11 so it fires after canard_setup() at priority 10,
+ * ensuring add_theme_support( 'editor-styles' ) is declared after full
+ * theme setup has completed.
  *
  * @return void
  */
@@ -417,70 +457,62 @@ function canard_editor_styles() {
 add_action( 'after_setup_theme', 'canard_editor_styles', 11 );
 
 /**
- * Implement the Custom Header feature.
+ * Loads the custom header feature.
  */
 require get_template_directory() . '/inc/custom-header.php';
 
 /**
- * Custom template tags for this theme.
+ * Loads custom template tags for this theme.
  */
 require get_template_directory() . '/inc/template-tags.php';
 
 /**
- * Custom functions that act independently of the theme templates.
+ * Loads custom functions that act independently of the theme templates.
  */
 require get_template_directory() . '/inc/extras.php';
 
 /**
- * Customizer additions.
+ * Loads Customizer additions.
  */
 require get_template_directory() . '/inc/customizer.php';
 
 /**
- * Load Jetpack compatibility file.
+ * Loads the Jetpack compatibility file.
  */
 require get_template_directory() . '/inc/jetpack.php';
 
 /**
- * Register the entry-hero body class filter.
+ * Loads the entry-hero body class filter exactly once.
  *
  * canard_entry_hero_body_class() is defined in entry-script.php, which is
- * loaded via get_template_part() inside the Loop. To avoid registering the
- * callback on every loop iteration (which would add it multiple times on
- * archive pages), we load the file here once at theme setup — purely for the
- * function definition — and call add_filter() a single time.
+ * also loaded via get_template_part() inside the Loop. Requiring it here
+ * once at theme setup — purely for the function definition — and calling
+ * add_filter() a single time prevents the callback from being registered
+ * on every loop iteration on archive pages.
  */
 require_once get_template_directory() . '/entry-script.php';
 add_filter( 'body_class', 'canard_entry_hero_body_class' );
 
 /**
- * -------------------------------------------------------------------------
- * Security: Taxonomy Archive Description Sanitisation
- * -------------------------------------------------------------------------
- *
  * WordPress outputs the taxonomy term description through the_archive_description()
  * without applying wp_kses_post(). Users with the manage_categories capability can
  * store arbitrary HTML (including <script> tags) in the description field. This
- * filter sanitises all output from get_the_archive_description() to a safe HTML
+ * filter sanitizes all output from get_the_archive_description() to a safe HTML
  * subset before it is printed by archive.php and category.php.
  *
  * Note: archive.php and category.php also call wp_kses_post() directly at the
- * point of echo for defence in depth. This filter covers any other template or
+ * point of echo for defense in depth. This filter covers any other template or
  * plugin that calls the_archive_description() or get_the_archive_description()
- * without its own sanitisation step.
+ * without its own sanitization step.
  */
 add_filter( 'get_the_archive_description', 'wp_kses_post' );
 
 /**
- * -------------------------------------------------------------------------
- * Category Header Image
- * -------------------------------------------------------------------------
- *
  * canard_get_category_header_image() returns the URL of the banner image for
  * the current category archive, or false if none is configured.
  *
  * By default the function returns false so that category.php falls back to a
- * plain colour block (see canard_get_category_color() below).
+ * plain color block (see canard_get_category_color() below).
  *
  * CHILD THEME OVERRIDE — use the canard_category_header_image filter:
  *
@@ -491,23 +523,32 @@ add_filter( 'get_the_archive_description', 'wp_kses_post' );
  *     if ( isset( $map[ $slug ] ) ) {
  *       return get_stylesheet_directory_uri() . '/images/categories/' . $map[ $slug ];
  *     }
- *     return $url; // return the received value (false) to keep the colour fallback
+ *     return $url; // return the received value (false) to keep the color fallback
  *   } );
  *
- * Always return the received $url value (not a hardcoded false) for slugs with
- * no match, so the filter chain and colour fallback continue to work correctly.
+ * Always return the received $url value (not a hard-coded false) for slugs with
+ * no match, so the filter chain and color fallback continue to work correctly.
  *
  * See docs/category-images.md for full documentation.
  *
- * @return string|false Image URL, or false to trigger the colour fallback.
+ * @return string|false Image URL, or false to trigger the color fallback.
  */
 if ( ! function_exists( 'canard_get_category_header_image' ) ) {
+	/**
+	 * Returns the category header image URL for the current archive page.
+	 *
+	 * Applies the canard_category_header_image filter so child themes can
+	 * supply a URL without replacing this function. Returns false by default,
+	 * causing category.php to render the solid-color fallback instead.
+	 *
+	 * @return string|false Image URL string, or false when no image is configured.
+	 */
 	function canard_get_category_header_image() {
 		/**
 		 * Filters the category header image URL.
 		 *
-		 * Return a URL string to show an image banner, or false/empty to fall
-		 * back to the solid colour block defined by canard_get_category_color().
+		 * Return a URL string to display an image banner, or false/empty to fall
+		 * back to the solid color block defined by canard_get_category_color().
 		 *
 		 * @param string|false $url Image URL or false.
 		 */
@@ -516,11 +557,9 @@ if ( ! function_exists( 'canard_get_category_header_image' ) ) {
 }
 
 /**
- * Returns the solid-colour fallback used in the category header when no image
- * is available.
- *
- * Defaults to the theme accent colour (#d11415). Child themes can override
- * this function or add a filter:
+ * Returns the solid-color CSS fallback used in the category header when no image is available.
+ * Defaults to the theme accent color (#d11415). Child themes can override
+ * this function or use the canard_category_color filter:
  *
  *   add_filter( 'canard_category_color', function( $color ) {
  *     $map = array( 'travel' => '#1a6eb5', 'food' => '#e07b29' );
@@ -528,17 +567,24 @@ if ( ! function_exists( 'canard_get_category_header_image' ) ) {
  *     return $map[ $cat->slug ] ?? $color;
  *   } );
  *
- * @return string A valid CSS colour value (hex, rgb, etc.).
+ * @return string A valid CSS color value (hex, rgb, etc.).
  */
 if ( ! function_exists( 'canard_get_category_color' ) ) {
+	/**
+	 * Returns the CSS color for the category header fallback block.
+	 * Applies the canard_category_color filter so child themes can supply
+	 * per-category colors without replacing the function. Defaults to the
+	 * theme accent color #d11415.
+	 *
+	 * @return string A valid CSS color value (e.g. '#d11415').
+	 */
 	function canard_get_category_color() {
 		/**
-		 * Filters the category header fallback colour.
-		 *
-		 * Defaults to the theme accent colour (#d11415). Child themes can
+		 * Filters the category header fallback color.
+		 * Defaults to the theme accent color (#d11415). Child themes can
 		 * override this value without replacing the function.
 		 *
-		 * @param string $color CSS colour value.
+		 * @param string $color CSS color value.
 		 */
 		return apply_filters( 'canard_category_color', '#d11415' );
 	}

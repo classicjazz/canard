@@ -8,10 +8,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2021-07-06T01:16:33+00:00\n"
-"PO-Revision-Date: 2021-07-05 02:58:00+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
+
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
+
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 
 #: functions.php:98
 msgid "Red"
@@ -43,10 +64,6 @@ msgstr "灰色"
 #: inc/extras.php:98
 msgid "Continue reading %s"
 msgstr "繼續閱讀 %s"
-
-#. Author of the theme
-msgid "Automattic"
-msgstr "Automattic 公司"
 
 #: single.php:28
 msgid "Next"
@@ -233,7 +250,7 @@ msgstr "on"
 #: functions.php:233
 msgctxt "Playfair Display font: on or off"
 msgid "on"
-msgstr "開啟"
+msgstr "off"
 
 #: header.php:22
 msgid "Skip to content"
@@ -252,7 +269,7 @@ msgstr "頁尾"
 #: functions.php:189
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "開啟"
+msgstr "off"
 
 #: footer.php:54
 msgid "Theme: %1$s by %2$s."

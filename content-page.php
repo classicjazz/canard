@@ -1,6 +1,14 @@
 <?php
 /**
- * The template used for displaying page content in page.php
+ * Template part for displaying page content in page.php.
+ *
+ * Renders a single static page including an optional featured image, the page
+ * title, structured data via the entry-script template part, paginated content,
+ * and an edit link for users with the appropriate capability.
+ *
+ * The featured image does not force eager loading because page layouts vary
+ * widely and the thumbnail is not reliably the Largest Contentful Paint
+ * element. Override loading behavior in a child theme when needed.
  *
  * @package Canard
  */
@@ -14,12 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<header class="entry-header">
 		<?php if ( has_post_thumbnail() ) : ?>
 			<div class="post-thumbnail">
-				<?php
-				// No eager/fetchpriority override here — page thumbnails are not reliably
-				// the LCP element (pages vary widely in layout). WordPress applies its own
-				// loading="lazy" heuristic. Override in a child theme when needed.
-				the_post_thumbnail( 'canard-single-thumbnail' );
-				?>
+				<?php the_post_thumbnail( 'canard-single-thumbnail' ); ?>
 			</div>
 		<?php endif; ?>
 

@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2024-11-21T04:17:05+00:00\n"
-"PO-Revision-Date: 2024-09-15 08:39:06+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: vi_VN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
 
 #: functions.php:99
 msgid "Red"
@@ -48,20 +48,26 @@ msgstr "Nền"
 msgid "Continue reading %s"
 msgstr "Đọc tiếp %s"
 
-#. Author of the theme
-#: style.css
-msgid "Automattic"
-msgstr "Tự động"
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
 
-#. Author URI of the theme
-#: style.css
-msgid "https://wordpress.com/themes/"
-msgstr "https://wordpress.com/themes/"
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
 
-#. Description of the theme
-#: style.css
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
 msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 msgstr "Một giao diện linh hoạt và đa năng hoàn hảo cho tạp chí, trang web tin tức và blog. Nó cho phép bạn làm nổi bật các bài viết cụ thể trên trang chủ và cân bằng khả năng đọc với việc sử dụng hình ảnh mạnh mẽ - tất cả đều trong một bố cục hoạt động trên mọi thiết bị."
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
 #: single.php:29
 msgid "Next"
@@ -144,12 +150,12 @@ msgstr "Trạng thái"
 #: inc/template-tags.php:167
 msgctxt "yearly archives date format"
 msgid "Y"
-msgstr "N"
+msgstr "Y"
 
 #: inc/template-tags.php:169
 msgctxt "monthly archives date format"
 msgid "F Y"
-msgstr "F N"
+msgstr "F Y"
 
 #: inc/template-tags.php:171
 msgctxt "daily archives date format"
@@ -248,7 +254,7 @@ msgstr "on"
 #: functions.php:229
 msgctxt "PT Serif font: on or off"
 msgid "on"
-msgstr "bật"
+msgstr "on"
 
 #: functions.php:167
 msgid "Footer"
@@ -259,7 +265,7 @@ msgstr "Footer"
 #: functions.php:190
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "bật"
+msgstr "on"
 
 #: functions.php:155
 #: sidebar.php:15

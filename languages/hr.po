@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-02-25T01:47:59+00:00\n"
-"PO-Revision-Date: 2025-02-24 11:54:22+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
 
 #: functions.php:99
 msgid "Red"
@@ -52,15 +52,26 @@ msgstr "Kontrast"
 msgid "Continue reading %s"
 msgstr "Nastavi čitati %s"
 
-#. Author of the theme
-#: style.css
-msgid "Automattic"
-msgstr "Automattic"
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
 
-#. Author URI of the theme
-#: style.css
-msgid "https://wordpress.com/themes/"
-msgstr "https://wordpress.com/themes/"
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
 #: single.php:29
 msgid "Next"
@@ -231,7 +242,7 @@ msgstr "Traži"
 #: functions.php:195
 msgctxt "Inconsolata font: on or off"
 msgid "on"
-msgstr "uklj."
+msgstr "on"
 
 #: header.php:23
 msgid "Skip to content"
@@ -250,7 +261,7 @@ msgstr "Podnožje"
 #: functions.php:190
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "uključeno"
+msgstr "on"
 
 #: footer.php:55
 msgid "Theme: %1$s by %2$s."

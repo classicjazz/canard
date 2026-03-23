@@ -8,10 +8,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2024-03-06T01:59:53+00:00\n"
-"PO-Revision-Date: 2024-03-04 15:24:51+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: az\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
+
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
+
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "Xəbər saytları, jurnal və bloqlar üçün sabit tərtibatlı bir mövzu."
 
 #: functions.php:98
 msgid "Red"
@@ -43,18 +64,6 @@ msgstr "Orta Boz"
 #: inc/extras.php:98
 msgid "Continue reading %s"
 msgstr "%s oxumağa davam et"
-
-#. Author of the theme
-msgid "Automattic"
-msgstr "Automattic"
-
-#. Author URI of the theme
-msgid "https://wordpress.com/themes/"
-msgstr "https://wordpress.com/themes/"
-
-#. Description of the theme
-msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
-msgstr "Xəbər saytları, jurnal və bloqlar üçün sabit tərtibatlı bir mövzu."
 
 #: single.php:28
 msgid "Next"
@@ -225,7 +234,7 @@ msgstr "Axtar"
 #: functions.php:194
 msgctxt "Inconsolata font: on or off"
 msgid "on"
-msgstr "açıq"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by PT Serif, translate this to 'off'. Do not translate into your own
@@ -233,7 +242,7 @@ msgstr "açıq"
 #: functions.php:228
 msgctxt "PT Serif font: on or off"
 msgid "on"
-msgstr "açıq"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by Playfair Display, translate this to 'off'. Do not translate into your own
@@ -241,7 +250,7 @@ msgstr "açıq"
 #: functions.php:233
 msgctxt "Playfair Display font: on or off"
 msgid "on"
-msgstr "açıq"
+msgstr "on"
 
 #: header.php:22
 msgid "Skip to content"

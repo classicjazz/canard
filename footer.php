@@ -1,8 +1,16 @@
 <?php
 /**
- * The template for displaying the footer.
+ * Template for displaying the site footer.
  *
- * Contains the closing of the #content div and all content after.
+ * Closes the #content div opened in header.php, renders the #colophon
+ * <footer> element (containing the optional footer widget area and footer
+ * navigation menu), closes the #page wrapper, calls wp_footer(), and closes
+ * the <body> and <html> tags.
+ *
+ * The role="contentinfo" attribute is applied explicitly on #colophon because
+ * the implicit landmark role on <footer> only applies when it is a direct
+ * child of <body>. Here it is nested inside the #page div, so the implicit
+ * role is not exposed by assistive technology without the explicit attribute.
  *
  * @package Canard
  */
@@ -15,11 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div><!-- #content -->
 
 	<footer id="colophon" class="site-footer" role="contentinfo">
-	<!-- role="contentinfo" is explicit because #colophon is a child of #page
-	     (a div), not a direct child of <body>. The implicit landmark role on
-	     <footer> only applies when it is not nested inside sectioning content.
-	     Without the explicit role, screen readers do not expose this as the
-	     page's contentinfo landmark. -->
 
 	<?php get_sidebar( 'footer' ); ?>
 

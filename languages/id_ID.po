@@ -8,10 +8,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2021-02-04T00:57:38+00:00\n"
-"PO-Revision-Date: 2020-01-16 02:01:26+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: id\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
+
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
 #: functions.php:99
 msgid "Red"
@@ -54,8 +60,18 @@ msgstr "Lanjutkan membaca %s"
 
 #. Author of the plugin/theme
 #: wp-content/themes/pub/canard/style.css
-msgid "Automattic"
-msgstr "Automattic"
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
+
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Canard"
+msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 
 #: single.php:28
 msgid "Next"
@@ -226,7 +242,7 @@ msgstr "Cari"
 #: functions.php:177
 msgctxt "Inconsolata font: on or off"
 msgid "on"
-msgstr "nyala"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by PT Serif, translate this to 'off'. Do not translate into your own
@@ -253,7 +269,7 @@ msgstr "Kaki Halaman"
 #: functions.php:172
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "di"
+msgstr "on"
 
 #: footer.php:54
 msgid "Theme: %1$s by %2$s."

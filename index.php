@@ -2,9 +2,13 @@
 /**
  * The main template file.
  *
- * This is the most generic template file in a WordPress theme and one of the
- * two required files for a theme (the other being style.css). It is used to
- * display a page when nothing more specific matches a query.
+ * The most generic template file in a WordPress theme and one of the two
+ * required files (the other being style.css). It is used to display a page
+ * when nothing more specific matches a query. On the blog home page
+ * (is_home()) it also renders the featured content hero area above the post
+ * list. Post format-specific template parts (content-{format}.php) are used
+ * for each post in the Loop; content-none.php is shown when no posts are
+ * found.
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
@@ -18,7 +22,6 @@ get_header(); ?>
 
 	<?php
 		if ( is_home() ) {
-			// Include the featured content template.
 			get_template_part( 'featured-content' );
 		}
 	?>

@@ -1,6 +1,12 @@
 <?php
 /**
- * The template for displaying search results pages.
+ * Template for displaying search results pages.
+ *
+ * Renders the search results header (including the sanitized query string),
+ * iterates the Loop using the content-search template part for each result,
+ * outputs paginated navigation, and falls back to content-none.php when no
+ * results are found. The sidebar is always included to keep the layout
+ * consistent with other listing pages.
  *
  * @package Canard
  */
@@ -20,29 +26,23 @@ get_header(); ?>
 				<header class="page-header">
 					<h1 class="page-title">
 						<?php
-							printf(
-								/* translators: %s: search query */
-								esc_html__( 'Search Results for: %s', 'canard' ),
-								'<span>' . esc_html( get_search_query() ) . '</span>'
-							);
+						// wp_sprintf() prevents compromised translation strings from injecting printf format specifiers.
+						echo wp_sprintf(
+							/* translators: %s: search query */
+							esc_html__( 'Search Results for: %s', 'canard' ),
+							'<span>' . esc_html( get_search_query() ) . '</span>'
+						);
 						?>
 					</h1>
 				</header><!-- .page-header -->
 
 				<?php while ( have_posts() ) : the_post(); ?>
 
-					<?php
-						/*
-						 * Include the search-specific template part.
-						 * To override in a child theme, create content-search.php.
-						 */
-						get_template_part( 'content', 'search' );
-					?>
+					<?php get_template_part( 'content', 'search' ); ?>
 
 				<?php endwhile; ?>
 
 				<?php
-				// esc_html__() prevents a compromised .po file from injecting markup into pagination labels.
 				the_posts_pagination( array(
 					'mid_size'  => 2,
 					'prev_text' => esc_html__( '&larr; Previous', 'canard' ),

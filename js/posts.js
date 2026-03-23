@@ -1,53 +1,106 @@
 /**
- * @fileoverview Applies background images and normalized heights to image/gallery post thumbnails.
+ * @fileoverview Applies background images to image/gallery post thumbnails.
  * Handles initial load, window resize, and Jetpack Infinite Scroll batches.
  */
 
 ( function() {
 
-	'use strict';
-
-	// Guard against utils.js failing to load; without this a missing canardUtils
-	// causes a TypeError that silences the entire file.
-	if ( ! window.canardUtils || typeof window.canardUtils.debounce !== 'function' ) {
-		console.warn( 'Canard posts.js: canardUtils not available — debounced resize handler disabled.' );
-		window.canardUtils = window.canardUtils || {};
-		window.canardUtils.debounce = function( fn ) { return fn; };
-	}
-
-	const debounce = window.canardUtils.debounce;
-
 	/**
-	 * Returns a sanitized CSS url() string for use in style.backgroundImage.
+	 * Resolves a safe debounce function.
 	 *
-	 * Accepts absolute http/https URLs, protocol-relative URLs, and root-relative
-	 * paths. Rejects src values containing characters that could escape the url("…")
-	 * wrapper. Double-quotes are percent-encoded as a second layer of defence.
+	 * Prefers the frozen canardUtils.debounce when available. Falls back to a
+	 * local minimal debounce rather than a passthrough identity, preventing
+	 * resize-handler storms when the utility script fails to load. Never writes
+	 * to window.canardUtils, which would leave an unfrozen, attacker-writable
+	 * object on the global scope that a compromised third-party script could
+	 * hijack.
 	 *
-	 * @param {string} src - Raw image src value.
-	 * @returns {string|null} Safe CSS url() value, or null if src is rejected.
+	 * @returns {Function} A debounce implementation.
 	 */
-	function safeCssUrl( src ) {
-		if ( ! src ) {
-			return null;
+	function resolveDebounce() {
+		if (
+			window.canardUtils &&
+			typeof window.canardUtils.debounce === 'function'
+		) {
+			return window.canardUtils.debounce;
 		}
-		if ( ! /^(https?:)?\/\/[^\s"'()\\]|^\/[^/]/.test( src ) ) {
-			return null;
-		}
-		return 'url("' + src.replace( /"/g, '%22' ) + '")';
+
+		console.warn( 'Canard posts.js: canardUtils not available — using local debounce fallback.' );
+
+		/**
+		 * Minimal debounce fallback that never touches window.canardUtils.
+		 *
+		 * @param {Function} fn   - The function to debounce.
+		 * @param {number}   wait - Delay in milliseconds.
+		 * @returns {Function} Debounced wrapper function.
+		 */
+		return function localDebounce( fn, wait ) {
+			let timer;
+			/**
+			 * Resets the debounce timer on each invocation and fires fn after the delay.
+			 *
+			 * @returns {void}
+			 */
+			return function() {
+				const ctx  = this;
+				const args = arguments;
+				clearTimeout( timer );
+				timer = setTimeout( function() {
+					fn.apply( ctx, args );
+				}, wait || 500 );
+			};
+		};
 	}
 
+	/** @type {Function} Debounce implementation resolved from canardUtils or local fallback. */
+	const debounce = resolveDebounce();
+
 	/**
-	 * Applies background-image and uniform height to .post-thumbnail for
-	 * format-image and format-gallery posts.
+	 * Resolves canardUtils.safeCssUrl from the frozen utility namespace.
 	 *
-	 * CSS hides the <img> (opacity:0) and uses background-image on .post-thumbnail
-	 * instead, so the background must be set via JS. Heights are normalized to the
-	 * tallest article in each batch so all cards are uniform. padding-top is read
-	 * from getComputedStyle because the parent stylesheet changes it at the 600px
-	 * breakpoint (60px → 90px).
+	 * Prefers the frozen canardUtils.safeCssUrl when available. Falls back to
+	 * a no-op that always returns null rather than writing to window, which
+	 * would leave an unfrozen, attacker-writable object on the global scope
+	 * that a compromised third-party script could hijack.
 	 *
-	 * @param {Element|Document} scope - Root to search within; pass a container to limit work to newly injected nodes.
+	 * @returns {Function} A safeCssUrl implementation, or a null-returning stub.
+	 */
+	function resolveSafeCssUrl() {
+		if (
+			window.canardUtils &&
+			typeof window.canardUtils.safeCssUrl === 'function'
+		) {
+			return window.canardUtils.safeCssUrl;
+		}
+
+		console.warn( 'Canard posts.js: canardUtils.safeCssUrl not available — background images disabled.' );
+
+		/**
+		 * Stub returned when canardUtils is unavailable.
+		 *
+		 * @returns {null} Always returns null to disable background application.
+		 */
+		return function stubSafeCssUrl() {
+			return null;
+		};
+	}
+
+	/** @type {Function} Sanitizes a raw src string into a safe CSS url() value. */
+	const safeCssUrl = resolveSafeCssUrl();
+
+	/**
+	 * Applies background-image to .post-thumbnail for format-image and
+	 * format-gallery posts.
+	 *
+	 * CSS hides the <img> (opacity:0) and uses background-image on
+	 * .post-thumbnail instead, so the background must be set via JS.
+	 * .post-thumbnail is already position:absolute with top:0 and bottom:0,
+	 * so it fills the card height automatically — no JS height normalization
+	 * is needed or correct here.
+	 *
+	 * @param {Element|Document} scope - Root to search within; pass a container
+	 *   to limit work to newly injected nodes.
+	 * @returns {void}
 	 */
 	function applyPostStyles( scope ) {
 
@@ -56,7 +109,7 @@
 			if (
 				! entry.classList.contains( 'has-post-thumbnail' ) ||
 				( ! entry.classList.contains( 'format-image' ) && ! entry.classList.contains( 'format-gallery' ) ) ||
-				( entry.parentElement && entry.parentElement.classList.contains( 'featured-content' ) )
+				entry.closest( '.featured-content, #featured-content' )
 			) {
 				return;
 			}
@@ -68,7 +121,7 @@
 				return;
 			}
 
-			entries.push( { entry: entry, postThumbnail: postThumbnail, thumbnail: thumbnail } );
+			entries.push( { postThumbnail: postThumbnail, thumbnail: thumbnail } );
 		} );
 
 		if ( ! entries.length ) {
@@ -77,75 +130,42 @@
 
 		/**
 		 * Sets background-image on the thumbnail container.
-		 * Uses currentSrc (srcset-resolved) when available, falls back to the src attribute.
 		 *
-		 * @param {{ postThumbnail: HTMLElement, thumbnail: HTMLImageElement }} item
+		 * Uses currentSrc (srcset-resolved) when available, falls back to the
+		 * src attribute. Skips the DOM write when the computed value is
+		 * unchanged, avoiding a style recalculation on every resize tick for
+		 * already-processed thumbnails.
+		 *
+		 * @param {{ postThumbnail: HTMLElement, thumbnail: HTMLImageElement }} item - Entry object containing the thumbnail container and image.
+		 * @returns {void}
 		 */
 		function applyBackground( item ) {
 			const src    = item.thumbnail.currentSrc || item.thumbnail.getAttribute( 'src' );
 			const cssUrl = safeCssUrl( src );
-			if ( cssUrl ) {
+			if ( ! cssUrl ) {
+				return;
+			}
+			// Guard: skip write when value is already correct to avoid a
+			// redundant style recalculation — especially important on resize
+			// where this runs across all loaded posts after Infinite Scroll.
+			if ( item.postThumbnail.style.backgroundImage !== cssUrl ) {
 				item.postThumbnail.style.backgroundImage = cssUrl;
 			}
 		}
 
-		/**
-		 * Measures all articles in the batch, finds the maximum thumbnail height,
-		 * and applies it uniformly after a single rAF to avoid layout thrash.
-		 */
-		function normalizeHeights() {
-			requestAnimationFrame( function() {
-				let maxThumbnailHeight = 0;
-				const measurements = entries.map( function( item ) {
-					const articleHeight = item.entry.offsetHeight;
-					if ( articleHeight <= 0 ) {
-						return null;
-					}
-					const paddingTop      = parseInt( getComputedStyle( item.entry ).paddingTop, 10 ) || 0;
-					const thumbnailHeight = articleHeight - paddingTop;
-					if ( thumbnailHeight > maxThumbnailHeight ) {
-						maxThumbnailHeight = thumbnailHeight;
-					}
-					return thumbnailHeight;
-				} );
-
-				if ( maxThumbnailHeight <= 0 ) {
-					normalizeHeights();
-					return;
-				}
-
-				entries.forEach( function( item, i ) {
-					if ( measurements[ i ] !== null ) {
-						item.postThumbnail.style.height = maxThumbnailHeight + 'px';
-					}
-				} );
-			} );
-		}
-
-		let pending = 0;
-
 		entries.forEach( function( item ) {
 			if ( item.thumbnail.complete && item.thumbnail.naturalWidth > 0 ) {
-				// Cache hit — currentSrc already resolved; single call suffices.
+				// Cache hit — currentSrc already resolved.
 				applyBackground( item );
 			} else {
-				// Apply src attribute immediately as a placeholder, then upgrade to
-				// srcset-resolved currentSrc once the load event fires.
+				// Apply src attribute immediately as a placeholder, then upgrade
+				// to srcset-resolved currentSrc once the load event fires.
 				applyBackground( item );
-				pending++;
 				item.thumbnail.addEventListener( 'load', function() {
 					applyBackground( item );
-					pending--;
-					if ( pending === 0 ) {
-						normalizeHeights();
-					}
 				}, { once: true } );
 			}
 		} );
-
-		if ( pending === 0 ) {
-			normalizeHeights();
-		}
 	}
 
 	// Script is deferred; readyState is already 'interactive' in practice.
@@ -157,20 +177,48 @@
 		applyPostStyles( document );
 	}
 
-	// Re-normalize all batches on resize since the tallest article may change across breakpoints.
-	window.addEventListener( 'resize', debounce( function() {
+	// Hoist the debounced wrapper to module scope so only one reference ever
+	// exists — prevents duplicate listener accumulation if 'load' fires more
+	// than once (e.g. Jetpack Infinite Scroll synthetic load events).
+	const debouncedApplyPostStyles = debounce( function() {
 		applyPostStyles( document );
-	}, 500 ) );
+	}, 500 );
+
+	// Re-apply backgrounds on resize in case srcset resolves to a different src.
+	window.addEventListener( 'resize', debouncedApplyPostStyles );
 
 	// Jetpack Infinite Scroll dispatches 'is.post-load' on document.body.
 	// (Not 'inf_scr_posts_loaded' on document — confirmed against infinity.min.js, Jetpack 15.x.)
-	document.body.addEventListener( 'is.post-load', function() {
+	/**
+	 * Handles Jetpack Infinite Scroll post-load events, applying backgrounds to newly injected posts.
+	 *
+	 * @param {CustomEvent} event - The `is.post-load` event, with new nodes in event.detail.nodes.
+	 * @returns {void}
+	 */
+	document.body.addEventListener( 'is.post-load', function( event ) {
+		// Jetpack passes the new nodes in event.detail.nodes on Jetpack >= 13.
+		// Fall back to .infinite-wrap scanning for older versions.
+		const newNodes = event && event.detail && event.detail.nodes;
+
+		if ( newNodes && newNodes.length ) {
+			// Process each newly injected element node directly to avoid
+			// re-scanning the entire document.
+			newNodes.forEach( function( node ) {
+				if ( node.nodeType === Node.ELEMENT_NODE ) {
+					applyPostStyles( node );
+				}
+			} );
+			return;
+		}
+
 		const wraps  = document.querySelectorAll( '.infinite-wrap' );
 		const latest = wraps[ wraps.length - 1 ];
 
 		if ( latest ) {
 			applyPostStyles( latest );
 		} else {
+			// Genuine fallback — log so this edge case is visible in development.
+			console.warn( 'Canard posts.js: is.post-load fired but no .infinite-wrap found — falling back to full document scan.' );
 			applyPostStyles( document );
 		}
 	} );

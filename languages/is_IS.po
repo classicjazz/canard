@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-03-05T01:52:03+00:00\n"
-"PO-Revision-Date: 2025-01-06 14:14:40+0000\n"
+"PO-Revision-Date: 2026-04-09 19:03:13+0000\n"
 "Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);\n"
-"X-Generator: GlotPress/2.4.0-alpha\n"
+"X-Generator: Claude Sonnet 4.6\n"
 
 #: functions.php:99
 msgid "Red"
@@ -56,25 +56,26 @@ msgstr "Bakgrunnur"
 msgid "Continue reading %s"
 msgstr "Halda áfram að lesa: %s"
 
-#. Author URI of the theme
-#: style.css
-msgid "https://wordpress.com/themes/"
-msgstr "https://wordpress.com/themes/"
+#. Author URI of the plugin/theme
+#. Theme URI of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "https://github.com/classicjazz/canard"
+msgstr "https://github.com/classicjazz/canard"
 
-#. Author of the theme
-#: style.css
-msgid "Automattic"
-msgstr "Automattic"
+#. Author of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "Automattic, Michael Connelly"
+msgstr "Automattic, Michael Connelly"
 
-#. Theme URI of the theme
-#: style.css
-msgid "https://wordpress.com/themes/canard/"
-msgstr "https://wordpress.com/themes/canard/"
-
-#. Theme Name of the theme
-#: style.css
+#. Theme Name of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
 msgid "Canard"
 msgstr "Canard"
+
+#. Description of the plugin/theme
+#: wp-content/themes/pub/canard/style.css
+msgid "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
+msgstr "A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device."
 
 #: single.php:30
 msgid "Previous post:"
@@ -166,7 +167,7 @@ msgstr "Dagur: %s"
 #: inc/template-tags.php:169
 msgctxt "monthly archives date format"
 msgid "F Y"
-msgstr "M Á"
+msgstr "M Y"
 
 #: inc/template-tags.php:169
 msgid "Month: %s"
@@ -175,7 +176,7 @@ msgstr "Mánuður: %s"
 #: inc/template-tags.php:167
 msgctxt "yearly archives date format"
 msgid "Y"
-msgstr "Á"
+msgstr "Y"
 
 #: inc/template-tags.php:167
 msgid "Year: %s"
@@ -261,7 +262,7 @@ msgstr "Fara að efni"
 #: functions.php:234
 msgctxt "Playfair Display font: on or off"
 msgid "on"
-msgstr "virkt"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by PT Serif, translate this to 'off'. Do not translate into your own
@@ -269,7 +270,7 @@ msgstr "virkt"
 #: functions.php:229
 msgctxt "PT Serif font: on or off"
 msgid "on"
-msgstr "virkt"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by Inconsolata, translate this to 'off'. Do not translate into your own
@@ -277,14 +278,14 @@ msgstr "virkt"
 #: functions.php:195
 msgctxt "Inconsolata font: on or off"
 msgid "on"
-msgstr "virkt"
+msgstr "on"
 
 #. translators: If there are characters in your language that are not supported
 #. by Lato, translate this to 'off'. Do not translate into your own language.
 #: functions.php:190
 msgctxt "Lato font: on or off"
 msgid "on"
-msgstr "virkt"
+msgstr "on"
 
 #: functions.php:167
 msgid "Footer"

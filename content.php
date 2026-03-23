@@ -1,6 +1,11 @@
 <?php
 /**
- * The template part for displaying content on the blog index and archive pages.
+ * Template part for displaying a single post card on index and archive pages.
+ *
+ * Renders one post card inside the Loop. Handles featured image display with
+ * format-aware wrapper elements, the sticky-post badge, entry header, entry
+ * meta (author, date, comments, categories), and a smart excerpt that
+ * respects manual <!--more--> breaks.
  *
  * @package Canard
  */
@@ -12,9 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<?php
-	// Cache get_post_type() once — called twice in this template (thumbnail
-	// conditional and entry-meta conditional). Saves one function call per post
-	// on archive pages.
+	// Cached once — used in both the thumbnail conditional and the entry-meta conditional.
 	$post_type = get_post_type();
 	?>
 	<?php if ( has_post_thumbnail() && 'post' === $post_type && ( ! has_post_format() || has_post_format( 'image' ) || has_post_format( 'gallery' ) ) ) : ?>
@@ -25,10 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			} elseif ( has_post_format( 'image' ) || has_post_format( 'gallery' ) ) {
 				echo '<div class="post-thumbnail">';
 			}
-			// sizes corrected: the post list sits inside #primary .content-area
-			// which is narrower than viewport when the sidebar is present.
-			// Default 100vw caused the browser to download a full-width image
-			// even on desktop where the container is ~620 px wide.
+			// The sizes attribute is narrowed from the default 100vw because the
+			// post list sits inside #primary .content-area, which is narrower than
+			// the viewport when the sidebar is present. Using 100vw would cause
+			// the browser to download a full-width image on desktop where the
+			// container is approximately 620 px wide.
 			the_post_thumbnail( 'canard-post-thumbnail', array(
 				'loading' => 'lazy',
 				'sizes'   => '(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px',
@@ -50,22 +54,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php endif; ?>
 
 	<header class="entry-header">
-		<?php
-			canard_entry_categories();
-			the_title( sprintf( '<h1 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h1>' ); ?>
+		<?php the_title( sprintf( '<h1 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h1>' ); ?>
 	</header><!-- .entry-header -->
 
 	<?php get_template_part( 'entry', 'script' ); ?>
+
+	<?php if ( 'post' === $post_type ) : ?>
+		<div class="entry-meta">
+			<?php
+			/*
+			 * Output order: author · date (abbreviated) · comments · categories.
+			 * canard_entry_meta() emits the byline, posted-on, and comments spans.
+			 * canard_entry_categories() emits the cat-links span inline after them.
+			 * Separator slashes between spans are handled by CSS via the
+			 * .content-area .entry-meta > span rules.
+			 */
+			canard_entry_meta();
+			canard_entry_categories();
+			?>
+		</div><!-- .entry-meta -->
+	<?php endif; ?>
 
 	<div class="entry-summary">
 		<?php
 		/*
 		 * Use the_content() when a <!--more--> tag is present so the "Continue
 		 * reading" link respects the manual break point. Fall back to the_excerpt()
-		 * for posts without one. get_the_content() is used only for the check —
-		 * the actual output is always through the template tag so filters run.
+		 * for posts that have no manual break. get_the_content() is used only for
+		 * the check — actual output always goes through the template tag so
+		 * all registered content filters run.
+		 *
+		 * Cast to string: get_the_content() can return false outside the Loop,
+		 * which would raise a PHP 8 TypeError in str_contains().
 		 */
-		if ( str_contains( get_the_content(), '<!--more' ) ) {
+		if ( str_contains( (string) get_the_content(), '<!--more' ) ) {
 			the_content(
 				sprintf(
 					/* translators: %s: Name of current post. */
@@ -79,9 +101,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	</div><!-- .entry-summary -->
 
-	<?php if ( 'post' === $post_type ) : ?>
-		<div class="entry-meta">
-			<?php canard_entry_meta(); ?>
-		</div><!-- .entry-meta -->
-	<?php endif; ?>
 </article><!-- #post-## -->

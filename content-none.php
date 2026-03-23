@@ -1,6 +1,11 @@
 <?php
 /**
- * The template part for displaying a message that posts cannot be found.
+ * Template part for displaying a "no posts found" message.
+ *
+ * Shown when a query returns no results. Outputs context-sensitive guidance:
+ * a prompt to create the first post (for admins on the home page), a search
+ * form with a retry message (for search results pages), or a generic fallback
+ * search form for all other contexts.
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  * @package Canard
