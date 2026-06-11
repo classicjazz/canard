@@ -4,7 +4,15 @@
  * CSS uses this class to adjust header layout for logo-less configurations.
  */
 
-( function() {
+(() => {
+	/**
+	 * Returns the site branding container, or null when it is not present.
+	 *
+	 * @returns {Element|null}
+	 */
+	function getSiteBranding() {
+		return document.querySelector(".site-branding");
+	}
 
 	/**
 	 * Adds 'no-site-branding' to <body> when the site branding container
@@ -23,17 +31,17 @@
 	 * @returns {void}
 	 */
 	function checkSiteBranding() {
-		const siteBranding = document.getElementsByClassName( 'site-branding' )[0];
+		const siteBranding = getSiteBranding();
 
-		if ( ! siteBranding || siteBranding.clientHeight > 0 ) {
+		if (!siteBranding || siteBranding.clientHeight > 0) {
 			return;
 		}
 
-		document.body.classList.add( 'no-site-branding' );
+		document.body.classList.add("no-site-branding");
 	}
 
-	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', checkSiteBranding );
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", checkSiteBranding);
 	} else {
 		checkSiteBranding();
 	}
@@ -50,19 +58,18 @@
 	 *
 	 * @returns {void}
 	 */
-	window.addEventListener( 'load', function() {
-		const siteBranding = document.getElementsByClassName( 'site-branding' )[0];
-		if ( ! siteBranding ) {
+	window.addEventListener("load", () => {
+		const siteBranding = getSiteBranding();
+		if (!siteBranding) {
 			return;
 		}
-		if ( siteBranding.clientHeight > 0 ) {
+		if (siteBranding.clientHeight > 0) {
 			// Font has loaded and inflated the container — remove any flag set
 			// during the font-swap period at DOMContentLoaded.
-			document.body.classList.remove( 'no-site-branding' );
+			document.body.classList.remove("no-site-branding");
 		} else {
 			// Still zero at full load — branding is genuinely hidden.
-			document.body.classList.add( 'no-site-branding' );
+			document.body.classList.add("no-site-branding");
 		}
-	} );
-
-} )();
+	});
+})();

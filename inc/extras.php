@@ -5,6 +5,8 @@
  * @package Canard
  */
 
+declare( strict_types = 1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -67,9 +69,9 @@ if ( ! function_exists( 'canard_continue_reading' ) ) {
 
 		return sprintf( '%1$s <a href="%2$s" class="more-link">%3$s</a>',
 			wp_kses_post( $the_excerpt ),
-			esc_url( $post_id !== false ? get_permalink( $post_id ) : '' ),
+			esc_url( false !== $post_id ? get_permalink( $post_id ) : '' ),
 			/* translators: %s: Name of current post */
-			sprintf( __( 'Continue reading %s', 'canard' ), '<span class="screen-reader-text">' . esc_html( $post_id !== false ? get_the_title( $post_id ) : '' ) . '</span>' )
+			sprintf( __( 'Continue reading %s', 'canard' ), '<span class="screen-reader-text">' . esc_html( false !== $post_id ? get_the_title( $post_id ) : '' ) . '</span>' )
 		);
 	}
 }
@@ -130,7 +132,7 @@ function canard_get_link_url(): string {
 	// so the declared string return type is always honoured.
 	$permalink = get_the_permalink();
 
-	return $has_url ?: ( $permalink !== false ? $permalink : '' );
+	return $has_url ?: ( false !== $permalink ? $permalink : '' );
 }
 
 /**
@@ -154,7 +156,7 @@ add_filter( 'comment_form_default_fields', function( array $fields ): array {
 		// is typed as mixed; the (string) cast narrows it for static analysis
 		// and is a no-op at runtime because the subject is always a string here.
 		$fields['email'] = (string) str_replace(
-			array( 'type="text"', "type='text'" ),
+			[ 'type="text"', "type='text'" ],
 			'type="email"',
 			$fields['email']
 		);

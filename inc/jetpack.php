@@ -6,6 +6,8 @@
  * @package Canard
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -28,38 +30,38 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function canard_jetpack_setup() {
-	add_theme_support( 'infinite-scroll', array(
+	add_theme_support( 'infinite-scroll', [
 		'container'      => 'main',
 		'footer'         => 'page',
-		'footer_widgets' => array( 'sidebar-2' ),
-	) );
+		'footer_widgets' => [ 'sidebar-2' ],
+	] );
 
-	add_theme_support( 'featured-content', array(
+	add_theme_support( 'featured-content', [
 		'filter'      => 'canard_get_featured_posts',
 		'description' => __( 'The featured content section displays on the front page above the header.', 'canard' ),
 		'max_posts'   => 5,
-		'post_types'  => array( 'post', 'page' ),
-	) );
+		'post_types'  => [ 'post', 'page' ],
+	] );
 
 	add_theme_support( 'jetpack-responsive-videos' );
 
-	add_theme_support( 'jetpack-content-options', array(
+	add_theme_support( 'jetpack-content-options', [
 		'blog-display'    => 'content',
 		'author-bio'      => true,
-		'post-details'    => array(
+		'post-details'    => [
 			'stylesheet' => 'canard-style',
 			'date'       => '.posted-on, body:not(.group-blog) .entry-summary + .entry-meta > .comments-link:before',
 			'categories' => '.cat-links',
 			'tags'       => '.tags-links',
 			'author'     => '.byline, .group-blog .entry-summary + .entry-meta > .posted-on:before',
 			'comment'    => '.comments-link',
-		),
-		'featured-images' => array(
+		],
+		'featured-images' => [
 			'archive'    => true,
 			'post'       => true,
 			'page'       => true,
-		),
-	) );
+		],
+	] );
 }
 add_action( 'after_setup_theme', 'canard_jetpack_setup' );
 
@@ -73,7 +75,7 @@ add_action( 'after_setup_theme', 'canard_jetpack_setup' );
  *              with at least 2 elements, false otherwise.
  */
 function canard_has_multiple_featured_posts(): bool {
-	$featured_posts = apply_filters( 'canard_get_featured_posts', array() );
+	$featured_posts = apply_filters( 'canard_get_featured_posts', [] );
 	return is_array( $featured_posts ) && count( $featured_posts ) > 1;
 }
 
@@ -136,8 +138,8 @@ function canard_jetpack_featured_image_display() {
 		return true;
 	}
 
-	$options = get_theme_support( 'jetpack-content-options' )[0] ?? array();
-	$fi      = $options['featured-images'] ?? array();
+	$options = get_theme_support( 'jetpack-content-options' )[0] ?? [];
+	$fi      = $options['featured-images'] ?? [];
 
 	$show_on_post = (bool) get_option(
 		'jetpack_content_featured_images_post',
@@ -182,7 +184,7 @@ function canard_jetpack_portfolio_classes( array $classes ): array {
 		? 'format-' . sanitize_html_class( $post_format )
 		: 'format-standard';
 
-	$class_key = array_search( $class, $classes );
+	$class_key = array_search( $class, $classes, true );
 	if ( false !== $class_key ) {
 		unset( $classes[ $class_key ] );
 	}
@@ -210,7 +212,7 @@ if ( class_exists( 'TypekitTheme' ) ) {
 	 * @param array<string, mixed> $category_rules Existing rules array passed by the filter.
 	 * @return array<string, mixed> The rules array with all Canard selector mappings appended.
 	 */
-	add_filter( 'typekit_add_font_category_rules', function( $category_rules ) {
+	add_filter( 'typekit_add_font_category_rules', function( array $category_rules ): array {
 
 		// -----------------------------------------------------------------------
 		// Base HTML elements
@@ -219,23 +221,23 @@ if ( class_exists( 'TypekitTheme' ) ) {
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'b,
 		strong',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'dfn',
-			array(
-				array( 'property' => 'font-style', 'value' => 'italic' ),
-			)
+			[
+				[ 'property' => 'font-style', 'value' => 'italic' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'optgroup',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
@@ -244,10 +246,10 @@ if ( class_exists( 'TypekitTheme' ) ) {
 		input,
 		select,
 		textarea',
-			array(
-				array( 'property' => 'font-family', 'value' => '"PT Serif", serif' ),
-				array( 'property' => 'font-size',   'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"PT Serif", serif' ],
+				[ 'property' => 'font-size',   'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -261,52 +263,52 @@ if ( class_exists( 'TypekitTheme' ) ) {
 		h4,
 		h5,
 		h6',
-			array(
-				array( 'property' => 'font-family', 'value' => '"Playfair Display", serif' ),
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"Playfair Display", serif' ],
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'h1',
-			array(
-				array( 'property' => 'font-size', 'value' => '49px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '49px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'h2:not(.site-description):not(.author-title)',
-			array(
-				array( 'property' => 'font-size', 'value' => '39px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '39px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'h3',
-			array(
-				array( 'property' => 'font-size', 'value' => '31px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '31px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'h4',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'h5',
-			array(
-				array( 'property' => 'font-size', 'value' => '20px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '20px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'h6',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -318,16 +320,16 @@ if ( class_exists( 'TypekitTheme' ) ) {
 		dfn,
 		em,
 		i',
-			array(
-				array( 'property' => 'font-style', 'value' => 'italic' ),
-			)
+			[
+				[ 'property' => 'font-style', 'value' => 'italic' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'cite',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -336,23 +338,23 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'blockquote',
-			array(
-				array( 'property' => 'font-style', 'value' => 'italic' ),
-			)
+			[
+				[ 'property' => 'font-style', 'value' => 'italic' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'blockquote cite',
-			array(
-				array( 'property' => 'font-style', 'value' => 'normal' ),
-			)
+			[
+				[ 'property' => 'font-style', 'value' => 'normal' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'dt',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -361,16 +363,16 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'a',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'a:visited',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'normal' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'normal' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -379,35 +381,35 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.main-navigation',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.secondary-navigation,
 		.footer-navigation,
 		.bottom-navigation',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comment-navigation a,
 		.posts-navigation a',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.post-navigation .post-title',
-			array(
-				array( 'property' => 'font-family', 'value' => '"Playfair Display", serif' ),
-				array( 'property' => 'font-size',   'value' => '25px' ),
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"Playfair Display", serif' ],
+				[ 'property' => 'font-size',   'value' => '25px' ],
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -416,32 +418,32 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.widget-title,
 		.widgettitle',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_recent_entries .post-date',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_rss .rss-date,
 		.widget_rss cite',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -450,30 +452,30 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.site-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.site-description',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.site-info',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.site-info .sep',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -482,9 +484,9 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.featured-content .entry-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -493,54 +495,54 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.entry-summary',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.page-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '39px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '39px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.archive .hentry .entry-title,
 		.blog .hentry .entry-title,
 		.search .hentry .entry-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.page .entry-title,
 		.single .entry-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '39px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '39px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.entry-meta',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.entry-footer',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.page-links',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -549,23 +551,23 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.author-info .author-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.author-info .author-name',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.author-info .author-bio',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -574,81 +576,81 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comments-area',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.comment-reply-title,
 		.comments-title,
 		.no-comments',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.no-comments',
-			array(
-				array( 'property' => 'font-family', 'value' => '"Playfair Display", serif' ),
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"Playfair Display", serif' ],
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comment-form,
 		.comment-form code',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comment-content blockquote:before',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.comment-author',
-			array(
-				array( 'property' => 'font-size',   'value' => '16px' ),
-				array( 'property' => 'font-family', 'value' => '"Playfair Display", serif' ),
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-size',   'value' => '16px' ],
+				[ 'property' => 'font-family', 'value' => '"Playfair Display", serif' ],
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comment-author a,
 		.comment-author b',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comment-metadata .edit-link:before',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.comment-list .comment-reply-title small,
 		.comment-metadata,
 		.comment-reply-link',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.required',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -657,16 +659,16 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.wp-caption',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.gallery-caption',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -678,16 +680,16 @@ if ( class_exists( 'TypekitTheme' ) ) {
 		#infinite-handle span button:active,
 		#infinite-handle span button:focus,
 		#infinite-handle span button:hover',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'#infinite-footer',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -697,9 +699,9 @@ if ( class_exists( 'TypekitTheme' ) ) {
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.hentry div.sd-rating h3.sd-title,
 		.hentry div.sharedaddy h3.sd-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -708,40 +710,40 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.hentry div#jp-relatedposts h3.jp-relatedposts-headline',
-			array(
-				array( 'property' => 'font-family', 'value' => '"Playfair Display", serif' ),
-				array( 'property' => 'font-size',   'value' => '25px' ),
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"Playfair Display", serif' ],
+				[ 'property' => 'font-size',   'value' => '25px' ],
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.hentry div#jp-relatedposts div.jp-relatedposts-items p',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-context',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-title',
-			array(
-				array( 'property' => 'font-family', 'value' => '"PT Serif", serif' ),
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"PT Serif", serif' ],
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.hentry div#jp-relatedposts div.jp-relatedposts-items .jp-relatedposts-post-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -750,16 +752,16 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_jetpack_display_posts_widget .jetpack-display-remote-posts h4',
-			array(
-				array( 'property' => 'font-size', 'value' => '20px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '20px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_jetpack_display_posts_widget .jetpack-display-remote-posts p',
-			array(
-				array( 'property' => 'font-size', 'value' => '16px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '16px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -768,23 +770,23 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_goodreads h2[class^="gr_custom_header"]',
-			array(
-				array( 'property' => 'font-size', 'value' => '20px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '20px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_goodreads div[class^="gr_custom_title"]',
-			array(
-				array( 'property' => 'font-weight', 'value' => 'bold' ),
-			)
+			[
+				[ 'property' => 'font-weight', 'value' => 'bold' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_goodreads div[class^="gr_custom_author"]',
-			array(
-				array( 'property' => 'font-size', 'value' => '13px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '13px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -793,9 +795,9 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.widget-grofile h4',
-			array(
-				array( 'property' => 'font-size', 'value' => '20px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '20px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -804,9 +806,9 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'body .hentry .wpcom-reblog-snapshot .reblogger-note-content blockquote',
-			array(
-				array( 'property' => 'font-style', 'value' => 'italic' ),
-			)
+			[
+				[ 'property' => 'font-style', 'value' => 'italic' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -815,16 +817,16 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.aboutme_widget #am_name',
-			array(
-				array( 'property' => 'font-size', 'value' => '25px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '25px' ],
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.aboutme_widget #am_headline',
-			array(
-				array( 'property' => 'font-size', 'value' => '20px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '20px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -833,9 +835,9 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_akismet_widget .a-stats',
-			array(
-				array( 'property' => 'font-size', 'value' => '14px' ),
-			)
+			[
+				[ 'property' => 'font-size', 'value' => '14px' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -844,9 +846,9 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'.widget_authors > ul > li > a',
-			array(
-				array( 'property' => 'font-family', 'value' => '"PT Serif", serif' ),
-			)
+			[
+				[ 'property' => 'font-family', 'value' => '"PT Serif", serif' ],
+			]
 		);
 
 		// -----------------------------------------------------------------------
@@ -855,22 +857,22 @@ if ( class_exists( 'TypekitTheme' ) ) {
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'body-text',
 			'body',
-			array(
-				array( 'property' => 'font-size', 'value' => '20px' ),
-			),
-			array(
+			[
+				[ 'property' => 'font-size', 'value' => '20px' ],
+			],
+			[
 				'screen and (min-width: 768px)',
-			)
+			]
 		);
 
 		TypekitTheme::add_font_category_rule( $category_rules, 'headings',
 			'.site-title',
-			array(
-				array( 'property' => 'font-size', 'value' => '49px' ),
-			),
-			array(
+			[
+				[ 'property' => 'font-size', 'value' => '49px' ],
+			],
+			[
 				'screen and (min-width: 768px)',
-			)
+			]
 		);
 
 		return $category_rules;

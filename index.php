@@ -14,6 +14,8 @@
  * @package Canard
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -44,11 +46,11 @@ get_header(); ?>
 
 				<?php endwhile; ?>
 
-				<?php the_posts_pagination( array(
+				<?php the_posts_pagination( [
 					'mid_size'  => 2,
 					'prev_text' => __( '&larr; Previous', 'canard' ),
 					'next_text' => __( 'Next &rarr;', 'canard' ),
-				) ); ?>
+				] ); ?>
 
 			<?php else : ?>
 
@@ -62,4 +64,4 @@ get_header(); ?>
 		<?php get_sidebar(); ?>
 	</div><!-- .site-content-inner -->
 
-<?php get_footer(); ?>
+<?php get_footer();

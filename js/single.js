@@ -3,8 +3,7 @@
  * and Jetpack Sharedaddy/Related Posts placement.
  */
 
-( function() {
-
+(() => {
 	/**
 	 * Resolves a safe debounce function.
 	 *
@@ -20,12 +19,14 @@
 	function resolveDebounce() {
 		if (
 			window.canardUtils &&
-			typeof window.canardUtils.debounce === 'function'
+			typeof window.canardUtils.debounce === "function"
 		) {
 			return window.canardUtils.debounce;
 		}
 
-		console.warn( 'Canard single.js: canardUtils not available — using local debounce fallback.' );
+		console.warn(
+			"Canard single.js: canardUtils not available — using local debounce fallback.",
+		);
 
 		/**
 		 * Minimal debounce fallback that never touches window.canardUtils.
@@ -34,20 +35,17 @@
 		 * @param {number}   wait - Delay in milliseconds.
 		 * @returns {Function} Debounced wrapper function.
 		 */
-		return function localDebounce( fn, wait ) {
+		return function localDebounce(fn, wait) {
 			let timer;
 			/**
 			 * Resets the debounce timer on each invocation and fires fn after the delay.
 			 *
+			 * @param {...*} args - Arguments forwarded to the debounced function.
 			 * @returns {void}
 			 */
-			return function() {
-				const ctx  = this;
-				const args = arguments;
-				clearTimeout( timer );
-				timer = setTimeout( function() {
-					fn.apply( ctx, args );
-				}, wait || 500 );
+			return function (...args) {
+				clearTimeout(timer);
+				timer = setTimeout(() => fn.apply(this, args), wait ?? 500);
 			};
 		};
 	}
@@ -63,12 +61,14 @@
 	 * content-single.php, so this block only handles the DOM reposition.
 	 * Runs synchronously to avoid a layout flash.
 	 */
-	if ( document.body.classList.contains( 'has-entry-hero' ) ) {
-		const entryHeader      = document.querySelector( '.hentry.has-post-thumbnail .entry-header' );
-		const siteContentInner = document.querySelector( '.site-content-inner' );
+	if (document.body.classList.contains("has-entry-hero")) {
+		const entryHeader = document.querySelector(
+			".hentry.has-post-thumbnail .entry-header",
+		);
+		const siteContentInner = document.querySelector(".site-content-inner");
 
-		if ( entryHeader && siteContentInner ) {
-			siteContentInner.parentNode.insertBefore( entryHeader, siteContentInner );
+		if (entryHeader && siteContentInner) {
+			siteContentInner.parentNode.insertBefore(entryHeader, siteContentInner);
 		}
 	}
 
@@ -89,23 +89,23 @@
 	 * @returns {void}
 	 */
 	function authorInfo() {
-		const authorInfoEl = document.querySelector( '.author-info' );
-		if ( ! authorInfoEl ) {
+		const authorInfoEl = document.querySelector(".author-info");
+		if (!authorInfoEl) {
 			return;
 		}
 
-		if ( window.innerWidth > 959 ) {
-			const widgetArea = document.querySelector( '.widget-area' );
-			if ( widgetArea && widgetArea.firstElementChild !== authorInfoEl ) {
-				widgetArea.insertBefore( authorInfoEl, widgetArea.firstElementChild );
+		if (window.innerWidth > 959) {
+			const widgetArea = document.querySelector(".widget-area");
+			if (widgetArea && widgetArea.firstElementChild !== authorInfoEl) {
+				widgetArea.insertBefore(authorInfoEl, widgetArea.firstElementChild);
 			}
 			// If no widget area exists on wide viewports, leave the element in place
 			// rather than stranding it; CSS should handle the visual layout via
 			// the .single-has-author-info body class output by PHP.
 		} else {
-			const entryContent = document.querySelector( '.entry-content' );
-			if ( entryContent && entryContent.nextElementSibling !== authorInfoEl ) {
-				entryContent.after( authorInfoEl );
+			const entryContent = document.querySelector(".entry-content");
+			if (entryContent && entryContent.nextElementSibling !== authorInfoEl) {
+				entryContent.after(authorInfoEl);
 			}
 		}
 	}
@@ -118,10 +118,10 @@
 	 *
 	 * @type {Function}
 	 */
-	const debouncedAuthorInfo = debounce( authorInfo, 500 );
+	const debouncedAuthorInfo = debounce(authorInfo, 500);
 
-	window.addEventListener( 'load', authorInfo );
-	window.addEventListener( 'resize', debouncedAuthorInfo );
+	window.addEventListener("load", authorInfo);
+	window.addEventListener("resize", debouncedAuthorInfo);
 
 	/**
 	 * Repositions Jetpack sharing/rating widgets and fixes table overflow after load.
@@ -131,32 +131,33 @@
 	 *
 	 * @returns {void}
 	 */
-	window.addEventListener( 'load', function() {
-
+	window.addEventListener("load", () => {
 		// Targets the classic Jetpack sharing / rating module. If block-based
 		// sharing is in use, these selectors will not match and are harmless no-ops.
-		const entryFooter = document.querySelector( '.entry-footer' );
-		if ( entryFooter ) {
-			document.querySelectorAll( '.sd-sharing-enabled:not(#jp-post-flair), .sd-like.jetpack-likes-widget-wrapper, .sd-rating' ).forEach( function( el ) {
-				entryFooter.appendChild( el );
-			} );
+		const entryFooter = document.querySelector(".entry-footer");
+		if (entryFooter) {
+			document
+				.querySelectorAll(
+					".sd-sharing-enabled:not(#jp-post-flair), .sd-like.jetpack-likes-widget-wrapper, .sd-rating",
+				)
+				.forEach((el) => {
+					entryFooter.appendChild(el);
+				});
 
-			const relatedPosts = document.getElementById( 'jp-relatedposts' );
-			if ( relatedPosts ) {
-				const postFlair = document.getElementById( 'jp-post-flair' );
-				if ( postFlair ) {
-					entryFooter.after( postFlair );
+			const relatedPosts = document.getElementById("jp-relatedposts");
+			if (relatedPosts) {
+				const postFlair = document.getElementById("jp-post-flair");
+				if (postFlair) {
+					entryFooter.after(postFlair);
 				}
 			}
 		}
 
 		// Prevent tables from overflowing their container in entry content.
-		document.querySelectorAll( '.entry-content table' ).forEach( function( table ) {
-			if ( table.offsetWidth > table.parentElement.offsetWidth ) {
-				table.style.tableLayout = 'fixed';
+		document.querySelectorAll(".entry-content table").forEach((table) => {
+			if (table.offsetWidth > table.parentElement?.offsetWidth) {
+				table.style.tableLayout = "fixed";
 			}
-		} );
-
-	} );
-
-} )();
+		});
+	});
+})();

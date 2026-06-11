@@ -35,10 +35,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="site-top-inner">
 					<nav class="secondary-navigation" aria-label="<?php esc_attr_e( 'Secondary Navigation', 'canard' ); ?>">
 						<?php
-							wp_nav_menu( array(
+							wp_nav_menu( [
 								'theme_location'  => 'secondary',
 								'depth'           => 1,
-							) );
+							] );
 						?>
 					</nav><!-- .secondary-navigation -->
 				</div><!-- .site-top-inner -->
@@ -70,7 +70,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<p class="site-description"><?php echo esc_html( get_bloginfo( 'description' ) ); ?></p>
 		</div><!-- .site-branding -->
 
-		<?php if ( get_header_image() ) : ?>
+		<?php
+		// Cache get_header_image() once: it is used for both the presence check
+		// below and the <img src> attribute. Calling it twice re-runs the
+		// custom-header resolution and its filters, and—with a randomized header
+		// image—could return a different image than the one the conditional gated on.
+		$header_image = get_header_image();
+		if ( $header_image ) :
+			?>
 			<div class="header-image">
 				<div class="header-image-inner">
 					<?php
@@ -97,7 +104,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$header_fetchprio = is_front_page() ? 'high'  : 'auto';
 					$custom_header    = get_custom_header();
 					?>
-					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &#x2014; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php echo esc_url( get_header_image() ); ?>" width="<?php echo absint( $custom_header->width ); ?>" height="<?php echo absint( $custom_header->height ); ?>" loading="<?php echo esc_attr( $header_loading ); ?>" fetchpriority="<?php echo esc_attr( $header_fetchprio ); ?>"
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?> &#x2014; <?php esc_attr_e( 'Home', 'canard' ); ?>"><img src="<?php echo esc_url( $header_image ); ?>" width="<?php echo absint( $custom_header->width ); ?>" height="<?php echo absint( $custom_header->height ); ?>" loading="<?php echo esc_attr( $header_loading ); ?>" fetchpriority="<?php echo esc_attr( $header_fetchprio ); ?>"
 				<?php
 				/*
 				 * Accessibility: alt="" is intentionally empty. The wrapping <a>
@@ -117,7 +124,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php if ( has_nav_menu( 'primary' ) ) : ?>
 					<nav id="site-navigation" class="main-navigation" aria-label="<?php esc_attr_e( 'Primary Navigation', 'canard' ); ?>">
 						<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><span class="screen-reader-text"><?php esc_html_e( 'Primary Menu', 'canard' ); ?></span></button>
-						<?php wp_nav_menu( array( 'theme_location'  => 'primary', 'menu_id' => 'primary-menu' ) ); ?>
+						<?php wp_nav_menu( [ 'theme_location'  => 'primary', 'menu_id' => 'primary-menu' ] ); ?>
 					</nav><!-- #site-navigation -->
 				<?php endif; ?>
 				<div id="search-header" class="search-header">

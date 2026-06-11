@@ -15,6 +15,8 @@
  * @package Canard
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -27,6 +29,11 @@ if ( post_password_required() ) {
 
 <div id="comments" class="comments-area">
 
+	<?php
+		// Cache the comment count; reused for the title, its i18n number, and the closed-comments notice.
+		$comments_number = (int) get_comments_number();
+	?>
+
 	<?php if ( have_comments() ) : ?>
 		<h2 class="comments-title">
 			<?php
@@ -34,11 +41,11 @@ if ( post_password_required() ) {
 					_nx(
 						'One thought on &ldquo;%2$s&rdquo;',
 						'%1$s thoughts on &ldquo;%2$s&rdquo;',
-						get_comments_number(),
+						$comments_number,
 						'comments title',
 						'canard'
 					),
-					number_format_i18n( get_comments_number() ),
+					number_format_i18n( $comments_number ),
 					'<span>' . esc_html( get_the_title() ) . '</span>'
 				);
 			?>
@@ -46,11 +53,11 @@ if ( post_password_required() ) {
 
 		<ol class="comment-list">
 			<?php
-				wp_list_comments( array(
+				wp_list_comments( [
 					'avatar_size' => 60,
 					'short_ping'  => true,
 					'style'       => 'ol',
-				) );
+				] );
 			?>
 		</ol><!-- .comment-list -->
 
@@ -65,7 +72,7 @@ if ( post_password_required() ) {
 	<?php endif; ?>
 
 	<?php
-		if ( ! comments_open() && 0 !== (int) get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
+		if ( ! comments_open() && 0 !== $comments_number && post_type_supports( get_post_type(), 'comments' ) ) :
 	?>
 		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'canard' ); ?></p>
 	<?php endif; ?>

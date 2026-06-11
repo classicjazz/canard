@@ -2,8 +2,7 @@
  * @fileoverview Navigation interactions: dropdown toggles, touch menus, and keyboard focus management.
  */
 
-( function() {
-
+(() => {
 	/**
 	 * Resolves a safe debounce function.
 	 *
@@ -19,12 +18,14 @@
 	function resolveDebounce() {
 		if (
 			window.canardUtils &&
-			typeof window.canardUtils.debounce === 'function'
+			typeof window.canardUtils.debounce === "function"
 		) {
 			return window.canardUtils.debounce;
 		}
 
-		console.warn( 'Canard navigation.js: canardUtils not available — using local debounce fallback.' );
+		console.warn(
+			"Canard navigation.js: canardUtils not available — using local debounce fallback.",
+		);
 
 		/**
 		 * Minimal debounce fallback that never touches window.canardUtils.
@@ -33,20 +34,19 @@
 		 * @param {number}   wait - Delay in milliseconds.
 		 * @returns {Function} Debounced wrapper function.
 		 */
-		return function localDebounce( fn, wait ) {
+		return function localDebounce(fn, wait) {
 			let timer;
 			/**
 			 * Resets the debounce timer on each invocation and fires fn after the delay.
 			 *
 			 * @returns {void}
 			 */
-			return function() {
-				const ctx  = this;
+			return function () {
 				const args = arguments;
-				clearTimeout( timer );
-				timer = setTimeout( function() {
-					fn.apply( ctx, args );
-				}, wait || 500 );
+				clearTimeout(timer);
+				timer = setTimeout(() => {
+					fn.apply(this, args);
+				}, wait ?? 500);
 			};
 		};
 	}
@@ -68,21 +68,21 @@
 	 * @param {HTMLAnchorElement} link - The anchor element whose label is needed.
 	 * @returns {string} Sanitized, truncated plain-text label.
 	 */
-	function getLinkLabel( link ) {
+	function getLinkLabel(link) {
 		// Collect only direct text node content, skipping child elements
 		// such as icon <span>s or <svg>s injected by menu icon plugins.
-		let text = '';
-		link.childNodes.forEach( function( node ) {
-			if ( node.nodeType === Node.TEXT_NODE ) {
+		let text = "";
+		link.childNodes.forEach((node) => {
+			if (node.nodeType === Node.TEXT_NODE) {
 				text += node.nodeValue;
 			}
-		} );
+		});
 
 		return text
-			.replace( /[<>&"']/g, '' )
-			.replace( /\s+/g, ' ' )
+			.replace(/[<>&"']/g, "")
+			.replace(/\s+/g, " ")
 			.trim()
-			.slice( 0, 100 );
+			.slice(0, 100);
 	}
 
 	/**
@@ -108,10 +108,10 @@
 	 */
 	function menuDropdownToggle() {
 		const parentLinks = document.querySelectorAll(
-			'.main-navigation .page_item_has_children > a, ' +
-			'.main-navigation .menu-item-has-children > a, ' +
-			'.widget_nav_menu .page_item_has_children > a, ' +
-			'.widget_nav_menu .menu-item-has-children > a'
+			".main-navigation .page_item_has_children > a, " +
+				".main-navigation .menu-item-has-children > a, " +
+				".widget_nav_menu .page_item_has_children > a, " +
+				".widget_nav_menu .menu-item-has-children > a",
 		);
 
 		/**
@@ -120,34 +120,39 @@
 		 * @param {HTMLAnchorElement} link - The parent menu item anchor element.
 		 * @returns {void}
 		 */
-		parentLinks.forEach( function( link ) {
-			if ( link.dataset.dropdownInjected ) {
+		parentLinks.forEach((link) => {
+			if (link.dataset.dropdownInjected) {
 				return;
 			}
 
-			const btn       = document.createElement( 'button' );
-			const linkLabel = getLinkLabel( link );
-			btn.classList.add( 'dropdown-toggle' );
-			btn.setAttribute( 'aria-expanded', 'false' );
+			const btn = document.createElement("button");
+			const linkLabel = getLinkLabel(link);
+			btn.classList.add("dropdown-toggle");
+			btn.setAttribute("aria-expanded", "false");
 			// Provide an accessible name per WCAG 2.1 SC 4.1.2.
-			btn.setAttribute( 'aria-label', linkLabel ? 'Toggle ' + linkLabel + ' submenu' : 'Toggle submenu' );
-			link.appendChild( btn );
-			link.dataset.dropdownInjected = 'true';
-		} );
+			btn.setAttribute(
+				"aria-label",
+				linkLabel ? "Toggle " + linkLabel + " submenu" : "Toggle submenu",
+			);
+			link.appendChild(btn);
+			link.dataset.dropdownInjected = "true";
+		});
 
-		if ( window.innerWidth > 959 ) {
+		if (window.innerWidth > 959) {
 			// Remove buttons from BOTH navigation contexts; omitting .widget_nav_menu
 			// causes those buttons to persist permanently after a mobile→desktop resize.
-			document.querySelectorAll(
-				'.main-navigation .dropdown-toggle, .widget_nav_menu .dropdown-toggle'
-			).forEach( function( btn ) {
-				// Clear the stamp on the parent link so re-injection works if the
-				// viewport returns to narrow.
-				if ( btn.parentNode ) {
-					delete btn.parentNode.dataset.dropdownInjected;
-					btn.parentNode.removeChild( btn );
-				}
-			} );
+			document
+				.querySelectorAll(
+					".main-navigation .dropdown-toggle, .widget_nav_menu .dropdown-toggle",
+				)
+				.forEach((btn) => {
+					// Clear the stamp on the parent link so re-injection works if the
+					// viewport returns to narrow.
+					if (btn.parentNode) {
+						delete btn.parentNode.dataset.dropdownInjected;
+						btn.parentNode.removeChild(btn);
+					}
+				});
 		}
 	}
 
@@ -159,10 +164,10 @@
 	 *
 	 * @type {Function}
 	 */
-	const debouncedMenuDropdownToggle = debounce( menuDropdownToggle, 500 );
+	const debouncedMenuDropdownToggle = debounce(menuDropdownToggle, 500);
 
-	window.addEventListener( 'load', menuDropdownToggle );
-	window.addEventListener( 'resize', debouncedMenuDropdownToggle );
+	window.addEventListener("load", menuDropdownToggle);
+	window.addEventListener("resize", debouncedMenuDropdownToggle);
 
 	/**
 	 * Initializes navigation interactions after all resources have loaded.
@@ -172,12 +177,12 @@
 	 *
 	 * @returns {void}
 	 */
-	window.addEventListener( 'load', function() {
-		const masthead = document.getElementById( 'masthead' );
+	window.addEventListener("load", () => {
+		const masthead = document.getElementById("masthead");
 		// Use the stable #site-navigation ID rather than a positional div selector,
 		// which would match the wrong element when the secondary nav is absent.
-		const menu     = masthead ? masthead.querySelector( '#site-navigation' ) : null;
-		if ( ! menu || ! menu.children.length ) {
+		const menu = masthead?.querySelector("#site-navigation");
+		if (!menu || !menu.children.length) {
 			return;
 		}
 
@@ -188,24 +193,27 @@
 		 * @param {MouseEvent} event - The click event.
 		 * @returns {void}
 		 */
-		document.addEventListener( 'click', function( event ) {
-			const btn = event.target.closest( '.dropdown-toggle' );
-			if ( ! btn ) {
+		document.addEventListener("click", (event) => {
+			const btn = event.target.closest(".dropdown-toggle");
+			if (!btn) {
 				return;
 			}
 			event.preventDefault();
 
-			const isExpanded = btn.getAttribute( 'aria-expanded' ) === 'true';
-			btn.classList.toggle( 'toggled' );
-			btn.setAttribute( 'aria-expanded', isExpanded ? 'false' : 'true' );
+			const isExpanded = btn.getAttribute("aria-expanded") === "true";
+			btn.classList.toggle("toggled");
+			btn.setAttribute("aria-expanded", isExpanded ? "false" : "true");
 
 			const subMenu = btn.parentNode.nextElementSibling;
-			if ( subMenu && ( subMenu.classList.contains( 'children' ) || subMenu.classList.contains( 'sub-menu' ) ) ) {
-				subMenu.classList.toggle( 'toggled' );
+			if (
+				subMenu?.classList.contains("children") ||
+				subMenu?.classList.contains("sub-menu")
+			) {
+				subMenu.classList.toggle("toggled");
 			}
-		} );
+		});
 
-		if ( 'ontouchstart' in window ) {
+		if ("ontouchstart" in window) {
 			// On touch devices, the first tap on a parent menu item opens the submenu
 			// rather than following the link, matching hover behaviour on desktop.
 			//
@@ -215,24 +223,24 @@
 			// rather than a classList.contains check, removing the conditional branch
 			// that previously forced e.preventDefault() to be called inside an if —
 			// which prevented the browser from optimising scroll commit timing.
-			menu.querySelectorAll( '.menu-item-has-children > a' ).forEach( function( link ) {
-				link.addEventListener( 'touchstart', function( e ) {
+			menu.querySelectorAll(".menu-item-has-children > a").forEach((link) => {
+				link.addEventListener("touchstart", function (e) {
 					e.preventDefault();
-					const li   = this.parentElement;
-					const open = li.dataset.touchOpen === 'true';
+					const li = this.parentElement;
+					const open = li.dataset.touchOpen === "true";
 
 					// Close all siblings before toggling this item.
-					Array.from( li.parentNode.children ).forEach( function( sibling ) {
-						sibling.dataset.touchOpen = 'false';
-						sibling.classList.remove( 'focus' );
-					} );
+					Array.from(li.parentNode.children).forEach((sibling) => {
+						sibling.dataset.touchOpen = "false";
+						sibling.classList.remove("focus");
+					});
 
-					if ( ! open ) {
-						li.dataset.touchOpen = 'true';
-						li.classList.add( 'focus' );
+					if (!open) {
+						li.dataset.touchOpen = "true";
+						li.classList.add("focus");
 					}
-				} );
-			} );
+				});
+			});
 
 			// passive:true because this handler never calls e.preventDefault();
 			// omitting it forces the browser to wait before committing each scroll frame.
@@ -242,39 +250,45 @@
 			 * @param {TouchEvent} e - The touchstart event.
 			 * @returns {void}
 			 */
-			document.addEventListener( 'touchstart', function( e ) {
-				if ( ! e.target.closest( '.main-navigation' ) ) {
-					document.querySelectorAll( '.main-navigation .focus' )
-						.forEach( function( el ) { el.classList.remove( 'focus' ); } );
-				}
-			}, { passive: true } );
+			document.addEventListener(
+				"touchstart",
+				(e) => {
+					if (!e.target.closest(".main-navigation")) {
+						document
+							.querySelectorAll(".main-navigation .focus")
+							.forEach((el) => {
+								el.classList.remove("focus");
+							});
+					}
+				},
+				{ passive: true },
+			);
 		}
 
 		// Add/remove 'focus' on ancestor menu items so CSS can show sub-menus
 		// when keyboard focus is inside them (keyboard nav parity with hover).
-		menu.querySelectorAll( 'a' ).forEach( function( link ) {
-			link.addEventListener( 'focus', function() {
+		menu.querySelectorAll("a").forEach((link) => {
+			link.addEventListener("focus", function () {
 				let el = this.parentElement;
-				while ( el && el !== menu ) {
-					if ( el.classList.contains( 'menu-item' ) ) {
-						el.classList.add( 'focus' );
+				while (el && el !== menu) {
+					if (el.classList.contains("menu-item")) {
+						el.classList.add("focus");
 					}
 					el = el.parentElement;
 				}
-			} );
-			link.addEventListener( 'blur', function() {
+			});
+			link.addEventListener("blur", function () {
 				let el = this.parentElement;
-				while ( el && el !== menu ) {
-					if ( el.classList.contains( 'menu-item' ) ) {
-						el.classList.remove( 'focus' );
+				while (el && el !== menu) {
+					if (el.classList.contains("menu-item")) {
+						el.classList.remove("focus");
 					}
 					el = el.parentElement;
 				}
-			} );
-		} );
-	} );
-
-} )();
+			});
+		});
+	});
+})();
 
 /**
  * Mobile menu toggle — shows/hides the primary navigation list and keeps
@@ -282,27 +296,26 @@
  *
  * @returns {void}
  */
-( function() {
-
-	const container = document.getElementById( 'site-navigation' );
-	if ( ! container ) {
+(() => {
+	const container = document.getElementById("site-navigation");
+	if (!container) {
 		return;
 	}
 
-	const button = container.getElementsByTagName( 'button' )[0];
-	if ( ! button ) {
+	const button = container.getElementsByTagName("button")[0];
+	if (!button) {
 		return;
 	}
 
-	const menu = container.getElementsByTagName( 'ul' )[0];
-	if ( ! menu ) {
-		button.style.display = 'none';
+	const menu = container.getElementsByTagName("ul")[0];
+	if (!menu) {
+		button.style.display = "none";
 		return;
 	}
-	menu.setAttribute( 'aria-expanded', 'false' );
+	menu.setAttribute("aria-expanded", "false");
 
-	if ( ! menu.classList.contains( 'nav-menu' ) ) {
-		menu.classList.add( 'nav-menu' );
+	if (!menu.classList.contains("nav-menu")) {
+		menu.classList.add("nav-menu");
 	}
 
 	/**
@@ -313,27 +326,26 @@
 	 *
 	 * @returns {void}
 	 */
-	button.addEventListener( 'click', function() {
+	button.addEventListener("click", () => {
 		// Dismiss the search panel before toggling nav so the two drop-downs
 		// never overlap in portrait mode on iPhone / iPad.
-		const searchContainer = document.getElementById( 'search-header' );
-		if ( searchContainer && searchContainer.classList.contains( 'toggled' ) ) {
-			searchContainer.classList.remove( 'toggled' );
-			document.body.classList.remove( 'search-toggled' );
-			const searchButton = searchContainer.getElementsByTagName( 'button' )[0];
-			if ( searchButton ) {
-				searchButton.setAttribute( 'aria-expanded', 'false' );
+		const searchContainer = document.getElementById("search-header");
+		if (searchContainer?.classList.contains("toggled")) {
+			searchContainer.classList.remove("toggled");
+			document.body.classList.remove("search-toggled");
+			const searchButton = searchContainer.getElementsByTagName("button")[0];
+			if (searchButton) {
+				searchButton.setAttribute("aria-expanded", "false");
 			}
-			const searchForm = searchContainer.getElementsByTagName( 'form' )[0];
-			if ( searchForm ) {
-				searchForm.setAttribute( 'aria-expanded', 'false' );
+			const searchForm = searchContainer.getElementsByTagName("form")[0];
+			if (searchForm) {
+				searchForm.setAttribute("aria-expanded", "false");
 			}
 		}
 
-		const toggled = container.classList.contains( 'toggled' );
-		container.classList.toggle( 'toggled' );
-		button.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );
-		menu.setAttribute( 'aria-expanded', toggled ? 'false' : 'true' );
-	} );
-
-} )();
+		const toggled = container.classList.contains("toggled");
+		container.classList.toggle("toggled");
+		button.setAttribute("aria-expanded", toggled ? "false" : "true");
+		menu.setAttribute("aria-expanded", toggled ? "false" : "true");
+	});
+})();

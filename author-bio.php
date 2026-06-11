@@ -9,6 +9,8 @@
  * @package Canard
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,20 +27,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 		 * the output through wp_kses() with an explicit allowlist so that any
 		 * filter-injected content is stripped before it reaches the page.
 		 */
-		$avatar_allowlist = array(
-			'img' => array(
-				'src'           => array(),
-				'class'         => array(),
-				'alt'           => array(),
-				'width'         => array(),
-				'height'        => array(),
-				'loading'       => array(),
-				'decoding'      => array(),
-				'fetchpriority' => array(),
-			),
-		);
+		$avatar_allowlist = [
+			'img' => [
+				'src'           => [],
+				'class'         => [],
+				'alt'           => [],
+				'width'         => [],
+				'height'        => [],
+				'loading'       => [],
+				'decoding'      => [],
+				'fetchpriority' => [],
+			],
+		];
 		$avatar_html = get_avatar( get_the_author_meta( 'user_email' ), $author_bio_avatar_size );
-		echo wp_kses( $avatar_html !== false ? $avatar_html : '', $avatar_allowlist );
+		echo wp_kses( false !== $avatar_html ? $avatar_html : '', $avatar_allowlist );
 		?>
 	</div><!-- .author-avatar -->
 

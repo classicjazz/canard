@@ -11,6 +11,8 @@
  * @package Canard
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,19 +22,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( has_post_thumbnail() ) : ?>
 		<a class="post-thumbnail" href="<?php echo esc_url( (string) get_permalink() ); ?>">
 			<?php
-		the_post_thumbnail( 'canard-featured-content-thumbnail', array(
-			'loading'       => 'eager',
-			'fetchpriority' => 'high',
-			'sizes'         => '(max-width: 1300px) 100vw, 1300px',
-		) );
-		?>
+			the_post_thumbnail(
+				'canard-featured-content-thumbnail',
+				[
+					'loading'       => 'eager',
+					'fetchpriority' => 'high',
+					'sizes'         => '(max-width: 1300px) 100vw, 1300px',
+				]
+			);
+			?>
 		</a>
 	<?php endif; ?>
 
 	<header class="entry-header">
 		<?php
 			canard_entry_categories();
-			the_title( '<h1 class="entry-title"><a href="' . esc_url( (string) get_permalink() ) . '" rel="bookmark">','</a></h1>' );
+			the_title( '<h1 class="entry-title"><a href="' . esc_url( (string) get_permalink() ) . '" rel="bookmark">', '</a></h1>' );
 		?>
 	</header><!-- .entry-header -->
 

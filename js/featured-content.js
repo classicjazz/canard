@@ -2,8 +2,7 @@
  * @fileoverview Applies featured post images as CSS backgrounds in the featured content area.
  */
 
-( function() {
-
+(() => {
 	/**
 	 * Resolves canardUtils.safeCssUrl from the frozen utility namespace.
 	 *
@@ -15,14 +14,13 @@
 	 * @returns {Function} A safeCssUrl implementation, or a null-returning stub.
 	 */
 	function resolveSafeCssUrl() {
-		if (
-			window.canardUtils &&
-			typeof window.canardUtils.safeCssUrl === 'function'
-		) {
+		if (typeof window.canardUtils?.safeCssUrl === "function") {
 			return window.canardUtils.safeCssUrl;
 		}
 
-		console.warn( 'Canard featured-content.js: canardUtils.safeCssUrl not available — background images disabled.' );
+		console.warn(
+			"Canard featured-content.js: canardUtils.safeCssUrl not available — background images disabled.",
+		);
 
 		/**
 		 * Stub returned when canardUtils is unavailable.
@@ -50,12 +48,12 @@
 	 * @param {HTMLElement}      article    - Parent article element; receives the 'background-done' class.
 	 * @returns {void}
 	 */
-	function applyBackground( entryImage, thumbnail, article ) {
-		const src    = thumbnail.currentSrc || thumbnail.getAttribute( 'src' );
-		const cssUrl = safeCssUrl( src );
-		if ( cssUrl ) {
+	function applyBackground(entryImage, thumbnail, article) {
+		const src = thumbnail.currentSrc || thumbnail.getAttribute("src");
+		const cssUrl = safeCssUrl(src);
+		if (cssUrl) {
 			entryImage.style.backgroundImage = cssUrl;
-			article.classList.add( 'background-done' );
+			article.classList.add("background-done");
 		}
 	}
 
@@ -70,38 +68,43 @@
 	 * @returns {void}
 	 */
 	function init() {
-		const featuredContent = document.getElementById( 'featured-content' );
-		if ( ! featuredContent ) {
+		const featuredContent = document.getElementById("featured-content");
+		if (!featuredContent) {
 			return;
 		}
 
-		featuredContent.querySelectorAll( 'article' ).forEach( function( article ) {
-			if ( article.classList.contains( 'background-done' ) ||
-				! article.classList.contains( 'has-post-thumbnail' ) ) {
+		featuredContent.querySelectorAll("article").forEach((article) => {
+			if (
+				article.classList.contains("background-done") ||
+				!article.classList.contains("has-post-thumbnail")
+			) {
 				return;
 			}
 
-			const entryImage = article.querySelector( '.post-thumbnail' );
-			const thumbnail  = article.querySelector( 'img' );
+			const entryImage = article.querySelector(".post-thumbnail");
+			const thumbnail = article.querySelector("img");
 
-			if ( ! entryImage || ! thumbnail ) {
+			if (!entryImage || !thumbnail) {
 				return;
 			}
 
-			if ( thumbnail.complete && thumbnail.naturalWidth > 0 ) {
-				applyBackground( entryImage, thumbnail, article );
+			if (thumbnail.complete && thumbnail.naturalWidth > 0) {
+				applyBackground(entryImage, thumbnail, article);
 			} else {
-				thumbnail.addEventListener( 'load', function() {
-					applyBackground( entryImage, thumbnail, article );
-				}, { once: true } );
+				thumbnail.addEventListener(
+					"load",
+					() => {
+						applyBackground(entryImage, thumbnail, article);
+					},
+					{ once: true },
+				);
 			}
-		} );
+		});
 	}
 
-	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', init );
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", init);
 	} else {
 		init();
 	}
-
-} )();
+})();

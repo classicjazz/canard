@@ -15,6 +15,8 @@
  * @package Canard
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -29,10 +31,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( has_nav_menu( 'footer' ) ) : ?>
 		<nav class="footer-navigation" aria-label="<?php esc_attr_e( 'Footer Navigation', 'canard' ); ?>">
 			<?php
-				wp_nav_menu( array(
+				wp_nav_menu( [
 					'theme_location'  => 'footer',
 					'depth'           => 1,
-				) );
+				] );
 			?>
 		</nav><!-- .footer-navigation -->
 	<?php endif; ?>

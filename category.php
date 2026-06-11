@@ -11,6 +11,8 @@
  * @since 2.5.0
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -32,7 +34,7 @@ get_header(); ?>
 			 * media-library item) before proceeding.
 			 */
 			$attachment_id = absint( get_term_meta( get_queried_object_id(), '_category_image_id', true ) );
-			$cat_img_meta  = array();
+			$cat_img_meta  = [];
 
 			if ( $attachment_id > 0 ) {
 				$attachment_status = get_post_status( $attachment_id );
@@ -56,34 +58,27 @@ get_header(); ?>
 			     height="<?php echo absint( $img_h ); ?>"
 			     alt="<?php echo esc_attr( single_cat_title( '', false ) ); ?>"
 			     loading="eager"
+			     decoding="async"
 			     fetchpriority="high"
 			     sizes="100vw" />
 		</div>
 		<?php else :
-			$color = canard_get_category_color();
 			/*
-			 * The background color is injected via wp_add_inline_style() rather
-			 * than a style="" attribute. This changes specificity from inline
-			 * (highest) to class-level, so child-theme rules targeting
-			 * .category-color-fallback will win if they declare a background-color.
-			 * Treat as a minor breaking change — document in CHANGES.md and bump
-			 * the theme version.
+			 * Output the fallback color as an escaped inline style attribute.
 			 *
-			 * The term ID is included in the CSS rule so concurrent page loads for
-			 * different categories each receive the correct color. WordPress
-			 * deduplicates identical inline style strings automatically.
+			 * This template runs after get_header() has already fired wp_head(), at
+			 * which point canard-style and its attached inline data have already been
+			 * printed to <head>. Calling wp_add_inline_style() here is a silent no-op:
+			 * the stylesheet's "after" data has been flushed, so the color would never
+			 * reach the page and the fallback would render with no background at all.
+			 * An inline style attribute renders reliably at this point. Child themes
+			 * that need to override it can target .category-color-fallback with
+			 * !important, matching the theme's prior inline-attribute behavior.
 			 */
-			$term_id = absint( get_queried_object_id() );
-			wp_add_inline_style(
-				'canard-style',
-				sprintf(
-					'body.term-%1$d .category-color-fallback { background-color: %2$s; }',
-					$term_id,
-					sanitize_hex_color( $color ) ?: '#d11415'
-				)
-			);
+			$color      = canard_get_category_color();
+			$safe_color = sanitize_hex_color( $color ) ?: '#d11415';
 		?>
-		<div class="post-thumbnail category-color-fallback"></div>
+		<div class="post-thumbnail category-color-fallback" style="background-color: <?php echo esc_attr( $safe_color ); ?>"></div>
 		<?php endif; ?>
 
 		<div class="entry-header-wrapper">
@@ -128,11 +123,11 @@ get_header(); ?>
 				 * cannot reach the page, regardless of how the_posts_pagination()
 				 * handles its arguments internally.
 				 */
-				the_posts_pagination( array(
+				the_posts_pagination( [
 					'mid_size'  => 2,
 					'prev_text' => esc_html__( '&larr; Previous', 'canard' ),
 					'next_text' => esc_html__( 'Next &rarr;', 'canard' ),
-				) );
+				] );
 				?>
 
 			<?php else : ?>

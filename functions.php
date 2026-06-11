@@ -5,6 +5,8 @@
  * @package Canard
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -14,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var string CANARD_VERSION Semantic version string of the active theme build.
  */
-define( 'CANARD_VERSION', '3.0.0' );
+define( 'CANARD_VERSION', '3.1.0' );
 
 /**
  * Maximum pixel width of the main content column.
@@ -25,7 +27,7 @@ define( 'CANARD_VERSION', '3.0.0' );
  *
  * @var int $content_width
  */
-$content_width = isset( $content_width ) ? $content_width : 720; /* pixels */
+$content_width ??= 720; /* pixels */
 
 if ( ! function_exists( 'canard_content_width' ) ) {
 	/**
@@ -102,19 +104,19 @@ if ( ! function_exists( 'canard_setup' ) ) {
 		 */
 		add_theme_support( 'wp-block-styles' );
 
-		add_theme_support( 'custom-logo', array(
+		add_theme_support( 'custom-logo', [
 			'width'       => 400,
 			'height'      => 90,
 			'flex-width'  => true,
 			'flex-height' => true,
-		) );
+		] );
 
 		register_nav_menus(
-			array(
+			[
 				'primary'   => __( 'Primary Location', 'canard' ),
 				'secondary' => __( 'Secondary Location', 'canard' ),
 				'footer'    => __( 'Footer Location', 'canard' ),
-			)
+			]
 		);
 
 		/*
@@ -124,7 +126,7 @@ if ( ! function_exists( 'canard_setup' ) ) {
 		 */
 		add_theme_support(
 			'html5',
-			array(
+			[
 				'search-form',
 				'comment-form',
 				'comment-list',
@@ -133,7 +135,7 @@ if ( ! function_exists( 'canard_setup' ) ) {
 				'script',
 				'style',
 				'navigation-widgets',
-			)
+			]
 		);
 
 		// Enables smoother widget previews in the Customizer.
@@ -146,11 +148,11 @@ if ( ! function_exists( 'canard_setup' ) ) {
 		 */
 		add_theme_support(
 			'post-formats',
-			array(
+			[
 				'image',
 				'link',
 				'gallery',
-			)
+			]
 		);
 	}
 }
@@ -172,22 +174,22 @@ if ( ! function_exists( 'canard_widgets_init' ) ) {
 	 * @return void
 	 */
 	function canard_widgets_init() {
-		$sidebar_defaults = array(
+		$sidebar_defaults = [
 			'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</aside>',
 			'before_title'  => '<h2 class="widget-title">',
 			'after_title'   => '</h2>',
-		);
+		];
 
-		register_sidebar( array_merge( $sidebar_defaults, array(
+		register_sidebar( array_merge( $sidebar_defaults, [
 			'name' => __( 'Sidebar', 'canard' ),
 			'id'   => 'sidebar-1',
-		) ) );
+		] ) );
 
-		register_sidebar( array_merge( $sidebar_defaults, array(
+		register_sidebar( array_merge( $sidebar_defaults, [
 			'name' => __( 'Footer', 'canard' ),
 			'id'   => 'sidebar-2',
-		) ) );
+		] ) );
 	}
 }
 add_action( 'widgets_init', 'canard_widgets_init' );
@@ -216,7 +218,7 @@ if ( ! function_exists( 'canard_google_fonts_url' ) ) {
 		 *
 		 * @var array<int, string> $families
 		 */
-		$families = array();
+		$families = [];
 
 		/* Translators: If characters in your language are not supported by Lato, translate this to 'off'. */
 		if ( 'off' !== _x( 'on', 'Lato font: on or off', 'canard' ) ) {
@@ -295,8 +297,8 @@ function canard_preconnect_hints( array $urls, string $relation_type ): array {
 		return $urls;
 	}
 
-	$urls[] = array( 'href' => 'https://fonts.googleapis.com' );
-	$urls[] = array( 'href' => 'https://fonts.gstatic.com', 'crossorigin' => 'anonymous' );
+	$urls[] = [ 'href' => 'https://fonts.googleapis.com' ];
+	$urls[] = [ 'href' => 'https://fonts.gstatic.com', 'crossorigin' => 'anonymous' ];
 
 	return $urls;
 }
@@ -318,17 +320,17 @@ function canard_scripts() {
 	// (where the featured-content carousel may contain block markup).
 	// Archives, search results, and other listing pages do not render block HTML.
 	if ( is_singular() || is_front_page() ) {
-		wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', array(), CANARD_VERSION );
+		wp_enqueue_style( 'canard-blocks', get_template_directory_uri() . '/blocks.css', [], CANARD_VERSION );
 	}
 
 	// Single Google Fonts request for all typefaces used by the theme.
 	$fonts_url = canard_google_fonts_url();
 	if ( $fonts_url ) {
-		wp_enqueue_style( 'canard-fonts', $fonts_url, array(), null );
+		wp_enqueue_style( 'canard-fonts', $fonts_url, [], null );
 	}
 
 	// Main stylesheet.
-	wp_enqueue_style( 'canard-style', get_template_directory_uri() . '/style.css', array(), CANARD_VERSION );
+	wp_enqueue_style( 'canard-style', get_template_directory_uri() . '/style.css', [], CANARD_VERSION );
 
 	// Comment styles are co-located in style.css to keep all layout concerns in a single stylesheet.
 	// Shared utility functions (debounce). No dependencies — plain JS.
@@ -337,23 +339,23 @@ function canard_scripts() {
 	wp_enqueue_script(
 		'canard-utils',
 		get_template_directory_uri() . '/js/utils.js',
-		array(),
+		[],
 		CANARD_VERSION,
-		array(
+		[
 			'in_footer' => true,
 			'strategy'  => 'defer',
-		)
+		]
 	);
 
 	wp_enqueue_script(
 		'canard-navigation',
 		get_template_directory_uri() . '/js/navigation.js',
-		array( 'canard-utils' ),
+		[ 'canard-utils' ],
 		CANARD_VERSION,
-		array(
+		[
 			'in_footer' => true,
 			'strategy'  => 'defer',
-		)
+		]
 	);
 
 	// Only enqueue the featured-content script on the front page where it is used.
@@ -361,35 +363,35 @@ function canard_scripts() {
 		wp_enqueue_script(
 			'canard-featured-content',
 			get_template_directory_uri() . '/js/featured-content.js',
-			array(),
+			[],
 			CANARD_VERSION,
-			array(
+			[
 				'in_footer' => true,
 				'strategy'  => 'defer',
-			)
+			]
 		);
 	}
 
 	wp_enqueue_script(
 		'canard-header',
 		get_template_directory_uri() . '/js/header.js',
-		array( 'canard-utils' ),
+		[ 'canard-utils' ],
 		CANARD_VERSION,
-		array(
+		[
 			'in_footer' => true,
 			'strategy'  => 'defer',
-		)
+		]
 	);
 
 	wp_enqueue_script(
 		'canard-search',
 		get_template_directory_uri() . '/js/search.js',
-		array(),
+		[],
 		CANARD_VERSION,
-		array(
+		[
 			'in_footer' => true,
 			'strategy'  => 'defer',
-		)
+		]
 	);
 
 	if ( is_singular() ) {
@@ -397,9 +399,9 @@ function canard_scripts() {
 		wp_enqueue_script(
 			'canard-single',
 			get_template_directory_uri() . '/js/single.js',
-			array( 'canard-utils' ),
+			[ 'canard-utils' ],
 			CANARD_VERSION,
-			array( 'in_footer' => true )
+			[ 'in_footer' => true ]
 		);
 	}
 
@@ -407,12 +409,12 @@ function canard_scripts() {
 		wp_enqueue_script(
 			'canard-sidebar',
 			get_template_directory_uri() . '/js/sidebar.js',
-			array(),
+			[],
 			CANARD_VERSION,
-			array(
+			[
 				'in_footer' => true,
 				'strategy'  => 'defer',
-			)
+			]
 		);
 	}
 
@@ -420,12 +422,12 @@ function canard_scripts() {
 		wp_enqueue_script(
 			'canard-posts',
 			get_template_directory_uri() . '/js/posts.js',
-			array( 'canard-utils' ),
+			[ 'canard-utils' ],
 			CANARD_VERSION,
-			array(
+			[
 				'in_footer' => true,
 				'strategy'  => 'defer',
-			)
+			]
 		);
 	}
 

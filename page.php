@@ -12,6 +12,8 @@
  * @package Canard
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -40,4 +42,4 @@ get_header(); ?>
 		<?php get_sidebar(); ?>
 	</div><!-- .site-content-inner -->
 
-<?php get_footer(); ?>
+<?php get_footer();

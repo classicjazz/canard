@@ -2,8 +2,7 @@
  * @fileoverview Search form hover/focus styling and header search toggle.
  */
 
-( function() {
-
+(() => {
 	/**
 	 * Adds and removes a hover/focus class on each search form when its submit
 	 * button is hovered or receives keyboard focus.
@@ -14,9 +13,9 @@
 	 *
 	 * @returns {void}
 	 */
-	window.addEventListener( 'load', function() {
-		const searchSubmits = document.querySelectorAll( '.search-submit' );
-		if ( ! searchSubmits.length ) {
+	window.addEventListener("DOMContentLoaded", () => {
+		const searchSubmits = document.querySelectorAll(".search-submit");
+		if (!searchSubmits.length) {
 			return;
 		}
 
@@ -27,10 +26,7 @@
 		 * @returns {void}
 		 */
 		function searchAddClass() {
-			const form = this.closest( '.search-form' );
-			if ( form ) {
-				form.classList.add( 'hover' );
-			}
+			this.closest(".search-form")?.classList.add("hover");
 		}
 
 		/**
@@ -40,10 +36,7 @@
 		 * @returns {void}
 		 */
 		function searchRemoveClass() {
-			const form = this.closest( '.search-form' );
-			if ( form ) {
-				form.classList.remove( 'hover' );
-			}
+			this.closest(".search-form")?.classList.remove("hover");
 		}
 
 		/**
@@ -52,18 +45,16 @@
 		 * @param {HTMLElement} searchSubmit - The search submit button element.
 		 * @returns {void}
 		 */
-		searchSubmits.forEach( function( searchSubmit ) {
-			searchSubmit.addEventListener( 'mouseenter', searchAddClass );
-			searchSubmit.addEventListener( 'mouseleave', searchRemoveClass );
-			searchSubmit.addEventListener( 'focus',      searchAddClass );
-			searchSubmit.addEventListener( 'blur',       searchRemoveClass );
-		} );
-	} );
+		searchSubmits.forEach((searchSubmit) => {
+			searchSubmit.addEventListener("mouseenter", searchAddClass);
+			searchSubmit.addEventListener("mouseleave", searchRemoveClass);
+			searchSubmit.addEventListener("focus", searchAddClass);
+			searchSubmit.addEventListener("blur", searchRemoveClass);
+		});
+	});
+})();
 
-} )();
-
-( function() {
-
+(() => {
 	/**
 	 * Toggles the header search form open/closed and keeps aria-expanded in sync
 	 * on both the button and the form.
@@ -74,22 +65,22 @@
 	 * @returns {void}
 	 */
 
-	const container = document.getElementById( 'search-header' );
-	if ( ! container ) {
+	const container = document.getElementById("search-header");
+	if (!container) {
 		return;
 	}
 
-	const button = container.getElementsByTagName( 'button' )[0];
-	if ( ! button ) {
+	const button = container.querySelector("button");
+	if (!button) {
 		return;
 	}
 
-	const form = container.getElementsByTagName( 'form' )[0];
-	if ( ! form ) {
-		button.style.display = 'none';
+	const form = container.querySelector("form");
+	if (!form) {
+		button.style.display = "none";
 		return;
 	}
-	form.setAttribute( 'aria-expanded', 'false' );
+	form.setAttribute("aria-expanded", "false");
 
 	/**
 	 * Toggles the header search form open or closed on button click.
@@ -99,27 +90,22 @@
 	 *
 	 * @returns {void}
 	 */
-	button.addEventListener( 'click', function() {
+	button.addEventListener("click", () => {
 		// Dismiss the nav panel before toggling search so the two drop-downs
 		// never overlap in portrait mode on iPhone / iPad.
-		const navContainer = document.getElementById( 'site-navigation' );
-		if ( navContainer && navContainer.classList.contains( 'toggled' ) ) {
-			navContainer.classList.remove( 'toggled' );
-			const navButton = navContainer.getElementsByTagName( 'button' )[0];
-			if ( navButton ) {
-				navButton.setAttribute( 'aria-expanded', 'false' );
-			}
-			const navMenu = navContainer.getElementsByTagName( 'ul' )[0];
-			if ( navMenu ) {
-				navMenu.setAttribute( 'aria-expanded', 'false' );
-			}
+		const navContainer = document.getElementById("site-navigation");
+		if (navContainer && navContainer.classList.contains("toggled")) {
+			navContainer.classList.remove("toggled");
+			navContainer
+				.querySelector("button")
+				?.setAttribute("aria-expanded", "false");
+			navContainer.querySelector("ul")?.setAttribute("aria-expanded", "false");
 		}
 
-		const isToggled = container.classList.contains( 'toggled' );
-		document.body.classList.toggle( 'search-toggled', ! isToggled );
-		container.classList.toggle( 'toggled', ! isToggled );
-		button.setAttribute( 'aria-expanded', isToggled ? 'false' : 'true' );
-		form.setAttribute( 'aria-expanded', isToggled ? 'false' : 'true' );
-	} );
-
-} )();
+		const isToggled = container.classList.contains("toggled");
+		document.body.classList.toggle("search-toggled", !isToggled);
+		container.classList.toggle("toggled", !isToggled);
+		button.setAttribute("aria-expanded", isToggled ? "false" : "true");
+		form.setAttribute("aria-expanded", isToggled ? "false" : "true");
+	});
+})();

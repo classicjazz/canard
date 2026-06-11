@@ -2,7 +2,7 @@
 Theme Name: Canard
 Theme URI: https://github.com/classicjazz/canard
 Description: A flexible and versatile theme perfect for magazines, news sites, and blogs. It lets you highlight specific articles on the homepage and balances readability with a powerful use of photography — all in a layout that works on any device.
-Version: 3.0.0
+Version: 3.1.0
 Author: Automattic, Michael Connelly
 Author URI: https://www.mikeconnelly.com
 License: GNU General Public License v2 or later
@@ -960,7 +960,7 @@ a:visited {
    Post Navigation
    ========================================================================== */
 
-	.post-navigation,
+.post-navigation,
 .posts-navigation {
 	clear: both;
 	font-family: Lato, sans-serif;
@@ -1130,9 +1130,9 @@ a:visited {
    Layout
    ========================================================================== */
 
-	/* Clearfix via :before/:after — display:table creates an anonymous table-cell
+/* Clearfix via :before/:after — display:table creates an anonymous table-cell
    that acts as a top/bottom margin guard for floated children. */
-	.entry-content:before,
+.entry-content:before,
 .entry-content:after,
 .entry-meta:before,
 .entry-meta:after,

@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<header class="entry-header entry-hero">
 		<?php if ( has_post_thumbnail() && ( ! has_post_format() || has_post_format( 'image' ) || has_post_format( 'gallery' ) ) ) : ?>
 			<div class="post-thumbnail">
-				<?php the_post_thumbnail( 'canard-single-thumbnail', array( 'loading' => 'eager', 'fetchpriority' => 'high' ) ); ?>
+				<?php the_post_thumbnail( 'canard-single-thumbnail', [ 'loading' => 'eager', 'fetchpriority' => 'high' ] ); ?>
 			</div>
 		<?php endif; ?>
 
@@ -38,14 +38,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="entry-content">
 		<?php the_content(); ?>
 		<?php
-			wp_link_pages( array(
-				'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'canard' ) . '</span>',
+			wp_link_pages( [
+				'before'      => '<div class="page-links"><span class="page-links-title">' . esc_html__( 'Pages:', 'canard' ) . '</span>',
 				'after'       => '</div>',
 				'link_before' => '<span>',
 				'link_after'  => '</span>',
-				'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'canard' ) . ' </span>%',
+				'pagelink'    => '<span class="screen-reader-text">' . esc_html__( 'Page', 'canard' ) . ' </span>%',
 				'separator'   => '<span class="screen-reader-text">, </span>',
-			) );
+			] );
 		?>
 	</div><!-- .entry-content -->
 

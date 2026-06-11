@@ -20,6 +20,8 @@
  * @package Canard
  */
 
+declare( strict_types = 1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -51,7 +53,7 @@ if ( ! function_exists( 'canard_entry_hero_body_class' ) ) {
 		$has_displayable_thumbnail = has_post_thumbnail() && canard_jetpack_featured_image_display();
 
 		$is_hero_post = is_single() && $has_displayable_thumbnail &&
-			( ! has_post_format() || has_post_format( 'aside' ) || has_post_format( 'image' ) || has_post_format( 'gallery' ) );
+			( ! has_post_format() || has_post_format( [ 'aside', 'image', 'gallery' ] ) );
 
 		$is_hero_page = is_page() && $has_displayable_thumbnail;
 

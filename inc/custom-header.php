@@ -6,6 +6,8 @@
  * @package Canard
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -22,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function canard_custom_header_setup() {
-	$args = apply_filters( 'canard_custom_header_args', array(
+	$args = apply_filters( 'canard_custom_header_args', [
 		'default-image'      => '',
 		'default-text-color' => '#d11415',
 		'width'              => 1260,
@@ -30,7 +32,7 @@ function canard_custom_header_setup() {
 		'flex-height'        => true,
 		'flex-width'         => true,
 		'wp-head-callback'   => 'canard_header_style',
-	) );
+	] );
 	add_theme_support( 'custom-header', $args );
 }
 add_action( 'after_setup_theme', 'canard_custom_header_setup' );
@@ -77,10 +79,13 @@ if ( ! function_exists( 'canard_header_style' ) ) {
 				}
 			';
 		} else {
+			// sanitize_hex_color_no_hash() is the context-correct escaper here: the value is
+			// interpolated into a CSS declaration, not an HTML attribute, so it must be
+			// constrained to a bare hex triplet rather than passed through esc_attr().
 			$css = '
 				.site-title,
 				.site-description {
-					color: #' . esc_attr( $header_text_color ) . ';
+					color: #' . sanitize_hex_color_no_hash( $header_text_color ) . ';
 				}
 			';
 		}

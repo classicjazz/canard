@@ -11,6 +11,8 @@
  * @package Canard
  */
 
+declare( strict_types=1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -27,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<p><?php
 				printf(
 					/* translators: %s: URL to the new post admin screen. */
-					wp_kses( __( 'Ready to publish your first post? <a href="%s">Get started here</a>.', 'canard' ), array( 'a' => array( 'href' => array() ) ) ),
+					wp_kses( __( 'Ready to publish your first post? <a href="%s">Get started here</a>.', 'canard' ), [ 'a' => [ 'href' => [] ] ] ),
 					esc_url( admin_url( 'post-new.php' ) )
 				);
 			?></p>

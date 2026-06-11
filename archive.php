@@ -11,6 +11,8 @@
  * @package Canard
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -59,11 +61,11 @@ get_header(); ?>
 				 * link labels are treated as plain text and cannot carry markup from
 				 * a compromised translation file.
 				 */
-				the_posts_pagination( array(
+				the_posts_pagination( [
 					'mid_size'  => 2,
 					'prev_text' => esc_html__( '&larr; Previous', 'canard' ),
 					'next_text' => esc_html__( 'Next &rarr;', 'canard' ),
-				) ); ?>
+				] ); ?>
 
 			<?php else : ?>
 

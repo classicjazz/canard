@@ -5,6 +5,8 @@
  * @package Canard
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -85,18 +87,18 @@ if ( ! function_exists( 'canard_entry_meta' ) ) {
 				$avatar_html = get_avatar( $author->user_email, $author_bio_avatar_size );
 				wp_cache_set( $avatar_cache_key, $avatar_html, 'canard_theme', (int) HOUR_IN_SECONDS );
 			} else {
-				$avatar_kses = array(
-					'img' => array(
-						'src'           => array(),
-						'class'         => array(),
-						'alt'           => array(),
-						'width'         => array(),
-						'height'        => array(),
-						'loading'       => array(),
-						'decoding'      => array(),
-						'fetchpriority' => array(),
-					),
-				);
+				$avatar_kses = [
+					'img' => [
+						'src'           => [],
+						'class'         => [],
+						'alt'           => [],
+						'width'         => [],
+						'height'        => [],
+						'loading'       => [],
+						'decoding'      => [],
+						'fetchpriority' => [],
+					],
+				];
 				$avatar_html = is_string( $cached ) ? wp_kses( $cached, $avatar_kses ) : false;
 			}
 		}
@@ -166,21 +168,21 @@ if ( ! function_exists( 'canard_entry_meta' ) ) {
 
 		// Explicit allowlist rather than wp_kses_post() because the byline string
 		// contains only these elements and we do not want to permit block-level markup.
-		$allowed_meta_html = array(
-			'span' => array( 'class' => array(), 'itemprop' => array() ),
-			'a'    => array( 'class' => array(), 'href' => array(), 'rel' => array(), 'itemprop' => array(), 'property' => array() ),
-			'time' => array( 'class' => array(), 'datetime' => array() ),
-			'img'  => array(
-				'src'           => array(),
-				'class'         => array(),
-				'alt'           => array(),
-				'width'         => array(),
-				'height'        => array(),
-				'loading'       => array(),
-				'decoding'      => array(),
-				'fetchpriority' => array(),
-			),
-		);
+		$allowed_meta_html = [
+			'span' => [ 'class' => [], 'itemprop' => [] ],
+			'a'    => [ 'class' => [], 'href' => [], 'rel' => [], 'itemprop' => [], 'property' => [] ],
+			'time' => [ 'class' => [], 'datetime' => [] ],
+			'img'  => [
+				'src'           => [],
+				'class'         => [],
+				'alt'           => [],
+				'width'         => [],
+				'height'        => [],
+				'loading'       => [],
+				'decoding'      => [],
+				'fetchpriority' => [],
+			],
+		];
 
 		if ( is_single() && ( (bool) get_theme_mod( 'canard_author_bio' ) && (bool) get_the_author_meta( 'description' ) ) ) {
 			echo wp_kses( '<span class="posted-on">' . $posted_on . '</span>', $allowed_meta_html );
@@ -238,11 +240,11 @@ function canard_categorized_blog(): bool {
 
 	if ( false === $cached_count ) {
 		/** @var array<int, int> $results */
-		$results   = get_categories( array(
+		$results   = get_categories( [
 			'fields'     => 'ids',
 			'hide_empty' => 1,
 			'number'     => 2,
-		) );
+		] );
 		$cat_count = is_countable( $results ) ? count( $results ) : 0;
 		// Expire after a week as a backstop; the hooks below invalidate immediately on real changes.
 		set_transient( 'canard_cat_count_v1', $cat_count, (int) WEEK_IN_SECONDS );

@@ -14,8 +14,7 @@
  * @package Canard
  */
 
-window.canardUtils = Object.freeze( {
-
+window.canardUtils = Object.freeze({
 	/**
 	 * Defers execution of func until after wait milliseconds have elapsed since
 	 * the last invocation of the returned function.
@@ -24,7 +23,7 @@ window.canardUtils = Object.freeze( {
 	 * @param {number}   wait - Delay in milliseconds.
 	 * @returns {Function} Debounced wrapper function.
 	 */
-	debounce: function( func, wait ) {
+	debounce: (func, wait) => {
 		let timeout;
 		/**
 		 * Resets the debounce timer on each call and invokes func after the delay.
@@ -32,12 +31,9 @@ window.canardUtils = Object.freeze( {
 		 * @param {...*} args - Arguments forwarded to func.
 		 * @returns {void}
 		 */
-		return function( ...args ) {
-			const context = this;
-			clearTimeout( timeout );
-			timeout = setTimeout( function() {
-				func.apply( context, args );
-			}, wait );
+		return function (...args) {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => func.apply(this, args), wait);
 		};
 	},
 
@@ -66,21 +62,24 @@ window.canardUtils = Object.freeze( {
 	 * @param {string} src - Raw image src value.
 	 * @returns {string|null} Safe CSS url() value, or null if src is rejected.
 	 */
-	safeCssUrl: function( src ) {
-		if ( ! src || typeof src !== 'string' ) {
+	safeCssUrl: (src) => {
+		if (!src || typeof src !== "string") {
 			return null;
 		}
 
 		let parsed;
 		try {
-			parsed = new URL( src, window.location.origin );
+			parsed = new URL(src, window.location.origin);
 		} catch {
 			return null;
 		}
 
 		// Allow only HTTPS or same-origin URLs (covers root-relative paths
 		// resolved against the current origin, including HTTP in development).
-		if ( parsed.protocol !== 'https:' && parsed.origin !== window.location.origin ) {
+		if (
+			parsed.protocol !== "https:" &&
+			parsed.origin !== window.location.origin
+		) {
 			return null;
 		}
 
@@ -92,11 +91,10 @@ window.canardUtils = Object.freeze( {
 		// URL serialization. This is the single authoritative gate: no encoding
 		// step follows, so there is no false impression that encoding and
 		// rejection are interchangeable defenses.
-		if ( /["'\\()\n\r\t]/.test( safe ) ) {
+		if (/["'\\()\n\r\t]/.test(safe)) {
 			return null;
 		}
 
 		return 'url("' + safe + '")';
-	}
-
-} );
+	},
+});

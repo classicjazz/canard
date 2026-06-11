@@ -5,6 +5,8 @@
  * @package Canard
  */
 
+declare( strict_types = 1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,21 +27,21 @@ function canard_customize_register( WP_Customize_Manager $wp_customize ) {
 	$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
 	$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
 
-	$wp_customize->add_section( 'canard_theme_options', array(
+	$wp_customize->add_section( 'canard_theme_options', [
 		'title'    => __( 'Theme Options', 'canard' ),
 		'priority' => 130,
-	) );
+	] );
 
-	$wp_customize->add_setting( 'canard_author_bio', array(
+	$wp_customize->add_setting( 'canard_author_bio', [
 		'default'           => '',
 		'sanitize_callback' => 'wp_validate_boolean',
-	) );
-	$wp_customize->add_control( 'canard_author_bio', array(
-		'label'   => __( 'Show author bio on single posts.', 'canard' ),
-		'section' => 'canard_theme_options',
+	] );
+	$wp_customize->add_control( 'canard_author_bio', [
+		'label'    => __( 'Show author bio on single posts.', 'canard' ),
+		'section'  => 'canard_theme_options',
 		'priority' => 10,
-		'type'    => 'checkbox',
-	) );
+		'type'     => 'checkbox',
+	] );
 }
 add_action( 'customize_register', 'canard_customize_register' );
 
@@ -53,6 +55,15 @@ add_action( 'customize_register', 'canard_customize_register' );
  * @return void
  */
 function canard_customize_preview_js() {
-	wp_enqueue_script( 'canard-customizer', get_theme_file_uri( '/js/customizer.js' ), array( 'customize-preview' ), CANARD_VERSION, true );
+	wp_enqueue_script(
+		'canard-customizer',
+		get_theme_file_uri( '/js/customizer.js' ),
+		[ 'customize-preview' ],
+		CANARD_VERSION,
+		[
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		]
+	);
 }
 add_action( 'customize_preview_init', 'canard_customize_preview_js' );

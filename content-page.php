@@ -13,6 +13,8 @@
  * @package Canard
  */
 
+declare( strict_types = 1 );
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -34,18 +36,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="entry-content">
 		<?php the_content(); ?>
 		<?php
-			wp_link_pages( array(
-				'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'canard' ) . '</span>',
+			wp_link_pages( [
+				'before'      => '<div class="page-links"><span class="page-links-title">' . esc_html__( 'Pages:', 'canard' ) . '</span>',
 				'after'       => '</div>',
 				'link_before' => '<span>',
 				'link_after'  => '</span>',
-				'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'canard' ) . ' </span>%',
+				'pagelink'    => '<span class="screen-reader-text">' . esc_html__( 'Page', 'canard' ) . ' </span>%',
 				'separator'   => '<span class="screen-reader-text">, </span>',
-			) );
+			] );
 		?>
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer">
-		<?php edit_post_link( __( 'Edit', 'canard' ), '<span class="edit-link">', '</span>' ); ?>
+		<?php edit_post_link( esc_html__( 'Edit', 'canard' ), '<span class="edit-link">', '</span>' ); ?>
 	</footer><!-- .entry-footer -->
 </article><!-- #post-## -->

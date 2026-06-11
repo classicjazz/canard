@@ -28,15 +28,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 			} elseif ( has_post_format( 'image' ) || has_post_format( 'gallery' ) ) {
 				echo '<div class="post-thumbnail">';
 			}
-			// The sizes attribute is narrowed from the default 100vw because the
-			// post list sits inside #primary .content-area, which is narrower than
-			// the viewport when the sidebar is present. Using 100vw would cause
-			// the browser to download a full-width image on desktop where the
-			// container is approximately 620 px wide.
-			the_post_thumbnail( 'canard-post-thumbnail', array(
-				'loading' => 'lazy',
-				'sizes'   => '(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px',
-			) );
+			// Loading strategy is intentionally left to WordPress core's
+			// wp_get_loading_optimization_attributes() (WP 6.3+): the first
+			// post card's thumbnail is the LCP candidate on home/archive views
+			// and should receive fetchpriority="high" without lazy-loading,
+			// while later cards are lazy-loaded automatically. Only the sizes
+			// attribute is overridden, since the post list container is
+			// narrower than the viewport when the sidebar is present.
+			the_post_thumbnail( 'canard-post-thumbnail', [
+				'sizes' => '(max-width: 767px) 100vw, (max-width: 1039px) 50vw, 620px',
+			] );
 		?>
 
 		<?php if ( is_sticky() ) : ?>
@@ -91,7 +92,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			the_content(
 				sprintf(
 					/* translators: %s: Name of current post. */
-					wp_kses( __( 'Continue reading %s', 'canard' ), array( 'span' => array( 'class' => array() ) ) ),
+					wp_kses( __( 'Continue reading %s', 'canard' ), [ 'span' => [ 'class' => [] ] ] ),
 					the_title( '<span class="screen-reader-text">"', '"</span>', false )
 				)
 			);
